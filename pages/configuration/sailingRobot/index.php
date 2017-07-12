@@ -47,7 +47,7 @@ else
         }
         else
         {
-            echo '<p> Vous must log-in to view this page. Click <strong><a href=' . $relative_path . 'pages/users/login.php">here</a></strong> to log-in. </p>';
+            echo '<p> Vous must log-in to view this page. Click <strong><a href=' . $relative_path . 'pages/users/login.php>here</a></strong> to log-in. </p>';
         }
       ?>
     </div>

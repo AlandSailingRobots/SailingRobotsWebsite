@@ -45,21 +45,26 @@
               </ul> -->
             </li>
 
-            <li><a><i class="fa fa-bar-chart-o"></i> Data Presentation <span class="label label-success pull-right">Coming Soon</span><span class="fa fa-chevron-down"></span></a>
+            <!-- First Menu -->
+            <li><a><i class="fa fa-bar-chart-o"></i>Data Presentation<span class="fa fa-chevron-down"></span><span class="label label-success pull-right">Soon</span></a>
               <ul class="nav child_menu">
                 <li><a href="#">Chart JS</a></li>
               </ul>
             </li>
 
-            <li><a><i class="fa fa-desktop"></i> Configuration <span class="fa fa-chevron-down"></span><span class="label label-warning pull-right">Soon</span></a>
+            <!-- Second Menu -->
+            <li><a><i class="fa fa-desktop"></i>Configuration<span class="fa fa-chevron-down"></span><span class="label label-warning pull-right">Soon</span></a>
               <ul class="nav child_menu">
               <li><a href= <?php echo $relative_path . "pages/configuration/sailingRobot/index.php"?>>Sailing Robot<span class="label label-danger pull-right">In Progress !</span></a></li>
                 <li><a href="#">Mission<span class="label label-success pull-right">Coming Soon</span></a></li>
               </ul>
             </li>
-            <li><a><i class="fa fa-table"></i> Logs <span class="label label-info pull-right">Work in Progress</span><span class="fa fa-chevron-down"></span></a>
+            
+            <!-- Third Menu -->
+            <li><a><i class="fa fa-table"></i>Logs<span class="fa fa-chevron-down"></span><span class="label label-info pull-right">Work in Progress</span></a>
               <ul class="nav child_menu">
                 <li><a href=<?php echo $relative_path . "pages/logs/live/index.php"?>>Live Logs<span class="label label-success pull-right">Coming Soon</span></a></li>
+                <li><a href=<?php echo $relative_path . "pages/logs/saved_logs/index.php"?>>Saved Logs<span class="label label-success pull-warning pull-right">Soon :p</span></a></li>
               </ul>
             </li>
           </ul>
