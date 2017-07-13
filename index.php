@@ -71,6 +71,12 @@ else
           echo '<h1>Welcome on board !</h1>';
         }
       ?>
+
+        <!-- start of weather widget -->
+        <?php include 'include/weather_widget.php' ?>
+        <!-- end of weather widget -->
+
+
     </div>
     <!-- /page content -->
 

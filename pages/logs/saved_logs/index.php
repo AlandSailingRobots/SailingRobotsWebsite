@@ -25,9 +25,14 @@ $available_pages = array (0 => 'compass',
 
 <!DOCTYPE html>
 <html lang="en">
+<head>
 <?php // Head of the HTML document
     include $relative_path . 'include/head.php'; 
 ?>
+    <!-- Custom CSS for the page -->
+    <!-- TODO Check if it's used or not -->
+    <link href="main.css" rel="stylesheet">
+</head>
 
 <body class="nav-md">
   <div class="container body">
@@ -59,32 +64,34 @@ $available_pages = array (0 => 'compass',
                 </div>
             </div>
 
-        <?php
-            if (isset($_GET['data']))
-            {
-                $data = $_GET['data'];
-                if (in_array($data, $available_pages))
+            <?php
+                if (isset($_GET['data']))
                 {
-                    /* include 'pages/' . $data . '_body.php'; */
-                    include 'adaptative_body.php';
+                    $data = $_GET['data'];
+                    if (in_array($data, $available_pages))
+                    {
+                        /* include 'pages/' . $data . '_body.php'; */
+                        include 'adaptative_body.php';
+                    }
                 }
+                else
+                {   
+                    echo '<div class="col-sm-9 col-md-10">';
+                    echo '<h1 class="sub-header jumbotron">Please choose which information you would like to visualize</h1>';
+                    echo '</div>';
+                    //include 'admin_body.php';
+                }
+            }
+            elseif ($connected)
+            {
+                echo '<p> You don\'t have the right to view this webdata </p>';
             }
             else
             {
-                echo 'pouet pouet';
-                //include 'admin_body.php';
+              echo '<p> You must log-in to view this data. Click <strong><a href=' . $relative_path . 'pages/users/login.php>here</a></strong> to log-in. </p>';
             }
-        }
-        elseif ($connected)
-        {
-            echo '<p> You don\'t have the right to view this webdata </p>';
-        }
-        else
-        {
-          echo '<p> Vous must log-in to view this data. Click <strong><a href=' . $relative_path . 'pages/users/login.php>here</a></strong> to log-in. </p>';
-        }
-      ?>
-    </div>
+            ?>
+        </div>
     </div>
     <!-- /data content -->
 
@@ -104,6 +111,8 @@ $available_pages = array (0 => 'compass',
     <!-- Custom Theme Scripts -->
     <script src=<?php echo $relative_path . "assets/js/custom.min.js"?>></script>
 
+    <!-- TODO Check if it's used or not  -->
+    <script src="jsfunctions.js"></script>
 
   <!-- ##########################    JAVASCRIPT     ########################## -->
 </body>

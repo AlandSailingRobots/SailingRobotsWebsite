@@ -59,7 +59,7 @@
             <li><a><i class="fa fa-desktop"></i>Configuration<span class="fa fa-chevron-down"></span><span class="label label-warning pull-right">Soon</span></a>
               <ul class="nav child_menu">
               <li><a href= <?php echo $relative_path . "pages/configuration/sailingRobot/index.php"?>>Sailing Robot<span class="label label-danger pull-right">In Progress !</span></a></li>
-                <li><a href="#">Mission<span class="label label-success pull-right">Coming Soon</span></a></li>
+                <li><a href=<?php echo $relative_path . "pages/configuration/mission/index.php"?>>Mission<span class="label label-success pull-right">Coming Soon</span></a></li>
               </ul>
             </li>
             

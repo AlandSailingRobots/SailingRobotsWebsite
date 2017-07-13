@@ -18,9 +18,14 @@ else
 
 <!DOCTYPE html>
 <html lang="en">
+<head>
 <?php // Head of the HTML document
     include $relative_path . 'include/head.php'; 
 ?>
+    <!-- Custom CSS for the page -->
+    <!-- TODO Check if it's used or not -->
+    <!-- <link href="main.css" rel="stylesheet"> -->
+</head>
 
 <body class="nav-md">
   <div class="container body">
@@ -47,7 +52,7 @@ else
         }
         else
         {
-          echo '<p> Vous must log-in to view this page. Click <strong><a href=' . $relative_path . 'pages/users/login.php>here</a></strong> to log-in. </p>';
+          echo '<p> You must log-in to view this page. Click <strong><a href=' . $relative_path . 'pages/users/login.php>here</a></strong> to log-in. </p>';
         }
       ?>
     </div>
@@ -69,6 +74,8 @@ else
     <!-- Custom Theme Scripts -->
     <script src=<?php echo $relative_path . "assets/js/custom.min.js"?>></script>
 
+    <!-- TODO Check if it's used or not  -->
+    <script src="jsfunctions.js"></script>
 
   <!-- ##########################    JAVASCRIPT     ########################## -->
 </body>

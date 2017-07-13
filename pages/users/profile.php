@@ -6,24 +6,11 @@
 ?>
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <!-- Meta, title, CSS, favicons, etc. -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link rel="shorcut icon" href="../../resources/images/forward_enabled_hover.png">
-    <title>Sailing Robots </title>
-
-    <!-- Bootstrap -->
-    <link href="../../assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="../../assets/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <!-- Custom Theme Style -->
-    <link href="../../assets/css/custom.min.css" rel="stylesheet">
-
-  </head>
+<head>
+<?php // Head of the HTML document
+    include $relative_path . 'include/head.php'; 
+?>
+</head>
 
 <body class="nav-md">
   <div class="container body">

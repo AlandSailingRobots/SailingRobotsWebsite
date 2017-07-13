@@ -38,7 +38,7 @@ else
         if ($connected and $_SESSION['right'] == 'admin')
         {
           echo '<p> You are an ' . $_SESSION['right'] . '! ';
-          include 'admin_body.php';
+          //include 'admin_body.php';
 
         }
         elseif ($connected)
