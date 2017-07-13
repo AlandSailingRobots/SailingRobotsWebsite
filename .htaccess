@@ -1,0 +1,6 @@
+ErrorDocument 403 /tests/Tuto_OCR/SailingRobots_v2/pages/errors/page_403.html
+
+ErrorDocument 404 /tests/Tuto_OCR/SailingRobots_v2/pages/errors/page_404.html
+
+ErrorDocument 500 /tests/Tuto_OCR/SailingRobots_v2/pages/errors/page_500.html
+
