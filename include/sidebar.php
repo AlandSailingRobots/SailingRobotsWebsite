@@ -11,14 +11,17 @@
       <div class="profile">
         <div class="profile_pic">
           <?php
-          $face_pic =  'resources/users/' . $_SESSION['username'] . '/user.jpg';
+          $face_pic = 'resources/users/default.png';
           //echo '####### ' . __ROOT__ . $face_pic;
-          if (!(file_exists(__ROOT__ . '/' . $face_pic)))
+          if (file_exists(__ROOT__ . '/resources/users/' . $_SESSION['username'] . '/user.jpg'))
           {
-            $face_pic = 'resources/users/default.png';
+            $face_pic = 'resources/users/' . $_SESSION['username'] . '/user.jpg';
+          }
+          elseif (file_exists(__ROOT__ . '/resources/users/' . $_SESSION['username'] . '/user.png'))
+          {
+            $face_pic = 'resources/users/' . $_SESSION['username'] . '/user.png';
           }
 
-          // TODO Fix the access danger. I think it comes from read-right on disk.
           // $_SESSION['face_pic'] = realpath($face_pic);
           $_SESSION['face_pic'] = $face_pic;
 
