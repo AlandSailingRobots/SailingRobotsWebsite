@@ -65,7 +65,8 @@ $available_pages = array (0 => 'compass',
                 $data = $_GET['data'];
                 if (in_array($data, $available_pages))
                 {
-                    include 'pages/' . $data . '_body.php';
+                    /* include 'pages/' . $data . '_body.php'; */
+                    include 'adaptative_body.php';
                 }
             }
             else
