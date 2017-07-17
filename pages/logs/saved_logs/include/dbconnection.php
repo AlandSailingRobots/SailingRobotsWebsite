@@ -45,10 +45,10 @@ function getPages($table)
     return $pages;
 }
 
-function getNumber($page) 
+function getNumber($pages) 
 {
     # default
-    $pages = getPages($page);
+    /* $pages = getPages($page); */
     $get_pages = isset($_GET['page']) ? $_GET['page'] : 1;
     $data = array(
         'options' => array(
@@ -63,20 +63,24 @@ function getNumber($page)
     return $number;
 }
 
-function getData($table)
+function getData($table, $pages)
 {
     $conn = dbConn();
     try 
     {
-        $pages   = getPages($table);
+        /* $pages   = getPages($table); */
         $perpage = getPerPage();
-        $number  = getNumber($table);
+        $number  = getNumber($table, $pages);
         $range   = $perpage * ($number - 1);
         $stmt    = $conn->prepare("SELECT * FROM $table LIMIT :limit, :perpage;");
 
         $stmt->bindParam(':perpage', $perpage, PDO::PARAM_INT);
         $stmt->bindParam(':limit', $range, PDO::PARAM_INT);
         $stmt->execute();
+        /* $stmt->execute(array( */
+        /*     'limit'   => $range, */
+        /*     'perpage' => $perpage) */
+        /* ); */
 
         $result = $stmt->fetchAll();
 

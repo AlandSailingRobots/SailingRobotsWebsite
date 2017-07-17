@@ -69,9 +69,9 @@
 
 <?php
     require('include/dbconnection.php');
-    $result = getData($data . '_dataLogs');
     $pages  = getPages($data . '_dataLogs');
-    $number = getNumber($data . '_dataLogs');
+    $result = getData($data . '_dataLogs', $pages);
+    $number = getNumber($pages);
     $next   = $number + 1;//getNext($data . '_dataLogs');
     $prev   = $number - 1;// getPrev($data . '_dataLogs');
 ?>
@@ -128,14 +128,14 @@
                                 foreach($result as $key => $row)
                                 {
                                     echo '<tr>';
-                                    $i++;
-                                    foreach($list_columns as $column)
-                                    {
-                                        echo '<td>' . $row[$column] . '</td>' ;
-                                    }
-                                    echo '<td>';
-                                        echo    '<a href=info.php?number='.$i.'&name='.$list_columns[0].'&table='.$data.'_dataLogs&id='.$row[0].'target=\'_blank\'>More</a>';
-                                    echo '</td>';
+                                        $i++;
+                                        foreach($list_columns as $column)
+                                        {
+                                            echo '<td>' . $row[$column] . '</td>' ;
+                                        }
+                                        echo '<td>';
+                                            echo    '<a href=more_info.php?number='.$i.'&name='.$list_columns[0].'&table='.$data.'_dataLogs&id='.$row[0].'>More</a>';
+                                        echo '</td>';
                                     echo '</tr>';
                                 }
                             ?>
