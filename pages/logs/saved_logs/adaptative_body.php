@@ -72,8 +72,8 @@
     $result = getData($data . '_dataLogs');
     $pages  = getPages($data . '_dataLogs');
     $number = getNumber($data . '_dataLogs');
-    $next   = getNext($data . '_dataLogs');
-    $prev   = getPrev($data . '_dataLogs');
+    $next   = $number + 1;//getNext($data . '_dataLogs');
+    $prev   = $number - 1;// getPrev($data . '_dataLogs');
 ?>
 <div class="container-fluid">
     <div class="row">

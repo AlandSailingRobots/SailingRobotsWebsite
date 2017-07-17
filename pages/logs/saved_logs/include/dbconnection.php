@@ -63,22 +63,6 @@ function getNumber($page)
     return $number;
 }
 
-function getNext($page)
-{
-    $number = getNumber($page);
-    $next = $number + 1;
-    return $next;
-}
-
-function getPrev($page)
-{
-    $number = getNumber($page);
-    $prev = $number - 1;
-    return $prev;
-}
-
-
-
 function getData($table)
 {
     $conn = dbConn();
