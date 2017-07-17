@@ -1,4 +1,13 @@
 <?php
+
+ /* This file contains function used to access to database. They have been written
+  * by the first developer of this website. As I don't understand everything, I
+  * didn't rewrite everything.
+  *
+  * TODO : Secure the SQL query
+  */
+
+
 function dbConn() {
     $user           = $GLOBALS['username'];
     $password       = $GLOBALS['password'];
@@ -28,18 +37,18 @@ function getPerPage()
 
 function getPages($table) 
 {
-    $conn = dbConn();
-    $total  = $conn->query("SELECT COUNT(*) as rows FROM $table") ->fetch(PDO::FETCH_OBJ);
+    $conn    = dbConn();
+    $total   = $conn->query("SELECT COUNT(*) as rows FROM $table") ->fetch(PDO::FETCH_OBJ);
     $perpage = getPerPage();
-    $posts  = $total->rows;
-    $pages  = ceil($posts / $perpage);
+    $posts   = $total->rows;
+    $pages   = ceil($posts / $perpage);
     return $pages;
 }
 
-function getNumber() 
+function getNumber($page) 
 {
     # default
-    $pages = getPages("gps_dataLogs");
+    $pages = getPages($page);
     $get_pages = isset($_GET['page']) ? $_GET['page'] : 1;
     $data = array(
         'options' => array(
@@ -54,16 +63,16 @@ function getNumber()
     return $number;
 }
 
-function getNext()
+function getNext($page)
 {
-    $number = getNumber();
+    $number = getNumber($page);
     $next = $number + 1;
     return $next;
 }
 
-function getPrev()
+function getPrev($page)
 {
-    $number = getNumber();
+    $number = getNumber($page);
     $prev = $number - 1;
     return $prev;
 }
@@ -75,11 +84,11 @@ function getData($table)
     $conn = dbConn();
     try 
     {
-        $pages = getPages($table);
+        $pages   = getPages($table);
         $perpage = getPerPage();
-        $number = getNumber();
-        $range  = $perpage * ($number - 1);
-        $stmt = $conn->prepare("SELECT * FROM $table LIMIT :limit, :perpage;");
+        $number  = getNumber($table);
+        $range   = $perpage * ($number - 1);
+        $stmt    = $conn->prepare("SELECT * FROM $table LIMIT :limit, :perpage;");
 
         $stmt->bindParam(':perpage', $perpage, PDO::PARAM_INT);
         $stmt->bindParam(':limit', $range, PDO::PARAM_INT);

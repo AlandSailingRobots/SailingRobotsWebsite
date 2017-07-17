@@ -4,19 +4,19 @@ require('dbconnection.php');
 
 if (isset($_SESSION['id']) && isset($_SESSION['name']) && isset($_SESSION['table']) && isset($_SESSION['number']))
 {
-    $id = $_SESSION['id'];
-    $name = $_SESSION['name'];
-    $table = $_SESSION['table'];
-    $number = $_SESSION['number'];
+    $id        = $_SESSION['id'];
+    $name      = $_SESSION['name'];
+    $table     = $_SESSION['table'];
+    $number    = $_SESSION['number'];
     $isSession = true;
 }
 else
 {
     $isSession = false;
-    $id = 1;
-    $name = "";
-    $table = "";
-    $number = 1;
+    $id        = 1;
+    $name      = "";
+    $table     = "";
+    $number    = 1;
 }
 
 switch ($_REQUEST['action']) 

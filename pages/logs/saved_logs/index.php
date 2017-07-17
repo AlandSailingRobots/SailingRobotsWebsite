@@ -55,7 +55,7 @@ $available_pages = array (0 => 'compass',
             <div class="">
                 <div class="col-sm-3 col-md-2 sidebar">
                     <ul class="nav nav-sidebar">
-                        <li><a href="index.php?data=gps"><i class="fa fa-desktop"></i> Gps Data</a></li>
+                        <li><a href="index.php?data=gps"><i class="fa fa-desktop"></i> GPS Data</a></li>
                         <li><a href="index.php?data=course">Course Data</a></li>
                         <li><a href="index.php?data=windsensor">Wind Sensor Data</a></li>
                         <li><a href="index.php?data=compass">Compass Data</a></li>

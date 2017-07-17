@@ -71,9 +71,9 @@
     require('include/dbconnection.php');
     $result = getData($data . '_dataLogs');
     $pages  = getPages($data . '_dataLogs');
-    $number = getNumber();
-    $next   = getNext();
-    $prev   = getPrev();
+    $number = getNumber($data . '_dataLogs');
+    $next   = getNext($data . '_dataLogs');
+    $prev   = getPrev($data . '_dataLogs');
 ?>
 <div class="container-fluid">
     <div class="row">
@@ -84,7 +84,9 @@
                     <?php
                     if($result && count($result) > 0)
                     {
-                        echo "<h3>Total pages ($pages)</h3>";
+                        $pages = $pages;
+                        echo '<h3>Total pages: '. $pages .'</h3>';
+                        echo '<p>' . $number .  '/' . $pages .'<br /> </p>';
                         # first page
                         if($number <= 1)
                         {
@@ -92,9 +94,9 @@
                                  <a href="?data='.$_GET['data'].'&page='.$next.'">next &raquo;</a>';
                         }
                         # last page
-                        elseif($number >= $pages)
+                        elseif($number == ($pages ))
                         {
-                            echo '<a href="?data='.$_GET['data'].'&page='.$prev.'>&laquo; prev</a> |
+                            echo '<a href="?data='.$_GET['data'].'&page='.$prev.'">&laquo; prev</a> |
                                  <span>next &raquo;</span';
                         }
                         # in range
