@@ -32,17 +32,6 @@ function checkNicknameInDB($nickname)
     $req->closeCursor();
     return $bool;
 }
-function checkPwd_CPwdAreTheSame($pwd, $cpwd)
-{
-    if (strcmp($pwd, $cpwd) == 0)
-    {
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
-}
 ?>
 
 <?php
