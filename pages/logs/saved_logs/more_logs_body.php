@@ -49,3 +49,25 @@
     </tbody>
     </table>
 </div>
+
+<div class="col-md-5">
+    <div id='mapbtn'>
+        <input type="button" class="btn btn-success" value="maps/boat" onclick="hideShowMapBoat()" />
+    </div>
+    <label for="usr">Route range: </label>
+    <div class="input-group">
+        <input type="text" id="startPath" onChange="updatePath()" class="form-control" placeholder="Start"/>
+        <span class="input-group-addon">-</span>
+        <input type="text" id="endPath" onChange="updatePath()" class="form-control" placeholder="End"/>
+    </div>
+    <div id='map'></div>
+    <div id='boatCanvas'>
+        <canvas width='900px' height='900px' id='pingCanvas' ></canvas>
+        <canvas width='900px' height='900px' id='layerCanvas'></canvas>
+        <canvas width='900px' height='900px' id='layerHeading'></canvas>
+        <canvas width='900px' height='900px' id='layerTWD'></canvas>
+        <canvas width='900px' height='900px' id='layerWaypoint'></canvas>
+        <canvas width='900px' height='900px' id='layerCompasHeading'></canvas>
+        <canvas width='900px' height='900px' id='layerBoatHeading'></canvas>
+    </div>
+</div>

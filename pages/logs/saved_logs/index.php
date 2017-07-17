@@ -49,7 +49,7 @@ $available_pages = array (0 => 'compass',
       <?php
         if ($connected and $_SESSION['right'] == 'admin')
         {
-            echo '<p> You are an ' . $_SESSION['right'] . '! ';
+            // echo '<p> You are an ' . $_SESSION['right'] . '! ';
         ?>
         <div class="container-fluid" >
             <div class="">
