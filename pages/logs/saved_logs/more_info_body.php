@@ -1,4 +1,4 @@
-<div id='table' class='col-lg-4'>
+<div id='table' class='col-xs-12  col-lg-4'>
     <table class="table table-striped">
     <tbody>
     <?php
@@ -50,8 +50,9 @@
     </table>
 </div>
 
-<div class="col-md-5">
-<!--     <div id='mapbtn'>
+<div class="col-xs-12 col-md-offset-1 col-md-7 embed-responsive embed-responsive-16by9">
+<!--
+    <div id='mapbtn'>
         <input type="button" class="btn btn-success" value="maps/boat" onclick="hideShowMapBoat()" />
     </div>
     <label for="usr">Route range: </label>
@@ -70,11 +71,14 @@
         <canvas width='900px' height='900px' id='layerWaypoint'></canvas>
         <canvas width='900px' height='900px' id='layerCompasHeading'></canvas>
         <canvas width='900px' height='900px' id='layerBoatHeading'></canvas>
-    </div> -->
+    </div> 
+-->
+        <!-- width="auto"  -->
+        <!-- height="auto" -->
+        <!-- size="100%" -->
 
-    <iframe 
-        width="425" 
-        height="350" 
+    <iframe
+        class="embed-responsive-item"
         frameborder="0" 
         scrolling="no" 
         marginheight="0" 
@@ -83,10 +87,10 @@
             // That iframe is the embedded openstreetmap. It uses Leaflet. Maybe I should use it directly.
             $lat_marker = $result[0]['latitude'];
             $lon_marker = $result[0]['longitude'];
-            $x_min = $lon_marker - 1;
-            $x_max = $lon_marker + 1;
-            $y_min = $lat_marker - 1;
-            $y_max = $lat_marker + 1;
+            $x_min = $lon_marker - 0.2;
+            $x_max = $lon_marker + 0.2;
+            $y_min = $lat_marker - 0.2;
+            $y_max = $lat_marker + 0.2;
         ?>
         src=<?php echo '"https://www.openstreetmap.org/export/embed.html?bbox=' . $x_min . '%2C' . $y_min . '%2C' . $x_max . '%2C' . $y_max . '&amp;layer=mapnik&amp;marker=' . $lat_marker . '%2C' . $lon_marker . '"'; ?> 
         style="border: 1px solid black">
