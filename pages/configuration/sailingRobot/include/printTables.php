@@ -1,40 +1,47 @@
 <?php
 function printTables($table, $tableName)
-{
-    echo "<div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
-        <form name=".$tableName." id=".$tableName." autocomplete='off'>
-        <div class='panel panel-default'>
-        <div class='panel-heading'>".$tableName."</div>";
-    echo "<table class='table'>";
-    echo "<input type='hidden' name='theTable' value=".$tableName.">";
-
-    if (is_array($table))
-    {
-        foreach($table as $key => $value)
-        {
-            echo "<tr>";
-            echo "<td>".$key."</td>";
-            echo "<td>".$value."</td>";
-            if ( $key != "id")
+{?>
+    <div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
+        <div class="form-group" id="<?php echo $tableName ;?>">
+            <div class='panel panel-default'>
+                <div class='panel-heading'><?php echo $tableName ;
+                ?></div>
+                <table class='table'>
+            <?php
+            if (is_array($table))
             {
-                echo "<td><input type='text' class='form-control' name=".$key." size='1'></td>";
+                foreach($table as $key => $value)
+                {
+                ?>  
+                    <tr>
+                        <td><?php echo $key ; ?></td>
+                        <td><?php echo $value ; ?></td>
+                    <?php
+                    if ( $key != "id")
+                    {
+                        echo "    <td><input type='text' class='form-control' name=".$tableName.'|'.$key." size='1'></td>";
+                    }
+                    else
+                    {
+                        echo "    <td></td>";
+                    }
+                echo '
+                    </tr>';
+                }
             }
             else
             {
-                echo "<td></td>";
+            ?><tr>
+                <td> No data found </td>
+            <?php
             }
-        }
-    }
-    else
-    {
-        echo "<tr>";
-        echo "<td> No data found </td>";
-    }
-
-    echo "</tr>";
-    echo "</table>";
-    echo "</div>
-         </form>
-         </div>";
+            // echo '</tr>';
+            ?>
+                
+                </table>
+            </div>
+        </div>
+    </div>
+<?php
 }
 ?>

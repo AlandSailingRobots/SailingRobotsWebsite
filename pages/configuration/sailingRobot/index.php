@@ -39,7 +39,7 @@ else
       <?php
         if ($connected and $_SESSION['right'] == 'admin')
         {
-            echo '<p> You are an ' . $_SESSION['right'] . '! ';
+            // echo '<p> You are an ' . $_SESSION['right'] . '! ';
             include 'admin_body.php';
         }
         elseif ($connected)
@@ -62,14 +62,13 @@ else
   <!-- ##########################    JAVASCRIPT     ########################## -->
   <?php // Not very clean, but the default configs includes too many JS for a beginner
         // That way, main file is 'clean' ?>
-  <?php  //include $relative_path . 'include/js_scripts.php';
-         ?>
+  <?php  //include $relative_path . 'include/js_scripts.php'; ?>
   <!-- jQuery -->
     <script src=<?php echo $relative_path . "assets/vendors/jquery/dist/jquery.min.js"?>></script>
     <!-- Bootstrap -->
     <script src=<?php echo $relative_path . "assets/vendors/bootstrap/dist/js/bootstrap.min.js"?>></script>
     <!-- Custom Theme Scripts -->
-    <!-- <script src=<?php //echo $relative_path . "assets/js/custom.min.js"?>></script> -->
+    <script src=<?php echo $relative_path . "assets/js/custom.min.js"?>></script>
 
 
   <!-- ##########################    JAVASCRIPT     ########################## -->

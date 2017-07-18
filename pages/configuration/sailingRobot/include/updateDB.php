@@ -1,5 +1,5 @@
 <?php
-//header("Refresh:5; url=http://localhost/Remote-sailing-robots/config/mainPage.php");
+// TODO : Check that file
 
 $servername = $GLOBALS['hostname'];
 $username   = $GLOBALS['username'];

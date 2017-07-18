@@ -76,8 +76,8 @@ require_once('include/dbconnection.php');
             }, true);
 
         </script>
-        <script src="jsfunctions.js"></script>
-        <script src=<?php echo $relative_path . "assets/js/sailing/utility.js"?>></script>
+        <script src="jsfunctions_v3.js"></script>
+        <!-- <script src=<?php echo $relative_path . "assets/js/sailing/utility.js"?>></script> -->
         <!-- <script src="https://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script> -->
         <!-- jQuery -->
         <script src=<?php echo $relative_path . "assets/vendors/jquery/dist/jquery.min.js"?>></script>

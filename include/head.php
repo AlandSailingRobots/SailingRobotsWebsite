@@ -4,7 +4,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link rel="shorcut icon" href=<?php echo $relative_path . "resources/images/logo.ico"?>>
+<link rel="icon" href=<?php echo $relative_path . "resources/images/logo.ico"?>>
 
 <title>Sailing Robots v2 !</title>
 <!-- CSS Rules -->

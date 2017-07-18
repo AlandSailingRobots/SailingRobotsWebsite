@@ -1,26 +1,4 @@
 <?php
-function getConfigData_($table)
-{
-    $user     = $GLOBALS['username'];
-    $password = $GLOBALS['password'];
-    $hostname = $GLOBALS['hostname'];
-    $dsn      = 'mysql:dbname=ithaax_testdata;host=' . $hostname;
-
-    try 
-    {
-      $dbh = new PDO($dsn, $user, $password);
-    } 
-    catch (PDOException $e) 
-    {
-      echo 'Connection failed: ' . $e->getMessage();
-    }
-    echo '<br/>' . $table;
-
-    $sth = $dbh->prepare("SELECT * FROM $table");
-    $sth->execute();
-    $result = $sth->fetch(PDO::FETCH_ASSOC);
-    return $result;
-}
 function getConfigData($table)
 {
     $user          = $GLOBALS['username'];
@@ -41,7 +19,7 @@ function getConfigData($table)
         die('Connection failed : '.$e->getMessage());
     }
 
-    // I tried to protect the sql query
+    // I tried to protect the sql query -- Don't know if it's necessary
     $allowed_query = array (0 => 'buffer_config',
                             1 => 'course_calculation_config',
                             2 => 'maestro_controller_config',

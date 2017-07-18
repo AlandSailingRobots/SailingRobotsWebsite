@@ -76,7 +76,15 @@
         <!-- width="auto"  -->
         <!-- height="auto" -->
         <!-- size="100%" -->
-
+    <div class="embed-responsive-item">
+        <canvas id='pingCanvas'><p>Désolé, votre navigateur ne supporte pas Canvas. Mettez-vous à jour</p></canvas>
+        <canvas id='layerCanvas'></canvas>
+        <canvas id='layerHeading'></canvas>
+        <canvas id='layerTWD'></canvas>
+        <canvas id='layerWaypoint'></canvas>
+        <canvas id='layerCompasHeading'></canvas>
+        <canvas id='layerBoatHeading'></canvas>       
+    </div>
     <iframe
         class="embed-responsive-item"
         frameborder="0" 
