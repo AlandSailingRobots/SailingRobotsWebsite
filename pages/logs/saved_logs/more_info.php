@@ -12,7 +12,7 @@ if (isset($_SESSION['id']) AND isset($_SESSION['username']))
 }
 else
 {
-        $connected = false;
+    $connected = false;
 }
 
 require_once('include/dbconnection.php');
@@ -47,7 +47,7 @@ require_once('include/dbconnection.php');
                 }
                 elseif ($connected)
                 {
-                        echo '<p> You don\'t have the right to view this webpage </p>';
+                    echo '<p> You don\'t have the right to view this webpage </p>';
                 }
                 else
                 {
@@ -55,10 +55,6 @@ require_once('include/dbconnection.php');
                 }
             ?>
         </div>
-
-
-
-
         <!-- /page content -->
 
         <!-- footer content -->

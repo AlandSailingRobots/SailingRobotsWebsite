@@ -1,4 +1,4 @@
-<div id='table' class='col-xs-12  col-lg-4'>
+<div id='table' class='col-xs-12 col-lg-4'>
     <table class="table table-striped">
     <tbody>
     <?php
@@ -50,7 +50,7 @@
     </table>
 </div>
 
-<div class="col-xs-12 col-md-offset-1 col-md-7 embed-responsive embed-responsive-16by9">
+<div class="col-xs-12 col-lg-offset-1 col-lg-7 embed-responsive embed-responsive-16by9">
 <!--
     <div id='mapbtn'>
         <input type="button" class="btn btn-success" value="maps/boat" onclick="hideShowMapBoat()" />
