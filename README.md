@@ -1,4 +1,4 @@
-# New version of the SailingRobot Website
+# New version of the SailingRobots Website
 
 The website needs to be more user-friendly in order to be used by biologists.
 To do that, the new UI should offer a clear view of measurements/samplings that would have been made on previous missions.
