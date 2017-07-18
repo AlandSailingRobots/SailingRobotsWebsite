@@ -40,10 +40,10 @@ require_once('include/dbconnection.php');
                 if ($connected and $_SESSION['right'] == 'admin')
                 {
                     // echo '<p> You are an ' . $_SESSION['right'] . '! ';
-                    echo '<a id="go_back" href="">GO BACK</a><br/>';
+                    echo '<a id="go_back" href="#">GO BACK</a><br/>';
                     echo "<a href=\"javascript:history.go(-1)\">GO BACK BAD</a>";
                     echo '<div class="row"></div>';
-                    include('more_logs_body.php');
+                    include('more_info_body.php');
                 }
                 elseif ($connected)
                 {
@@ -82,7 +82,7 @@ require_once('include/dbconnection.php');
         </script>
         <script src="jsfunctions.js"></script>
         <script src=<?php echo $relative_path . "assets/js/sailing/utility.js"?>></script>
-        <script src="https://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
+        <!-- <script src="https://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script> -->
         <!-- jQuery -->
         <script src=<?php echo $relative_path . "assets/vendors/jquery/dist/jquery.min.js"?>></script>
         <!-- Bootstrap -->
