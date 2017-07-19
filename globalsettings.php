@@ -15,17 +15,17 @@
 
 
 
-    $GLOBALS['server'] = "http://localhost/tests/Tuto_OCR/SailingRobots_v2/";
+    /* $GLOBALS['server'] = "http://localhost/tests/Tuto_OCR/SailingRobotsWebsite/"; */
     //$GLOBALS['server'] = "http://www.sailingrobots.com/testdata/";
     $GLOBALS['username'] = 'root';
     //$GLOBALS['username'] = 'ithaax_testdata';
-    $GLOBALS['password'] = '';//'root';
+    $GLOBALS['password'] = '';
     //$GLOBALS['password'] = 'test123data';
     $GLOBALS['hostname'] = '127.0.0.1';
 
     $GLOBALS['database_name_testdata'] = 'ithaax_testdata';
     $GLOBALS['database_name'] = 'ithaax_ASPire_config';
-
+    $GLOBALS['database_mission'] = 'ithaax_mission';
     // $hostname = '127.0.0.1';
     // $db_user = 'root';
     // $db_password = '';

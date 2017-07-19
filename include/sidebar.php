@@ -2,7 +2,7 @@
   <div class="col-md-3 left_col">
     <div class="left_col scroll-view">
       <div class="navbar nav_title" style="border: 0;">
-        <a href=<?php echo $GLOBALS['server'] ?> class="site_title"><i class="fa fa-ship"></i> <span>Sailing Robots</span></a>
+        <a href=<?php echo $relative_path ?> class="site_title"><i class="fa fa-ship"></i> <span>Sailing Robots</span></a>
       </div>
 
       <div class="clearfix"></div>

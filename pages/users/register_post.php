@@ -1,17 +1,22 @@
 <?php
 session_start();
 // Connexion à la base de données
+
+$hostname  = $GLOBALS['hostname'];
+$username  = $GLOBALS['username'];
+$password  = $GLOBALS['password'];
+$dbname    = $GLOBALS['database_name'];
 try
 {
-    $hostname = '127.0.0.1';
-    $db_user = 'root';
-    $db_password = '';
-    $database_name = 'ithaax_ASPire_config';
-    $bdd = new PDO("mysql:host=$hostname;dbname=$database_name;charset=utf8;port=3306", $db_user, $db_password, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+    $bdd = new PDO("mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
+                    $username,
+                    $password,
+                    array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+                );
 }
 catch(Exception $e)
 {
-    die('Erreur : '.$e->getMessage());
+    die('Error : '.$e->getMessage());
 }
 
 function checkNicknameInDB($nickname)

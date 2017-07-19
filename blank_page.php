@@ -7,8 +7,8 @@ $relative_path = './';
 //  If we are connected
 if (isset($_SESSION['id']) AND isset($_SESSION['username']))
 {
-  // TODO
-  $connected = true;
+    // TODO
+    $connected = true;
 }
 else
 {
@@ -18,9 +18,11 @@ else
 
 <!DOCTYPE html>
 <html lang="en">
+<head>
 <?php // Head of the HTML document
     include $relative_path . 'include/head.php'; 
 ?>
+</head>
 
 <body class="nav-md">
   <div class="container body">
@@ -37,7 +39,7 @@ else
       <?php
         if ($connected and $_SESSION['right'] == 'admin')
         {
-          echo '<p> You are an ' . $_SESSION['right'] . '! ';
+            echo '<p> You are an ' . $_SESSION['right'] . '! ';
         }
         elseif ($connected)
         {
@@ -66,8 +68,7 @@ else
     <script src=<?php echo $relative_path . "assets/vendors/bootstrap/dist/js/bootstrap.min.js"?>></script>
     <!-- Custom Theme Scripts -->
     <script src=<?php echo $relative_path . "assets/js/custom.min.js"?>></script>
-
-
   <!-- ##########################    JAVASCRIPT     ########################## -->
+
 </body>
 </html>

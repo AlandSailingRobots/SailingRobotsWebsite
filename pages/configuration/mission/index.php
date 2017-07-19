@@ -18,9 +18,15 @@ else
 
 <!DOCTYPE html>
 <html lang="en">
+<head>
 <?php // Head of the HTML document
     include $relative_path . 'include/head.php'; 
 ?>
+    <link rel="stylesheet" href=<?php echo $relative_path . 'assets/vendors/leafletjs/leaflet.css' ;?> />
+    <link rel="stylesheet" href="custome_style.css" />
+    <!-- Make sure you put this AFTER Leaflet CSS -->
+    <script src=<?php echo $relative_path . 'asset/vendors/leafletjs/leaflet.js'; ?>></script>
+</head>
 
 <body class="nav-md">
   <div class="container body">
@@ -37,9 +43,8 @@ else
       <?php
         if ($connected and $_SESSION['right'] == 'admin')
         {
-          echo '<p> You are an ' . $_SESSION['right'] . '! ';
-          //include 'admin_body.php';
-
+            echo '<p> You are an ' . $_SESSION['right'] . '! ';
+            include 'mission_body.php';
         }
         elseif ($connected)
         {
@@ -47,7 +52,7 @@ else
         }
         else
         {
-          echo '<p> Vous must log-in to view this page. Click <strong><a href=' . $relative_path . 'pages/users/login.php>here</a></strong> to log-in. </p>';
+          echo '<p> Vous must log-in to view this page. Click <strong><a href=' . $relative_path . 'pages/users/login.php">here</a></strong> to log-in. </p>';
         }
       ?>
     </div>
@@ -68,8 +73,7 @@ else
     <script src=<?php echo $relative_path . "assets/vendors/bootstrap/dist/js/bootstrap.min.js"?>></script>
     <!-- Custom Theme Scripts -->
     <script src=<?php echo $relative_path . "assets/js/custom.min.js"?>></script>
-
-
   <!-- ##########################    JAVASCRIPT     ########################## -->
+
 </body>
 </html>

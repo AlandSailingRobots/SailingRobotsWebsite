@@ -22,30 +22,7 @@ else
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <!-- Meta, title, CSS, favicons, etc. -->
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <link rel="shorcut icon" href="resources/images/forward_enabled_hover.png">
-
-  <title>Sailing Robots v2 !</title>
-  <!-- CSS Rules -->
-    <!-- Bootstrap -->
-    <link href="assets/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="assets/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <!-- iCheck -->
-    <link href="assets/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
-    <!-- bootstrap-progressbar -->
-    <link href="assets/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
-    <!-- jVectorMap -->
-    <link href="assets/css/maps/jquery-jvectormap-2.0.3.css" rel="stylesheet"/>
-
-    <!-- Custom Theme Style -->
-    <link href="assets/css/custom.min.css" rel="stylesheet">
-  <!-- /CSS Rules -->
+  <?php include 'include/head.php'; ?>
 </head>
 
 <body class="nav-md">

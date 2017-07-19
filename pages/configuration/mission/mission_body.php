@@ -1,8 +1,28 @@
+<?php
+require_once('include/getMissionList.php');
+require_once('include/getPointList.php');
+require_once('include/insertWaypoint.php');
+require_once('include/updateWaypoints.php');
+require_once('include/printWaypointList.php');
+?>
+
+
+<div class="row">
+    <div id="mapid" class="col-lg-4 embed-responsive embed-responsive-16by9 leaflet-container leaflet-fade-anim leaflet-grab leaflet-touch-drag">
+    </div>
+
+    <div>
+    </div>
+</div>
+
+
+<!-- 
 <div class ="row">
     <div class='panel panel-default'>
         <div class='panel-heading'>Waypoints
         </div>
         <div class="col-md-4" id = "map" >
+            <p> Map here !!! :p </p>
         </div>
         <div class='panel panel-default'>
             <div class='panel-heading'>Selected Waypoint
@@ -45,3 +65,4 @@
         </div>
     </div>
 </div> 
+-->
