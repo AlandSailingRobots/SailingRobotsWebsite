@@ -77,7 +77,7 @@
         <!-- height="auto" -->
         <!-- size="100%" -->
     <div class="embed-responsive-item">
-        <canvas id='pingCanvas'><p>Désolé, votre navigateur ne supporte pas Canvas. Mettez-vous à jour</p></canvas>
+        <canvas id='pingCanvas'><p>Sorry, your Internet Browser does not support the canvas tag. Please update it !</p></canvas>
         <canvas id='layerCanvas'></canvas>
         <canvas id='layerHeading'></canvas>
         <canvas id='layerTWD'></canvas>
