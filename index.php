@@ -13,6 +13,7 @@ if (isset($_SESSION['id']) AND isset($_SESSION['username']))
 }
 else
 {
+  session_destroy();
   $connected = false;
   $_SESSION['username'] = 'Guest';
   $name = 'Guest';
@@ -65,7 +66,13 @@ else
   <!-- ##########################    JAVASCRIPT     ########################## -->
   <?php // Not very clean, but the default configs includes too many JS for a beginner
         // That way, main file is 'clean' ?>
-  <?php  include 'include/js_scripts.php'; ?>
+  <?php  //include 'include/js_scripts.php'; ?>
+      <!-- jQuery -->
+    <script src=<?php echo $relative_path . "assets/vendors/jquery/dist/jquery.min.js"?>></script>
+    <!-- Bootstrap -->
+    <script src=<?php echo $relative_path . "assets/vendors/bootstrap/dist/js/bootstrap.min.js"?>></script>
+    <!-- Custom Theme Scripts -->
+    <script src=<?php echo $relative_path . "assets/js/custom.min.js"?>></script>
   <!-- ##########################    JAVASCRIPT     ########################## -->
 </body>
 </html>
