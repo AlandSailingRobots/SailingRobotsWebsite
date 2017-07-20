@@ -22,10 +22,9 @@ else
 <?php // Head of the HTML document
     include $relative_path . 'include/head.php'; 
 ?>
-    <link rel="stylesheet" href=<?php echo $relative_path . 'assets/vendors/leafletjs/leaflet.css' ;?> />
-    <link rel="stylesheet" href="custome_style.css" />
-    <!-- Make sure you put this AFTER Leaflet CSS -->
-    <script src=<?php echo $relative_path . 'asset/vendors/leafletjs/leaflet.js'; ?>></script>
+    <link rel="stylesheet" href="<?php echo $relative_path . 'assets/vendors/leafletjs/leaflet.css' ;?>" />
+    <link rel="stylesheet" href="custom_style.css" />
+
 </head>
 
 <body class="nav-md">
@@ -43,7 +42,7 @@ else
       <?php
         if ($connected and $_SESSION['right'] == 'admin')
         {
-            echo '<p> You are an ' . $_SESSION['right'] . '! ';
+            //echo '<p> You are an ' . $_SESSION['right'] . '! ';
             include 'mission_body.php';
         }
         elseif ($connected)
@@ -52,7 +51,8 @@ else
         }
         else
         {
-          echo '<p> Vous must log-in to view this page. Click <strong><a href=' . $relative_path . 'pages/users/login.php">here</a></strong> to log-in. </p>';
+            echo '<p> Vous must log-in to view this page. Click <strong><a href=' .
+                $relative_path . 'pages/users/login.php">here</a></strong> to log-in. </p>';
         }
       ?>
     </div>
@@ -66,13 +66,26 @@ else
   <!-- ##########################    JAVASCRIPT     ########################## -->
   <?php // Not very clean, but the default configs includes too many JS for a beginner
         // That way, main file is 'clean' ?>
-  <?php  //include $relative_path . 'include/js_scripts.php'; ?>
-  <!-- jQuery -->
+  <?php  //include $relative_path . 'include/js_scripts.php'; 
+  ?>
+    <!-- jQuery -->
     <script src=<?php echo $relative_path . "assets/vendors/jquery/dist/jquery.min.js"?>></script>
     <!-- Bootstrap -->
     <script src=<?php echo $relative_path . "assets/vendors/bootstrap/dist/js/bootstrap.min.js"?>></script>
     <!-- Custom Theme Scripts -->
     <script src=<?php echo $relative_path . "assets/js/custom.min.js"?>></script>
+  <?php
+  if ($connected)
+  {
+    echo '<script src="' . $relative_path . 'assets/vendors/leafletjs/leaflet.js"></script>';
+
+    echo '<script src="./custom_js_leaflet.js"></script>';
+    echo '<script src="./script.js"></script>';
+    // echo '<script src="' . $relative_path . 'assets/vendors/bootstrap-select-1.12.4/dist/js/bootstrap-select.min.js"</script>'; 
+  }
+  ?>
+    
+
   <!-- ##########################    JAVASCRIPT     ########################## -->
 
 </body>
