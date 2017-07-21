@@ -1,6 +1,7 @@
 <?php
 define('__ROOT__', dirname(dirname(dirname(dirname(dirname(__FILE__))))));
 require_once(__ROOT__.'/globalsettings.php');
+
 function deleteMissionFromDB($id_mission)
 {
     /* 
@@ -34,7 +35,8 @@ function deleteMissionFromDB($id_mission)
     return $result;
 }
 
-if (isset($_POST['id_mission']))
+session_start();
+if (isset($_POST['id_mission']) && $_SESSION['right'] == 'admin')
 {
     deleteMissionFromDB($_POST['id_mission']);
 }

@@ -23,9 +23,8 @@ function getPointList($id_mission)
         die('Error : '.$e->getMessage());
     }
     
-    $query = $db->prepare('SELECT * FROM pointList WHERE id_mission = :id_mission ;');
-    $query->execute(array('id_mission' => $id_mission)
-                );
+    $query = $db->prepare('SELECT * FROM pointList WHERE id_mission = :? ;');
+    $query->execute(array($id_mission));
 
     $result = $query->fetchAll();
 

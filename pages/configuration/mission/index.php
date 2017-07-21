@@ -7,12 +7,16 @@ $relative_path = './../../../';
 //  If we are connected
 if (isset($_SESSION['id']) AND isset($_SESSION['username']))
 {
-    // TODO
-    $connected = true;
+  // TODO
+  $connected = true;
+  $name = $_SESSION['username'];
 }
 else
 {
-    $connected = false;
+  session_destroy();
+  $connected = false;
+  $_SESSION['username'] = 'Guest';
+  $name = 'Guest';
 }
 ?>
 
@@ -23,7 +27,7 @@ else
     include $relative_path . 'include/head.php'; 
 ?>
     <link rel="stylesheet" href="<?php echo $relative_path . 'assets/vendors/leafletjs/leaflet.css' ;?>" />
-    <link rel="stylesheet" href="custom_style.css" />
+    <link rel="stylesheet" href="css/custom_style.css" />
 
 </head>
 
@@ -52,7 +56,7 @@ else
         else
         {
             echo '<p> Vous must log-in to view this page. Click <strong><a href=' .
-                $relative_path . 'pages/users/login.php">here</a></strong> to log-in. </p>';
+                $relative_path . 'pages/users/login.php>here</a></strong> to log-in. </p>';
         }
       ?>
     </div>
@@ -79,8 +83,8 @@ else
   {
     echo '<script src="' . $relative_path . 'assets/vendors/leafletjs/leaflet.js"></script>';
 
-    echo '<script src="./custom_js_leaflet.js"></script>';
-    echo '<script src="./script.js"></script>';
+    echo '<script src="./js/map_leaflet.js"></script>';
+    echo '<script src="./js/script.js"></script>';
     // echo '<script src="' . $relative_path . 'assets/vendors/bootstrap-select-1.12.4/dist/js/bootstrap-select.min.js"</script>'; 
   }
   ?>

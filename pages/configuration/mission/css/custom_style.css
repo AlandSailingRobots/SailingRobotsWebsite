@@ -13,8 +13,34 @@
     margin-bottom: 0; /* optional */
 }
 
+textarea 
+{ 
+	resize: vertical; 
+}
+
+.top15
+{
+	margin-top: 15px;
+}
+
 #map
 { 
 	height: 350px;
 	border: 1px solid #AAA;
+}
+
+#buttonContainerMap
+{
+	position: relative;
+	margin-top: 2px;
+}
+#newCheckpoint
+{
+	position: absolute;
+	right: 1px;
+}
+
+#ul
+{
+	padding-top: 10px;
 }
