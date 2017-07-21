@@ -75,7 +75,7 @@
                     <!-- end of image cropping -->
                     <div id="crop-avatar">
                       <!-- Current avatar -->
-                      <img class="img-responsive avatar-view" src=<?php echo $GLOBALS['server'] . $_SESSION['face_pic'] ?> alt="Avatar" title="Change the avatar">
+                      <img class="img-responsive avatar-view" src=<?php echo $relative_path . $_SESSION['face_pic'] ?> alt="Avatar" title="Change the avatar">
 
                       <!-- Cropping modal -->
                       <div class="modal fade" id="avatar-modal" aria-hidden="true" aria-labelledby="avatar-modal-label" role="dialog" tabindex="-1">
