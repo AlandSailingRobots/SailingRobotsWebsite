@@ -1,5 +1,6 @@
-(function()
-{
+// function map_leaflet()
+// {
+
     // Initialisation
     var mymap = L.map('map').setView([60.1, 19.935], 13); 
 
@@ -13,24 +14,31 @@
 
 
     var listOfPoints = document.getElementById('listOfPoints');
+    var isOpen = false;
+    var numberOfPoints = listOfPoints.childElementCount;
+    var arrayOfPoints = new Array();
+    var coordGPS;
+
     // console.log(listOfPoints.childElementCount);
     if (listOfPoints.childElementCount == 0)
     {
         listOfPoints.parentNode.style.display = "none";
     }
 
+    mymap.on('click', onMapClick); // Event click on map
 
 
 
-    var isOpen = false;
-    var numberOfPoints = listOfPoints.childElementCount;
-    var arrayOfPoints = new Array();
+    //*****************************************************************************
+    //                                                                            *
+    //                      Functions Used By The Events                          *
+    //                                                                            *
+    //*****************************************************************************    
 
     // This function handles the click on the map.
     function onMapClick(e) 
     { 
-        var coordGPS = splitGPS(e.latlng.toString());
-        // var coordGPS_2 = e.latlng.LatLng();
+        coordGPS = splitGPS(e.latlng.toString());
 
         // One click opens the popup, another closes it.
         if (isOpen)
@@ -46,68 +54,112 @@
 
         // Event when click on a button of the popup
         $('.addPoint').on('click', function(e)
-            {
-                var listOfPoints = document.getElementById('listOfPoints');
-                var newPoint = document.createElement('li');
-                var color;
-                
-                // Add class attribute to the <li> element
-                newPoint.setAttribute("class", "point");
-                newPoint.classList.add('list-group-item');
-                
-                // Checkpoint or Waypoint
+            {   
+                // Edit the modal form depending of which kind of point we want to create.
+                var waypointOrCheckpoint = $('.waypointOrCheckpoint');
                 if ($(this).attr('id') == 'newCheckpoint')
                 {
-                    newPoint.classList.add('isCheckpoint');
-                    color = greenIcon;
+                    var text = 'checkpoint';
+                    var classText = 'isCheckpoint';
                 }
                 else
                 {
-                    newPoint.classList.add('isWaypoint');
-                    color = blueIcon;
+                    var text = 'waypoint';
+                    var classText = 'isWaypoint';
+                }
+                for (var i = waypointOrCheckpoint.length - 1; i >= 0; i--) 
+                {
+                    // waypointOrCheckpoint[i].classList.toggle(classText);
+                    // Deleting previous text
+                    waypointOrCheckpoint[i].removeChild(waypointOrCheckpoint[i].firstChild);
+
+                    // Creating a child (easier to remove than just using TexteNode)
+                    var txt_env = document.createElement('span');
+                    txt_env.classList.add(classText);
+                    txt_env.appendChild(document.createTextNode(text));
+                    waypointOrCheckpoint[i].appendChild(txt_env);
                 }
 
-                // Add an item to the list
-                newPoint.appendChild(document.createTextNode(displayNewPointName(coordGPS)));
-                listOfPoints.appendChild(newPoint);
-                
-                // Display the list (useful only once)
-                listOfPoints.parentNode.style.display = "inline-block";
-                
-                // New draggable marker
-                marker = new L.marker( [coordGPS.split(',')[0], coordGPS.split(',')[1]],
-                                        {draggable:'true',
-                                        icon: color
-                                    });
-                marker.bindPopup($(this).attr('id'));
-                // marker.bindPopup('pouet opoeutzojfdkjs');
-                marker.on('dragend', function(event)
+                // Display the modal form
+                $('#createPointModal').modal('show');
+                // Cancel
+                $('#cancelNewPoint').on('click', function()
                     {
-                        var marker = event.target;
-                        var position = marker.getLatLng();
-                        console.log(position);
+                        $(':input','#createPointModal').val("");
+                        $('#createPointModal').modal('hide');
+                        mymap.closePopup();
+                        isOpen = false;
+                    })
 
-                        // Update the position
-                        marker.setLatLng(position,{draggable:'true'}).bindPopup(position).update();
-                        updateListItems();
-                    });
-                mymap.addLayer(marker);
-                
-                // We now close the popup
-                mymap.closePopup();
-                isOpen = false;
             });
     }
 
-    mymap.on('click', onMapClick); // Event click on map
+
+
+    // This function create a new point
+    function createNewPoint()
+    {
+        var listOfPoints = document.getElementById('listOfPoints');
+        var newPoint = document.createElement('li');
+        var color;
+        var name = $('#newPointName').val();
+
+        // Add class attribute to the <li> element
+        newPoint.setAttribute("class", "point");
+        newPoint.classList.add('list-group-item');
+        
+        // Checkpoint or Waypoint
+        if ($('.waypointOrCheckpoint')[0].firstChild.classList.contains('isCheckpoint'))
+        {
+            newPoint.classList.add('isCheckpoint');
+            color = greenIcon;
+        }
+        else
+        {
+            newPoint.classList.add('isWaypoint');
+            color = blueIcon;
+        }
+
+        // Add an item to the list
+        newPoint.appendChild(document.createTextNode(displayNewPointName(coordGPS, name)));
+        listOfPoints.appendChild(newPoint);
+        
+        // Display the list (useful only once)
+        listOfPoints.parentNode.style.display = "inline-block";
+        
+        // New draggable marker
+        marker = new L.marker( [coordGPS.split(',')[0], coordGPS.split(',')[1]],
+                                {draggable:'true',
+                                icon: color
+                            });
+        // marker.bindPopup($(this).attr('id'));
+        marker.bindPopup(name);
+        marker.on('dragend', function(event)
+            {
+                var marker = event.target;
+                var position = marker.getLatLng();
+                console.log(position);
+
+                // Update the position
+                marker.setLatLng(position,{draggable:'true'}).bindPopup(position).update();
+                updateListItems();
+            });
+        mymap.addLayer(marker);
+        
+        // We now close the popup
+        $('#createPointModal').modal('hide');
+        mymap.closePopup();
+        isOpen = false;
+    }
+
 
     function updateListItems()
     {
         return ;
     }
-    function displayNewPointName(point)
+    function displayNewPointName(point, name)
     {
-        return "Hi ! You clicked here: " + point;
+        return "Hi ! here is "+ name +". You clicked at: " + point;
     }
 
     function askNewPoint()
@@ -129,17 +181,14 @@
         return res;
     }
 
-})();
+    // return  {
+    //             createNewPoint: createNewPoint()
+    //         };
 
+// }
 
-
-
-
-
-
-
-
-
+// var main_leaflet_var = map_leaflet();
+// map_leaflet();
 
 
 //////////////////:

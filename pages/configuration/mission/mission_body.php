@@ -6,13 +6,12 @@ require_once('php/updateWaypoints.php');
 require_once('php/printWaypointList.php');
 ?>
 
-<!-- Mission Selection -->
+<!-- MISSION SELECTION -->
 <div class="row myrow" id="missionSelector">
     <div class="form-group col-xs-12 col-md-5"  >
         <label for="mission">Please select your mission:</label>
         <select class="selectpicker" id="missionSelection" title="Not Selected" placeholder="mission" data-live-search="true">
             <option id="0" selected > Choose a mission </option>
-            <!-- <optgroup label="Mission" class="missionSelection"> -->
             <?php 
             $missionList = getMissionList();
             if (empty($missionList))
@@ -24,7 +23,6 @@ require_once('php/printWaypointList.php');
                 echo '<option data_token="'.$aMission['id']. '" id="'.$aMission['id'] .'">' . $aMission['id'] . ' – ' . $aMission['name'] . '</option>';
             }
             ?>
-            <!-- </optgroup> -->
         </select>
     </div>
     <button type="button" class="btn btn-primary col-xs-12 col-md-offset-1 col-md-2 " id="createMissionButton" >Create Mission</button>
@@ -34,7 +32,11 @@ require_once('php/printWaypointList.php');
     </span>
 </div>
 
-<!-- DELETE CONFIRMATIOn MODAL PART -->
+<!-- BUTTPON FOR CANCELLATION / SAVING -->
+<div class="row">
+</div>
+
+<!-- DELETE CONFIRMATION MODAL PART -->
 <div class="modal fade" id="deleteConfirmationModal" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -84,17 +86,49 @@ require_once('php/printWaypointList.php');
     </div>
 </div>
 
+<!-- NEW POINT MODAL PART -->
+<div class="modal fade" id="createPointModal" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+          <h4 id="modalTitle" class="modal-title">New <span class="waypointOrCheckpoint"><span></span></span></h4>
+        </div>
+        <div class="modal-body">
+            <!-- Text input-->
+            <div class="form-group">
+              <label class="col-md-4 control-label" for="Name" >Name</label>  
+              <input id="newPointName" name="Name" placeholder="Mariehamn 1" class="form-control input-md" required="1" type="text" >
+              <span class="help-block">Give the <span class="waypointOrCheckpoint"><span></span></span> a name.</span>  
+            </div>
+
+            <!-- Textarea -->
+            <div class="form-group">
+              <label class="col-md-4 control-label" for="radius">Radius</label>
+              <input type="number" class="form-control" id="newPointRadius" name="radius" value="15" required="1" ></input>
+              <span class="input-group-addon">meters</span>
+              <span class="help-block">Give the size of the <span class="waypointOrCheckpoint"><span></span></span>.</span>  
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="cancelNewPoint">Cancel</button>
+            <button type="button" class="btn btn-success" id="confirmNewPoint" onClick="createNewPoint();">Create new <span class="waypointOrCheckpoint"><span></span></span></button>
+        </div>
+      </div>
+    </div>
+</div>
+
+
 <br />
 <br />
 
 <div class="row top15">
-    <!-- <div id="map" class="col-lg-5 embed-responsive embed-responsive-16by9 leaflet-container leaflet-fade-anim leaflet-grab leaflet-touch-drag"> -->
-
     <!-- HERE IS THE MAP -->
     <div id="map" class="pagination-centered col-xs-12 col-lg-5">
         <p>Here stands a Mapbox map (using Leaflet JS Library). If you don't see it, enable JS in your browser or update it.</p>
     </div>
 
+    <!-- DISPLAY OF THE POINTS ON THE SIDE OF BELOW -->
     <div class="panel panel-default col-xs-12 col-md-offset-1 col-md-6" >
         <ul class="list-group" id="listOfPoints">
         </ul>

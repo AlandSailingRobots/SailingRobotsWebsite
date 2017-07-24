@@ -11,7 +11,7 @@
 //
 //**************************************************************************************/
 
-function main()
+(function ()
 {
     //*****************************************************************************
     //                                                                            *
@@ -73,7 +73,6 @@ function main()
     //                                                                            *
     //*****************************************************************************
     $('#createMissionButton').on('click', function(){
-        console.log('pouet');
         $('#createMissionModal').modal('show');
 
         // Cancel
@@ -132,6 +131,4 @@ function main()
         var mess = document.querySelectorAll('.messageMission');
         mess[0].style.display = 'none'; 
     });
-}
-
-main();
+}());
