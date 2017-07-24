@@ -91,7 +91,7 @@ require_once('php/printWaypointList.php');
     <!-- <div id="map" class="col-lg-5 embed-responsive embed-responsive-16by9 leaflet-container leaflet-fade-anim leaflet-grab leaflet-touch-drag"> -->
 
     <!-- HERE IS THE MAP -->
-    <div id="map" class="pagination-centered col-xs-12 col-md-5">
+    <div id="map" class="pagination-centered col-xs-12 col-lg-5">
         <p>Here stands a Mapbox map (using Leaflet JS Library). If you don't see it, enable JS in your browser or update it.</p>
     </div>
 

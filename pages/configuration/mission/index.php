@@ -85,6 +85,8 @@ else
 
     echo '<script src="./js/map_leaflet.js"></script>';
     echo '<script src="./js/script.js"></script>';
+
+    echo '<script src="./js/leaflet-color-markers.js"></script>';
     // echo '<script src="' . $relative_path . 'assets/vendors/bootstrap-select-1.12.4/dist/js/bootstrap-select.min.js"</script>'; 
   }
   ?>
