@@ -27,9 +27,6 @@ require_once('php/printWaypointList.php');
     </div>
     <button type="button" class="btn btn-primary col-xs-12 col-md-offset-1 col-md-2 " id="createMissionButton" >Create Mission</button>
     <button type="button" class="btn btn-danger col-xs-12 col-md-offset-1 col-md-2 disabled" id="deleteMissionButton" >Delete Mission</button>
-    <input type="button" value="Display selected mission" onclick="check();" />
-    <span id="messageMission" class="messageMission">
-    </span>
 </div>
 
 <!-- BUTTPON FOR CANCELLATION / SAVING -->
@@ -91,28 +88,34 @@ require_once('php/printWaypointList.php');
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
-          <h4 id="modalTitle" class="modal-title">New <span class="waypointOrCheckpoint"><span></span></span></h4>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+            <h4 id="modalTitle" class="modal-title">New <span class="waypointOrCheckpoint"><span></span></span></h4>
         </div>
         <div class="modal-body">
             <!-- Text input-->
             <div class="form-group">
-              <label class="col-md-4 control-label" for="Name" >Name</label>  
-              <input id="newPointName" name="Name" placeholder="Mariehamn 1" class="form-control input-md" required="1" type="text" >
-              <span class="help-block">Give the <span class="waypointOrCheckpoint"><span></span></span> a name.</span>  
+                <label class="col-md-4 control-label" for="Name" >Name</label>  
+                <input id="newPointName" name="Name" placeholder="Mariehamn 1" class="form-control input-md" required type="text" >
+                <span class="help-block">Give the <span class="waypointOrCheckpoint"><span></span></span> a name.</span>  
             </div>
 
             <!-- Textarea -->
             <div class="form-group">
-              <label class="col-md-4 control-label" for="radius">Radius</label>
-              <input type="number" class="form-control" id="newPointRadius" name="radius" value="15" required="1" ></input>
-              <span class="input-group-addon">meters</span>
-              <span class="help-block">Give the size of the <span class="waypointOrCheckpoint"><span></span></span>.</span>  
+                <label class="col-md-4 control-label" for="radius">Radius</label>
+                <input type="number" class="form-control" id="newPointRadius" name="radius" value="15" required="1" ></input>
+                <span class="input-group-addon">meters</span>
+                <span class="help-block">Give the size of the <span class="waypointOrCheckpoint"><span></span></span>.</span>
+
+                <label class="col-md-4 control-label" for="stay_time">Stay time</label>
+                <input type="number" class="form-control" id="newPointStay_time" name="stay_time" value="1" required="1" ></input>
+                <span class="input-group-addon">minutes</span>
+                <span class="help-block">How long should the boart stay at the <span class="waypointOrCheckpoint"><span></span></span>?</span>
+
             </div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-primary" id="cancelNewPoint">Cancel</button>
-            <button type="button" class="btn btn-success" id="confirmNewPoint" onClick="createNewPoint();">Create new <span class="waypointOrCheckpoint"><span></span></span></button>
+            <button  type="submit" class="btn btn-success" id="confirmNewPoint" onClick="createNewPoint();">Create new <span class="waypointOrCheckpoint"><span></span></span></button>
         </div>
       </div>
     </div>
@@ -122,7 +125,7 @@ require_once('php/printWaypointList.php');
 <br />
 <br />
 
-<div class="row top15">
+<div class="row top15" id="myConfig">
     <!-- HERE IS THE MAP -->
     <div id="map" class="pagination-centered col-xs-12 col-lg-5">
         <p>Here stands a Mapbox map (using Leaflet JS Library). If you don't see it, enable JS in your browser or update it.</p>

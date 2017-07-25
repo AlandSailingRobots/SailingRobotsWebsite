@@ -25,13 +25,17 @@
         console.log("id ", id_mission);
         if (id_mission != 0 && document.getElementById("deleteMissionButton").classList.contains('disabled'))
         {
-            document.getElementById("deleteMissionButton").classList.remove('disabled');    
+            document.getElementById("deleteMissionButton").classList.remove('disabled'); 
+            document.getElementById('myConfig').style.display = 'inline';   
         }
         if (id_mission == 0 && !(document.getElementById("deleteMissionButton").classList.contains('disabled')))
         {
             document.getElementById("deleteMissionButton").classList.add('disabled');   
+            document.getElementById('myConfig').style.display = 'none';   
         }
     })
+
+
 
     // Confirmation Popup before deleting the selected mission
     $("#deleteMissionButton").on('click', function(){
@@ -43,7 +47,6 @@
             })
         // Confirm
         $('#confirmDeleteButton').on('click', deleteMission);
-
     })
 
     function deleteMission()
@@ -108,27 +111,4 @@
         $('#createMissionModal').modal('hide');
     }
 
-    //*****************************************************************************
-    //                                                                            *
-    //                      Test functions                                        *
-    //                                                                            *
-    //*****************************************************************************
-    function check() 
-    {
-        var input = $('#missionSelection');
-        var paragraph = document.getElementById('messageMission');
-        var newlink0 = document.createElement('p');
-        var res = input.children(':selected').attr('id');
-
-        var newLinkText = document.createTextNode(' You clicked on the mission ' + res);
-
-        alert('La case cochée est la n°' + res);
-        paragraph.appendChild(newLinkText);
-        paragraph.style.display = 'inline-block';
-    }
-
-    $( document ).ready(function() {
-        var mess = document.querySelectorAll('.messageMission');
-        mess[0].style.display = 'none'; 
-    });
 }());
