@@ -13,6 +13,12 @@
     margin-bottom: 0; /* optional */
 }
 
+.myfooter
+{
+	/*display: inline-block;*/
+	vertical-align: bottom;
+	margin-bottom: 0;
+}
 textarea 
 { 
 	resize: vertical; 

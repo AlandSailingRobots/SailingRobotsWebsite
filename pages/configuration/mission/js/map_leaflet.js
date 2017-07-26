@@ -6,8 +6,9 @@
     //                                                                            *
     //*****************************************************************************  
 
-    function Point(id_mission, isCheckpoint, rankInMission, name, lat, lon, decl, radius, stay_time)
+    function Point(id, id_mission, isCheckpoint, rankInMission, name, lat, lon, decl, radius, stay_time)
     {
+        this.id            = id; // Different to the primary key of the DB when it comes to add new points.
         this.id_mission    = id_mission;
         this.isCheckpoint  = isCheckpoint;
         this.rankInMission = rankInMission;
@@ -30,10 +31,10 @@
             type = "waypoint";
         }
 
-        result = "The " + type + " " + this.name + " from mission n°" + this.id_mission + 
-                   "is located at the coordinates (" + this.lat + ", " + this.lon + ")" + 
+        result = "The " + type + " " + this.name + " is located at the coordinates (" 
+                    + this.latitude + ", " + this.longitude + ")\n" + 
                    "Radius: " + this.radius + " | Declination: " + this.declination + 
-                   " | Sty time: " + this.stay_time; 
+                   " | Stay time: " + this.stay_time +" (sec)"; 
         return result;
     };
 
@@ -86,9 +87,10 @@
     var listOfPoints = document.getElementById('listOfPoints'); // To manage the list of item
     var isOpen = false; // To handle the popup of creation of point
     var numberOfPoints = listOfPoints.childElementCount;
-    var arrayOfPoints = new Array(); // To store the different waypoints & checkpoints
-    var arrayOfMarker = new Array(); // To store the different marker of the map.
+    var arrayOfPoints = {}; //new Array(); // To store the different waypoints & checkpoints
+    var arrayOfMarker = {}; // new Array(); // To store the different marker of the map.
     var coordGPS; // Coord of where we clicked on the map
+    var timeStamp = currentTimeStamp(); // We need an unique ID to link the html tag / the marker object / the point object
 
     // Hide the list if there is no point in the mission
     if (listOfPoints.childElementCount == 0)
@@ -195,10 +197,10 @@
             isCheckpoint, 
             declination;
 
-        // Add class attribute to the <li> element
-        newPoint.setAttribute("class", "point");
-        newPoint.classList.add('list-group-item');
-        
+        console.log("GPS : ", coordGPS, " lat ", coordGPS.split(',')[0], " lon ", coordGPS.split(',')[1]);
+        // Update the timestamp for the new point
+        timeStamp = currentTimeStamp();
+
         // Checkpoint or Waypoint
         if ($('.waypointOrCheckpoint')[0].firstChild.classList.contains('isCheckpoint'))
         {
@@ -216,16 +218,18 @@
         declination = computeDeclination(lat, lon);
 
         // We can now create an instance of the class Point
-        var newPoint_JS = new Point(id_mission, isCheckpoint, rankInMission, name, lat, lon, declination, radius, stay_time);
+        var newPoint_JS = new Point(timeStamp, id_mission, isCheckpoint, rankInMission, name, lat, lon, declination, radius, stay_time);
         
         // We add it to the array
-        // listOfPoints.push(newPoint_JS); 
         arrayOfPoints[rankInMission] = newPoint_JS;
-        console.log("rank ", rankInMission);
-        console.log("item stored ", arrayOfPoints[rankInMission]);
+
+        // Add class attribute to the <li> element
+        newPoint.setAttribute("class", "point");
+        newPoint.classList.add('list-group-item');
+        newPoint.setAttribute("id", timeStamp);
 
         // Add an item to the HTML list
-        newPoint.appendChild(document.createTextNode(displayNewPointName(coordGPS, name)));
+        newPoint.appendChild(document.createTextNode(newPoint_JS.print()));
         listOfPoints.appendChild(newPoint);
         
         // Display the list (useful only once)
@@ -238,7 +242,8 @@
         marker = new L.marker( [lat, lon],
                                 {draggable:'true',
                                 icon: color, 
-                                rankInMission: rankInMission
+                                rankInMission: rankInMission,
+                                id: timeStamp
                             });
         marker.bindPopup(name);
 
@@ -251,9 +256,13 @@
                 var marker = event.target;
                 var position = marker.getLatLng();
                 // console.log(position);
+                // console.log("GPS : ", position);
 
                 // Update the position on the map
-                marker.setLatLng(position,{draggable:'true'}).update();
+                marker.setLatLng(position,{draggable:'true',
+                                            rankInMission: marker.options.rankInMission,
+                                            id: marker.options.id
+                                        }).update();
 
                 // Update the position in our lists.
                 updateListItems(marker);
@@ -265,25 +274,33 @@
         $('#createPointModal').modal('hide');
         mymap.closePopup();
         isOpen = false;
+
     }
 
 
     function updateListItems(marker)
     {
-        var index = marker.options.rankInMission;
-        var indexPoint = indexMarker; // Because the lists are related to each other :p
-        // console.log("index marker ", indexMarker);
-        // console.log("list item :", arrayOfPoints[indexPoint]);
-        var newLat = marker.getLatLng().lat,
-            newLon = marker.getLatLng().lon;
+        var index = marker.options.rankInMission,
+            id    = marker.options.id;
 
-        arrayOfPoints[index].lat = newLat;
-        arrayOfPoints[index].lon = newLon;
+        // Update the position according to the marker
+        arrayOfPoints[index].latitude  = marker.getLatLng().lat;
+        arrayOfPoints[index].longitude = marker.getLatLng().lng;
 
-        // TODO : update display
-
-        return ;
+        // We create another li element
+        var listOfPoints = document.getElementById('listOfPoints');
+        var newPoint     = document.createElement('li');
+        newPoint.setAttribute("id", id);
+        newPoint.setAttribute("class", "point");
+        newPoint.classList.add('list-group-item');
+        newPoint.appendChild(document.createTextNode(arrayOfPoints[index].print()));
+        // Which insertedd at the the right place
+        var listItem = document.getElementById(id);
+        listOfPoints.insertBefore(newPoint, listItem);
+        // And we delete the old child
+        listOfPoints.removeChild(listItem);
     }
+
     function displayNewPointName(point, name)
     {
         return "Hi ! here is "+ name +". You clicked at: " + point;
@@ -312,6 +329,11 @@
     function computeDeclination(lat, lon)
     {
         return 0;
+    }
+
+    function currentTimeStamp()
+    {
+        return Math.floor(Date.now() / 1000);
     }
 
     // return  {

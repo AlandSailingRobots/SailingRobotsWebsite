@@ -29,7 +29,7 @@ require_once('php/printWaypointList.php');
     <button type="button" class="btn btn-danger col-xs-12 col-md-offset-1 col-md-2 disabled" id="deleteMissionButton" >Delete Mission</button>
 </div>
 
-<!-- BUTTPON FOR CANCELLATION / SAVING -->
+<!-- BUTTON FOR CANCELLATION / SAVING -->
 <div class="row">
 </div>
 
@@ -45,8 +45,8 @@ require_once('php/printWaypointList.php');
             <p>Do you really want to delete this mission from the Database ? This action is irreversible.</p>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary" id="cancelDeleteButton">Cancel</button>
-            <button type="button" class="btn btn-danger" id="confirmDeleteButton">Confirm</button>
+            <button type="button" class="btn btn-primary myfooter" id="cancelDeleteButton">Cancel</button>
+            <button type="button" class="btn btn-danger myfooter" id="confirmDeleteButton">Confirm</button>
         </div>
       </div>
     </div>
@@ -75,9 +75,9 @@ require_once('php/printWaypointList.php');
               <span class="help-block">Give the mission a description to help you remember its purpose.</span>  
             </div>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-primary" id="cancelCreateButton">Cancel</button>
-            <button type="button" class="btn btn-success" id="confirmCreateButton">Create New Mission</button>
+        <div class="modal-footer ">
+            <button type="button" class="btn btn-primary myfooter" id="cancelCreateButton">Cancel</button>
+            <button type="button" class="btn btn-success myfooter" id="confirmCreateButton">Create New Mission</button>
         </div>
       </div>
     </div>
@@ -114,8 +114,8 @@ require_once('php/printWaypointList.php');
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary" id="cancelNewPoint">Cancel</button>
-            <button  type="submit" class="btn btn-success" id="confirmNewPoint" onClick="createNewPoint();">Create new <span class="waypointOrCheckpoint"><span></span></span></button>
+            <button type="button" class="btn btn-primary myfooter" id="cancelNewPoint">Cancel</button>
+            <button  type="submit" class="btn btn-success myfooter" id="confirmNewPoint" onClick="createNewPoint();">Create new <span class="waypointOrCheckpoint"><span></span></span></button>
         </div>
       </div>
     </div>
@@ -132,7 +132,7 @@ require_once('php/printWaypointList.php');
     </div>
 
     <!-- DISPLAY OF THE POINTS ON THE SIDE OF BELOW -->
-    <div class="panel panel-default col-xs-12 col-md-offset-1 col-md-6" >
+    <div class="panel panel-default col-xs-12 col-lg-offset-1 col-lg-6" >
         <ul class="list-group" id="listOfPoints">
         </ul>
     </div>
