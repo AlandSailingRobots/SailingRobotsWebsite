@@ -75,6 +75,7 @@
     //                      Create A New Mission                                  *
     //                                                                            *
     //*****************************************************************************
+
     $('#createMissionButton').on('click', function(){
         $('#createMissionModal').modal('show');
 
@@ -109,6 +110,30 @@
         });
 
         $('#createMissionModal').modal('hide');
+    }
+
+    //*****************************************************************************
+    //                                                                            *
+    //                      Discard Changes in Mission                            *
+    //                                                                            *
+    //*****************************************************************************
+
+    $('#cancelMissionButton').on('click', function()
+        {
+            location.reload();
+        });
+
+    //*****************************************************************************
+    //                                                                            *
+    //                        Saving Mission in DB                                *
+    //                                                                            *
+    //*****************************************************************************
+
+    $('#saveMissionButton').on('click', saveMissionIntoDB());
+
+    function saveMissionIntoDB()
+    {
+
     }
 
 }());

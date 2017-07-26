@@ -25,8 +25,13 @@ require_once('php/printWaypointList.php');
             ?>
         </select>
     </div>
-    <button type="button" class="btn btn-primary col-xs-12 col-md-offset-1 col-md-2 " id="createMissionButton" >Create Mission</button>
-    <button type="button" class="btn btn-danger col-xs-12 col-md-offset-1 col-md-2 disabled" id="deleteMissionButton" >Delete Mission</button>
+    <button type="button" class="btn btn-primary col-xs-12 col-sm-offset-1 col-sm-5 col-md-offset-1 col-md-2 " id="createMissionButton" >Create Mission</button>
+    <button type="button" class="btn btn-danger col-xs-12 col-sm-5 col-md-offset-1 col-md-2 disabled" id="deleteMissionButton" >Delete Mission</button>
+</div>
+    <button type="button" class="btn btn-success col-xs-12 col-sm-offset-1 col-sm-5 col-md-offset-0 col-md-5 " id="saveMissionButton" >Save Mission</button>
+    <button type="button" class="btn btn-warning col-xs-12 col-sm-5 col-md-offset-1 col-md-offset-1 col-md-5 " id="cancelMissionButton" >Discard Changes</button>
+<div>
+    
 </div>
 
 <!-- BUTTON FOR CANCELLATION / SAVING -->
