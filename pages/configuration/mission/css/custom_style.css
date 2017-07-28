@@ -19,6 +19,7 @@
 	vertical-align: bottom;
 	margin-bottom: 0;
 }
+
 textarea 
 { 
 	resize: vertical; 
@@ -31,7 +32,7 @@ textarea
 
 #map
 { 
-	height: 350px;
+	height: 400px;
 	border: 1px solid #AAA;
 }
 
