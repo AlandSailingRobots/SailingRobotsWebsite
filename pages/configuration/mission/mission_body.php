@@ -1,9 +1,5 @@
 <?php
 require_once('php/getMissionList.php');
-require_once('php/getPointList.php');
-require_once('php/insertWaypoint.php');
-require_once('php/updateWaypoints.php');
-require_once('php/printWaypointList.php');
 ?>
 
 <!-- MISSION SELECTION -->
@@ -28,9 +24,9 @@ require_once('php/printWaypointList.php');
     <button type="button" class="btn btn-primary col-xs-12 col-sm-offset-1 col-sm-5 col-md-offset-1 col-md-2 " id="createMissionButton" >Create Mission</button>
     <button type="button" class="btn btn-danger col-xs-12 col-sm-5 col-md-offset-1 col-md-2 disabled" id="deleteMissionButton" >Delete Mission</button>
 </div>
+<div class=" row ">
     <button type="button" class="btn btn-success col-xs-12 col-sm-offset-1 col-sm-5 col-md-offset-0 col-md-5 " id="saveMissionButton" >Save Mission</button>
     <button type="button" class="btn btn-warning col-xs-12 col-sm-5 col-md-offset-1 col-md-offset-1 col-md-5 " id="cancelMissionButton" >Discard Changes</button>
-<div>
     
 </div>
 
@@ -136,7 +132,7 @@ require_once('php/printWaypointList.php');
         <p>Here stands a Mapbox map (using Leaflet JS Library). If you don't see it, enable JS in your browser or update it.</p>
     </div>
 
-    <!-- DISPLAY OF THE POINTS ON THE SIDE OF BELOW -->
+    <!-- DISPLAY OF THE POINTS ON THE SIDE OF BELOW --> 
     <div class="panel panel-default col-xs-12 col-lg-offset-1 col-lg-6" >
         <ul class="list-group" id="listOfPoints">
         </ul>
@@ -177,7 +173,7 @@ require_once('php/printWaypointList.php');
             <div class='panel-heading'>Waypoint list (reload to see changes)
             </div>
             <?php
-            printWaypointList();
+            //printWaypointList();
             //$waypointString = json_encode($getWaypointsService->getWaypoints());
             //echo "<div>.$waypointString.</div>";
             ?>
