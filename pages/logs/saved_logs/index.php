@@ -9,10 +9,14 @@ if (isset($_SESSION['id']) AND isset($_SESSION['username']))
 {
   // TODO
   $connected = true;
+  $name = $_SESSION['username'];
 }
 else
 {
-    $connected = false;
+  session_destroy();
+  $connected = false;
+  $_SESSION['username'] = 'Guest';
+  $name = 'Guest';
 }
 $available_pages = array (0 => 'compass',
                         1 => 'course',

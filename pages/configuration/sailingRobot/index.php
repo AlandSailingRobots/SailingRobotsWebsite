@@ -7,12 +7,16 @@ $relative_path = './../../../';
 //  If we are connected
 if (isset($_SESSION['id']) AND isset($_SESSION['username']))
 {
-    // TODO
-    $connected = true;
+  // TODO
+  $connected = true;
+  $name = $_SESSION['username'];
 }
 else
 {
-    $connected = false;
+  session_destroy();
+  $connected = false;
+  $_SESSION['username'] = 'Guest';
+  $name = 'Guest';
 }
 ?>
 
