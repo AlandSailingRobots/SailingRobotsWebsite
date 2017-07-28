@@ -19,22 +19,28 @@
     //                                                                            *
     //*****************************************************************************
 
-    // Update the delete button
-    $('#missionSelection').on('change', function(){
-        var id_mission = $(this).children(':selected').attr('id')
-        console.log("id ", id_mission);
-        if (id_mission != 0 && document.getElementById("deleteMissionButton").classList.contains('disabled'))
+    $('#missionSelection').on('change', function()
         {
-            document.getElementById("deleteMissionButton").classList.remove('disabled'); 
-            document.getElementById('myConfig').style.display = 'inline';   
-        }
-        if (id_mission == 0 && !(document.getElementById("deleteMissionButton").classList.contains('disabled')))
-        {
-            document.getElementById("deleteMissionButton").classList.add('disabled');   
-            document.getElementById('myConfig').style.display = 'none';   
-        }
-    })
+            var id_mission = $(this).children(':selected').attr('id');
+            
+            // Get the right point list
+            if (id_mission != 0)
+            {
+                getMissionFromDB(id_mission);
+            }
 
+            // Update the delete button and the display of the map
+            if (id_mission != 0 && document.getElementById("deleteMissionButton").classList.contains('disabled'))
+            {
+                document.getElementById("deleteMissionButton").classList.remove('disabled'); 
+                document.getElementById('myConfig').style.display = 'inline';   
+            }
+            if (id_mission == 0 && !(document.getElementById("deleteMissionButton").classList.contains('disabled')))
+            {
+                document.getElementById("deleteMissionButton").classList.add('disabled');   
+                document.getElementById('myConfig').style.display = 'none';   
+            }
+        });
 
 
     // Confirmation Popup before deleting the selected mission
@@ -45,9 +51,10 @@
         $('#cancelDeleteButton').on('click', function(){
                 $('#deleteConfirmationModal').modal('hide');
             })
+
         // Confirm
         $('#confirmDeleteButton').on('click', deleteMission);
-    })
+    });
 
     function deleteMission()
     {
@@ -68,7 +75,7 @@
         });
 
         $('#deleteConfirmationModal').modal('hide');
-    };  
+    }
 
     //*****************************************************************************
     //                                                                            *
@@ -120,6 +127,7 @@
 
     $('#cancelMissionButton').on('click', function()
         {
+            // IMPROVEMENT : Only reload the righ <div> tags
             location.reload();
         });
 
@@ -129,11 +137,11 @@
     //                                                                            *
     //*****************************************************************************
 
-    $('#saveMissionButton').on('click', saveMissionIntoDB());
+    $('#saveMissionButton').on('click', saveMissionIntoDB);
 
-    function saveMissionIntoDB()
-    {
+    // function saveMissionIntoDB()
+    // {
 
-    }
+    // }
 
 }());

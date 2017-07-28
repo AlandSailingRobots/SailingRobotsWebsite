@@ -6,18 +6,20 @@
     //                                                                            *
     //*****************************************************************************  
 
-    function Point(id, id_mission, isCheckpoint, rankInMission, name, lat, lon, decl, radius, stay_time)
+    function Point(id, id_mission, isCheckpoint, rankInMission, name, lat, lon, decl, radius, stay_time, harvested)
     {
         this.id            = id; // Different to the primary key of the DB when it comes to add new points.
         this.id_mission    = id_mission;
-        this.isCheckpoint  = isCheckpoint;
         this.rankInMission = rankInMission;
+        this.isCheckpoint  = isCheckpoint;
         this.name          = name;
         this.latitude      = lat;
         this.longitude     = lon;
         this.declination   = decl;
         this.radius        = radius;
         this.stay_time     = stay_time;
+        // If no argument is provided, then this.harvested = false, otherwise, the provided argument
+        this.harvested     = (harvested === undefined ? false : harvested);
     }
 
     Point.prototype.print = function() 
@@ -87,10 +89,15 @@
     var listOfPoints = document.getElementById('listOfPoints'); // To manage the list of item
     var isOpen = false; // To handle the popup of creation of point
     var numberOfPoints = listOfPoints.childElementCount;
-    var arrayOfPoints = {}; //new Array(); // To store the different waypoints & checkpoints
+    var arrayOfPoints = {}; // new Array(); // To store the different waypoints & checkpoints
     var arrayOfMarker = {}; // new Array(); // To store the different marker of the map.
     var coordGPS; // Coord of where we clicked on the map
     var timeStamp = currentTimeStamp(); // We need an unique ID to link the html tag / the marker object / the point object
+
+    var name,
+        lat, 
+        lon,
+        rankInMission;
 
     // Hide the list if there is no point in the mission
     if (listOfPoints.childElementCount == 0)
@@ -108,7 +115,7 @@
     //                                                                            *
     //                      Functions Used By The Events                          *
     //                                                                            *
-    //*****************************************************************************    
+    //*****************************************************************************
 
     // This function handles the click on the map.
     // It will displau a popup asking the user which point he would liek to add
@@ -184,8 +191,9 @@
     function createNewPoint()
     {
         var listOfPoints   = document.getElementById('listOfPoints');
-        var newPoint       = document.createElement('li');
+        // var newPoint       = document.createElement('li');
         var color; // Of Icon on the map
+        
         // Var to create a new point object
         var name           = $('#newPointName').val(),
             id_mission     = $('#missionSelection').children(':selected').attr('id'),
@@ -197,22 +205,22 @@
             isCheckpoint, 
             declination;
 
-        console.log("GPS : ", coordGPS, " lat ", coordGPS.split(',')[0], " lon ", coordGPS.split(',')[1]);
+        // console.log("GPS : ", coordGPS, " lat ", coordGPS.split(',')[0], " lon ", coordGPS.split(',')[1]);
         // Update the timestamp for the new point
         timeStamp = currentTimeStamp();
 
         // Checkpoint or Waypoint
         if ($('.waypointOrCheckpoint')[0].firstChild.classList.contains('isCheckpoint'))
         {
-            newPoint.classList.add('isCheckpoint');
+            // newPoint.classList.add('isCheckpoint');
             isCheckpoint = 1;
-            color = greenIcon;
+            // color = greenIcon;
         }
         else
         {
-            newPoint.classList.add('isWaypoint');
+            // newPoint.classList.add('isWaypoint');
             isCheckpoint = 0;
-            color = blueIcon;
+            // color = blueIcon;
         }
         // Last thing to compute
         declination = computeDeclination(lat, lon);
@@ -220,64 +228,67 @@
         // We can now create an instance of the class Point
         var newPoint_JS = new Point(timeStamp, id_mission, isCheckpoint, rankInMission, name, lat, lon, declination, radius, stay_time);
         
-        // We add it to the array
-        arrayOfPoints[rankInMission] = newPoint_JS;
+        createMarker(newPoint_JS, lat, lon);
+        /* //
+            // We add it to the array
+            arrayOfPoints[rankInMission] = newPoint_JS;
 
-        // Add class attribute to the <li> element
-        newPoint.setAttribute("class", "point");
-        newPoint.classList.add('list-group-item');
-        newPoint.setAttribute("id", timeStamp);
+            // Add class attribute to the <li> element
+            newPoint.setAttribute("class", "point");
+            newPoint.classList.add('list-group-item');
+            newPoint.setAttribute("id", timeStamp);
 
-        // Add an item to the HTML list
-        newPoint.appendChild(document.createTextNode(newPoint_JS.print()));
-        listOfPoints.appendChild(newPoint);
-        
-        // Display the list (useful only once)
-        if (listOfPoints.parentNode.style.display == 'none')
-        {
-            listOfPoints.parentNode.style.display = "inline-block";
-        }
-        
-        // New draggable marker
-        marker = new L.marker( [lat, lon],
-                                {draggable:'true',
-                                icon: color, 
-                                rankInMission: rankInMission,
-                                id: timeStamp
-                            });
-        marker.bindPopup(name);
-
-        // Add in marker array
-        arrayOfMarker[rankInMission] = marker;
-        
-        // Drag & Drop management
-        marker.on('dragend', function(event)
+            // Add an item to the HTML list
+            newPoint.appendChild(document.createTextNode(newPoint_JS.print()));
+            listOfPoints.appendChild(newPoint);
+            
+            // Display the list (useful only once)
+            if (listOfPoints.parentNode.style.display == 'none')
             {
-                var marker = event.target;
-                var position = marker.getLatLng();
-                // console.log(position);
-                // console.log("GPS : ", position);
+                listOfPoints.parentNode.style.display = "inline-block";
+            }
+            
+            // New draggable marker
+            marker = new L.marker( [lat, lon],
+                                    {draggable:'true',
+                                    icon: color, 
+                                    rankInMission: rankInMission,
+                                    id: timeStamp
+                                });
+            marker.bindPopup(name);
 
-                // Update the position on the map
-                marker.setLatLng(position,{draggable:'true',
-                                            rankInMission: marker.options.rankInMission,
-                                            id: marker.options.id
-                                        }).update();
+            // Add in marker array
+            arrayOfMarker[rankInMission] = marker;
+            
+            // Drag & Drop management
+            marker.on('dragend', function(event)
+                {
+                    var marker = event.target;
+                    var position = marker.getLatLng();
+                    // console.log(position);
+                    // console.log("GPS : ", position);
 
-                // Update the position in our lists.
-                updateListItems(marker);
+                    // Update the position on the map
+                    marker.setLatLng(position,{draggable:'true',
+                                                rankInMission: marker.options.rankInMission,
+                                                id: marker.options.id
+                                            }).update();
 
-            });
-        mymap.addLayer(marker);
-        
+                    // Update the position in our lists.
+                    updateListItems(marker);
+
+                });
+            mymap.addLayer(marker);
+        */ //
+
         // We now close the popup
         $('#createPointModal').modal('hide');
         mymap.closePopup();
         isOpen = false;
-
     }
 
-
+    // This function update the display of the list by manipulating the DOM
+    // elements of the page
     function updateListItems(marker)
     {
         var index = marker.options.rankInMission,
@@ -290,20 +301,19 @@
         // We create another li element
         var listOfPoints = document.getElementById('listOfPoints');
         var newPoint     = document.createElement('li');
+        
         newPoint.setAttribute("id", id);
         newPoint.setAttribute("class", "point");
         newPoint.classList.add('list-group-item');
         newPoint.appendChild(document.createTextNode(arrayOfPoints[index].print()));
-        // Which insertedd at the the right place
+        
+        // Which is inserted at the the right place
         var listItem = document.getElementById(id);
+        
         listOfPoints.insertBefore(newPoint, listItem);
+        
         // And we delete the old child
         listOfPoints.removeChild(listItem);
-    }
-
-    function displayNewPointName(point, name)
-    {
-        return "Hi ! here is "+ name +". You clicked at: " + point;
     }
 
     function askNewPoint()
@@ -328,12 +338,173 @@
 
     function computeDeclination(lat, lon)
     {
+        // TODO : write the function
         return 0;
     }
 
     function currentTimeStamp()
     {
         return Math.floor(Date.now() / 1000);
+    }
+
+    //*****************************************************************************
+    //                                                                            *
+    //                      Read Points to Save Them                              *
+    //                                                                            *
+    //*****************************************************************************
+
+    // That function is used in the other JS file.
+    // I put it here to have access to the variables b/c the other file is 
+    // executed in an IEFE (which should be done here too, to avoid any
+    // potential conflict with the variables namespace)
+    function saveMissionIntoDB()
+    {
+        // console.log('clicked !');
+        // console.log(JSON.stringify(arrayOfPoints));
+        $.ajax({
+            type: 'POST',
+            url: 'php/insertPointIntoDB.php',
+            contentType: 'application/json; charset=utf-8', // What is sent
+            data: JSON.stringify(arrayOfPoints),
+            // dataType: 'json',
+            async: true,
+            timeout: 3000,
+            success: function(data) {
+                alert(data);
+                // $('#missionSelector').load(document.URL + ' #missionSelector'); },
+                // $('#right_col').load(document.URL + ' #right_col', main); },
+                //location.reload(); 
+                },
+            error: function() {
+                alert('Fail !'); }
+        });        
+    }
+
+    //*****************************************************************************
+    //                                                                            *
+    //                      Receive & Display Points                              *
+    //                                                                            *
+    //*****************************************************************************
+
+    // We get the point list in a JSON format, parse
+    function getMissionFromDB(id_mission)
+    {
+        // TODO : Clean the map and the list
+        
+        // Clean the list
+        while (listOfPoints.firstChild) 
+        {
+            listOfPoints.removeChild(listOfPoints.firstChild);
+        }
+
+        // Clean the map
+
+        // Get the marker list in JSON object
+        $.ajax({
+            type: 'POST',
+            url: 'php/getPointList.php',
+            //contentType: 'application/json; charset=utf-8', // What is sent
+            data: {id_mission:id_mission},
+            dataType: 'json', // What is expected
+            async: true,
+            timeout: 3000,
+            success: function(data) {
+                displayPointFromDB(data); },
+            error: function() {
+                alert('Fail !'); }
+        }); 
+    }
+    
+    // This function gets a json object, convert it into Point() object,
+    // fill the array, and display them
+    function displayPointFromDB(data)
+    {
+        // We clean the variables
+        var arrayOfPoints = {},
+            arrayOfMarker = {};
+
+        var len = data.length;
+        if (len == 0)
+        {
+            listOfPoints.parentNode.style.display = "none";
+        }
+
+        for (var i = 0; i < len; i++)
+        {
+            var point = $.extend(new Point(), data[i]);
+
+            // Fullfilling our variables
+            lat = point.latitude;
+            lon = point.longitude;
+
+            // Creating the markers
+            createMarker(point, lat, lon);
+        }
+        numberOfPoints = listOfPoints.childElementCount;
+    }
+
+    function createMarker(point, lat, lon)
+    {
+        newPoint = document.createElement('li');
+
+        // Add class attribute to the <li> element
+        newPoint.setAttribute("class", "point");
+        newPoint.classList.add('list-group-item');
+        newPoint.setAttribute("id", point.id);
+
+        if (point.isCheckpoint)
+        {
+            newPoint.classList.add('isCheckpoint');
+            color = greenIcon;
+        }
+        else
+        {
+            newPoint.classList.add('isWaypoint');
+            color = blueIcon;
+        }
+
+        // We add it to the array
+        arrayOfPoints[point.rankInMission] = point;
+
+        // Add an item to the HTML list
+        newPoint.appendChild(document.createTextNode(point.print()));
+        listOfPoints.appendChild(newPoint);
+        
+        // Display the list (useful only once)
+        if (listOfPoints.parentNode.style.display == 'none')
+        {
+            listOfPoints.parentNode.style.display = "inline-block";
+        }
+        
+        // New draggable marker
+        marker = new L.marker( [lat, lon],
+                                {draggable:'true',
+                                icon: color, 
+                                rankInMission: point.rankInMission,
+                                id: point.id
+                            });
+        marker.bindPopup(point.name);
+
+        // Add in marker array
+        arrayOfMarker[point.rankInMission] = marker;
+        
+        // Drag & Drop management
+        marker.on('dragend', function(event)
+            {
+                var marker = event.target;
+                var position = marker.getLatLng();
+
+                // Update the position on the map
+                marker.setLatLng(position,{draggable:'true',
+                                            rankInMission: marker.options.rankInMission,
+                                            id: marker.options.id
+                                        }).update();
+
+                // Update the position in our lists.
+                updateListItems(marker);
+
+            });
+        mymap.addLayer(marker);
     }
 
     // return  {
