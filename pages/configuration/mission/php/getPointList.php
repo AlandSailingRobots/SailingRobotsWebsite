@@ -1,4 +1,8 @@
 <?php
+define('__ROOT__', dirname(dirname(dirname(dirname(dirname(__FILE__))))));
+require_once(__ROOT__.'/globalsettings.php');
+session_start();
+
 function getPointList($id_mission)
 {
     /* 
@@ -13,8 +17,8 @@ function getPointList($id_mission)
     try
     {
         $db = new PDO("mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
-                        $db_user,
-                        $db_password,
+                        $username,
+                        $password,
                         array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
                     );
     }
@@ -23,13 +27,40 @@ function getPointList($id_mission)
         die('Error : '.$e->getMessage());
     }
     
-    $query = $db->prepare('SELECT * FROM pointList WHERE id_mission = :? ;');
+    $query = $db->prepare('SELECT * FROM pointList WHERE id_mission = ? ;');
     $query->execute(array($id_mission));
 
-    $result = $query->fetchAll();
+    try
+    {
+        $result = $query->fetchAll(PDO::FETCH_ASSOC);
+        // print_r($result);
+        $resultJSON = json_encode($result);
+        // print_r($resultJSON);
+        echo $resultJSON;
+    }
+    catch(Exception $e)
+    {
+        die('Error : '.$e->getMessage());
+        echo "";
+    }
 
     $query->closeCursor();
-
-    return $result;
 }
+
+
+if (is_ajax()) 
+{
+    // Get param & return JSON string
+    if (isset($_POST['id_mission']) && $_SESSION['right'] == 'admin')
+    {
+        getPointList($_POST['id_mission']);
+    }
+}
+
+// Function to check if the request is an AJAX request
+function is_ajax() 
+{
+    return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+}
+
 ?>

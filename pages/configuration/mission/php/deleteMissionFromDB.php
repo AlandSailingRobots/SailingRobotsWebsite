@@ -28,10 +28,10 @@ function deleteMissionFromDB($id_mission)
 
     $query = $db->prepare('DELETE FROM mission WHERE mission.id=?;');
     $query->execute(array($id_mission));
-    $result = 1;
     $query = $db->prepare('DELETE FROM pointList WHERE pointList.id_mission=?;');
     $query->execute(array($id_mission));
 
+    $result = 1;
     return $result;
 }
 
