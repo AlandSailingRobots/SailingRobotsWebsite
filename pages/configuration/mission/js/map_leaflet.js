@@ -377,11 +377,7 @@
             async: true,
             timeout: 3000,
             success: function(data) {
-                alert(data);
-                // $('#missionSelector').load(document.URL + ' #missionSelector'); },
-                // $('#right_col').load(document.URL + ' #right_col', main); },
-                //location.reload(); 
-                },
+                alert(data);},
             error: function() {
                 alert('Fail !'); }
         });        
@@ -429,8 +425,8 @@
     function displayPointFromDB(data)
     {
         // We clean the variables
-        var arrayOfPoints = {},
-            arrayOfMarker = {};
+        arrayOfPoints = {},
+        arrayOfMarker = {};
 
         var len = data.length;
         if (len == 0)

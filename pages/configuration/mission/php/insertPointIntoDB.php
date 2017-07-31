@@ -3,7 +3,7 @@ define('__ROOT__', dirname(dirname(dirname(dirname(dirname(__FILE__))))));
 require_once(__ROOT__.'/globalsettings.php');
 session_start();
 
-function insertPointIntoDB($id_mission, $arrayOfPoints)
+function insertPointIntoDB($params)
 {
     /* 
      * This function add a new entry in the DB.
@@ -29,67 +29,57 @@ function insertPointIntoDB($id_mission, $arrayOfPoints)
 
     // First we delete everything associated to the mission
     $query = $db->prepare('DELETE FROM pointList WHERE id_mission = ? ;');
-    $query->execute(array($id_mission));
+    $query->execute(array($params['1']['id_mission']));
     $query->closeCursor();
-
-    // Now we insert every waypoints / checkpoint into the DB 
-    // $query = $db->prepare('INSERT INTO pointList (  id, 
-    //                                                 id_mission, 
-    //                                                 rankInMission,
-    //                                                 isCheckpoint, 
-    //                                                 name, 
-    //                                                 latitude, 
-    //                                                 longitude, 
-    //                                                 declination, 
-    //                                                 radius, 
-    //                                                 stay_time,
-    //                                                 harvested
-    //                                             ) VALUES :points ;');
 
     // Let's find a way to generate $arrayOfPoints :p
     // It should look like (id, id_mission, ...), (id, id_mission, ...), ...
-    echo $arrayOfPoints . '<br><br>';
-    echo "INSERT INTO pointList (  id, id_mission, rankInMission, isCheckpoint, name, latitude, longitude, declination, radius, stay_time, harvested ) 
-            VALUES " . $arrayOfPoints . '<br><br>';
-    // $exec = $query->execute(array($arrayOfPoints));
-    $db->exec("INSERT INTO pointList (  id, id_mission, rankInMission, isCheckpoint, name, latitude, longitude, declination, radius, stay_time, harvested ) VALUES " . $arrayOfPoints);
+    $emptyArray = "";
+    $arrayOfPoints = array();
+    $emptyParam = "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    foreach ($params as $key => $value) 
+    {
+        $emptyArray = $emptyArray . ', ' . $emptyParam; 
+        $arrayOfPoints = array_merge($arrayOfPoints, array_values($value));
+    }
+    $emptyArray = substr($emptyArray, 1);
+
+    // Now we insert every waypoints / checkpoint into the DB 
+    $query = $db->prepare('INSERT INTO pointList (  id, 
+                                                    id_mission, 
+                                                    rankInMission,
+                                                    isCheckpoint, 
+                                                    name, 
+                                                    latitude, 
+                                                    longitude, 
+                                                    declination, 
+                                                    radius, 
+                                                    stay_time,
+                                                    harvested
+                                                ) VALUES '. $emptyArray .' ;');
+
+    $exec = $query->execute($arrayOfPoints);
+
     if( false === $exec )
     {
-        $fail = sprintf("Error while inserting into DB because execute() failed: %s\n<br />", htmlspecialchars($query->error));
+        $msg = sprintf("Error while inserting into DB because execute() failed: %s\n<br />", htmlspecialchars($query->error));
     } 
     else 
     {
-        $ready = sprintf("Success !\n<br />");
+        $msg = sprintf("Success !\n<br />");
     }
 
-    if ( ! empty( $ready ) )
-        print $ready;
-    if ( ! empty( $fail ) )
-        print $fail;
-    
-    $query->close();
-    $db->close();
-
-    return $exec;
+    echo $msg;
 }
 
 
 if (is_ajax()) 
 {
-    $request = file_get_contents("php://input"); // gets the raw data
-    $params = json_decode($request,true); // true for return as array
-    //print_r($params);
-    $id_mission =  $params['1']['id_mission'];
-    $arrayOfPoints = "";
-    foreach ($params as $key => $value) 
-    {
-        $arrayOfPoints = $arrayOfPoints . '(' . implode(",", $value) . '), '; //', 0), ' ;
-    }
+    // Parsing JSON object to 2D-Array
+    $request = file_get_contents("php://input");    // gets the raw data
+    $params = json_decode($request,true);           // true for return as array
 
-    // echo $arrayOfPoints;
-    $arrayOfPoints = substr($arrayOfPoints, 0, -2);
-
-    insertPointIntoDB($id_mission, $arrayOfPoints);
+    insertPointIntoDB($params);
 }
 
 // Function to check if the request is an AJAX request
