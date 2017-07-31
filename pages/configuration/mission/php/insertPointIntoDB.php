@@ -33,25 +33,26 @@ function insertPointIntoDB($id_mission, $arrayOfPoints)
     $query->closeCursor();
 
     // Now we insert every waypoints / checkpoint into the DB 
-    $query = $db->prepare('INSERT INTO pointList (  id, 
-                                                    id_mission, 
-                                                    rankInMission,
-                                                    isCheckpoint, 
-                                                    name, 
-                                                    latitude, 
-                                                    longitude, 
-                                                    declination, 
-                                                    radius, 
-                                                    stay_time,
-                                                    harvested
-                                                ) VALUES :points ;');
+    // $query = $db->prepare('INSERT INTO pointList (  id, 
+    //                                                 id_mission, 
+    //                                                 rankInMission,
+    //                                                 isCheckpoint, 
+    //                                                 name, 
+    //                                                 latitude, 
+    //                                                 longitude, 
+    //                                                 declination, 
+    //                                                 radius, 
+    //                                                 stay_time,
+    //                                                 harvested
+    //                                             ) VALUES :points ;');
 
     // Let's find a way to generate $arrayOfPoints :p
     // It should look like (id, id_mission, ...), (id, id_mission, ...), ...
-    echo $arrayOfPoints;
+    echo $arrayOfPoints . '<br><br>';
     echo "INSERT INTO pointList (  id, id_mission, rankInMission, isCheckpoint, name, latitude, longitude, declination, radius, stay_time, harvested ) 
-            VALUES" . $arrayOfPoints;
-    $exec = $query->execute(array($arrayOfPoints));
+            VALUES " . $arrayOfPoints . '<br><br>';
+    // $exec = $query->execute(array($arrayOfPoints));
+    $db->exec("INSERT INTO pointList (  id, id_mission, rankInMission, isCheckpoint, name, latitude, longitude, declination, radius, stay_time, harvested ) VALUES " . $arrayOfPoints);
     if( false === $exec )
     {
         $fail = sprintf("Error while inserting into DB because execute() failed: %s\n<br />", htmlspecialchars($query->error));
@@ -77,7 +78,7 @@ if (is_ajax())
 {
     $request = file_get_contents("php://input"); // gets the raw data
     $params = json_decode($request,true); // true for return as array
-    // print_r($params);
+    //print_r($params);
     $id_mission =  $params['1']['id_mission'];
     $arrayOfPoints = "";
     foreach ($params as $key => $value) 
