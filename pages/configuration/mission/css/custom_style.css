@@ -51,3 +51,22 @@ textarea
 {
 	padding-top: 10px;
 }
+
+@media (min-width: 991px)
+{
+    #editMissionButton
+    {
+        /* Fix a bad alignement on the first button on large screen */
+        margin-left: 5px;
+    }
+}
+
+#missionPresentation
+{
+	text-align: center;
+}
+
+#descriptionNode
+{
+	font-size: 1.5em;
+}

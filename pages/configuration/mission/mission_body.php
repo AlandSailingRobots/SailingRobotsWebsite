@@ -2,9 +2,14 @@
 require_once('php/getMissionList.php');
 ?>
 
+<div class="jumbotron">
+    <h1>Mission Configuration</h1>      
+    <p>On this page, you can configure missions : create or delete a mission, add waypoints & checkpoints, load a mission on ASPire.</p>
+</div>
+
 <!-- MISSION SELECTION -->
 <div class="row myrow" id="missionSelector">
-    <div class="form-group col-xs-12 col-md-5"  >
+    <div class="form-group col-xs-12 col-md-6"  >
         <label for="mission">Please select your mission:</label>
         <select class="selectpicker" id="missionSelection" title="Not Selected" placeholder="mission" data-live-search="true">
             <option id="0" selected > Choose a mission </option>
@@ -21,17 +26,22 @@ require_once('php/getMissionList.php');
             ?>
         </select>
     </div>
-    <button type="button" class="btn btn-primary col-xs-12 col-sm-offset-1 col-sm-5 col-md-offset-1 col-md-2 " id="createMissionButton" >Create Mission</button>
-    <button type="button" class="btn btn-danger col-xs-12 col-sm-5 col-md-offset-1 col-md-2 disabled" id="deleteMissionButton" >Delete Mission</button>
+    <button type="button" class="btn col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-5 disabled" id="editMissionButton" >Edit Mission Properties</button>
 </div>
-<div class=" row ">
-    <button type="button" class="btn btn-success col-xs-12 col-sm-offset-1 col-sm-5 col-md-offset-0 col-md-5 " id="saveMissionButton" >Save Mission</button>
-    <button type="button" class="btn btn-warning col-xs-12 col-sm-5 col-md-offset-1 col-md-offset-1 col-md-5 " id="cancelMissionButton" >Discard Changes</button>
-    
+<div class="row">
+    <button type="button" class="btn btn-primary col-xs-12 col-sm-offset-1 col-sm-5 col-md-offset-0 col-md-5 " id="createMissionButton" >Create Mission</button>
+    <button type="button" class="btn btn-danger col-xs-12 col-sm-5 col-md-offset-1 col-md-5 disabled" id="deleteMissionButton" >Delete Mission</button>
 </div>
 
 <!-- BUTTON FOR CANCELLATION / SAVING -->
 <div class="row">
+    <button type="button" class="btn btn-success col-xs-12 col-sm-offset-1 col-sm-5 col-md-offset-0 col-md-5 hidden" id="saveMissionButton" >Save Mission</button>
+    <button type="button" class="btn btn-warning col-xs-12 col-sm-5 col-md-offset-1 col-md-offset-1 col-md-5 hidden " id="cancelMissionButton" >Discard Changes</button>
+</div>
+
+<!-- DIV FOR MISSION NAME AND DESCRIPTION -->
+<div id="missionPresentation" class="row col-xs-12 col-lg-11">
+   <!-- Generated code with JS --> 
 </div>
 
 <!-- DELETE CONFIRMATION MODAL PART -->
@@ -84,6 +94,37 @@ require_once('php/getMissionList.php');
     </div>
 </div>
 
+<!-- EDIT MISSION MODAL PART -->
+<div class="modal fade" id="editMissionModal" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+            <h4 id="modalTitle" class="modal-title">Edit Mission</h4>
+        </div>
+        <div class="modal-body">
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="Name" >Name</label>  
+                <input id="editMissionName" name="Name" placeholder="Mariehamn 1" class="form-control input-md" required type="text" >
+                <span class="help-block">Give the mission a name.</span>  
+            </div>
+
+            <!-- Textarea -->
+            <div class="form-group">
+              <label class="col-md-4 control-label" for="description">Description</label>
+              <textarea class="form-control" id="editMissionDescription" name="description" placeholder="Optional" ></textarea>
+              <span class="help-block">Give the mission a description to help you remember its purpose.</span>  
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary myfooter" id="cancelEditMissionButton">Cancel</button>
+            <button  type="submit" class="btn btn-success myfooter" id="confirmEditMissionButton">Edit Mission Properties</button>
+        </div>
+      </div>
+    </div>
+</div>
+
 <!-- NEW POINT MODAL PART -->
 <div class="modal fade" id="createPointModal" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
     <div class="modal-dialog">
@@ -110,7 +151,7 @@ require_once('php/getMissionList.php');
                 <label class="col-md-4 control-label" for="stay_time">Stay time</label>
                 <input type="number" class="form-control" id="newPointStay_time" name="stay_time" value="1" required="1" ></input>
                 <span class="input-group-addon">minutes</span>
-                <span class="help-block">How long should the boart stay at the <span class="waypointOrCheckpoint"><span></span></span>?</span>
+                <span class="help-block">How long should the boat stay at the <span class="waypointOrCheckpoint"><span></span></span>?</span>
 
             </div>
         </div>
@@ -122,6 +163,42 @@ require_once('php/getMissionList.php');
     </div>
 </div>
 
+<!-- EDIT POINT MODAL PART -->
+<div class="modal fade" id="editPointModal" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+            <h4 id="modalTitle" class="modal-title">Edit <span class="waypointOrCheckpoint"><span></span></span></h4>
+        </div>
+        <div class="modal-body">
+            <!-- Text input-->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="Name" >Name</label>  
+                <input id="editPointName" name="Name" placeholder="Mariehamn 1" class="form-control input-md" required type="text" >
+                <span class="help-block">Give the <span class="waypointOrCheckpoint"><span></span></span> a name.</span>  
+            </div>
+
+            <!-- Textarea -->
+            <div class="form-group">
+                <label class="col-md-4 control-label" for="radius">Radius</label>
+                <input type="number" class="form-control" id="editPointRadius" name="radius" value="15" required="1" ></input>
+                <span class="input-group-addon">meters</span>
+                <span class="help-block">Give the size of the <span class="waypointOrCheckpoint"><span></span></span>.</span>
+
+                <label class="col-md-4 control-label" for="stay_time">Stay time</label>
+                <input type="number" class="form-control" id="editPointStay_time" name="stay_time" value="1" required="1" ></input>
+                <span class="input-group-addon">minutes</span>
+                <span class="help-block">How long should the boat stay at the <span class="waypointOrCheckpoint"><span></span></span>?</span>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary myfooter" id="cancelEditPoint">Cancel</button>
+            <button  type="submit" class="btn btn-success myfooter" id="confirmEditPoint" <!-- onClick="editPoint();"--> >Edit <span class="waypointOrCheckpoint"><span></span></span></button>
+        </div>
+      </div>
+    </div>
+</div>
 
 <br />
 <br />
@@ -133,7 +210,7 @@ require_once('php/getMissionList.php');
     </div>
 
     <!-- DISPLAY OF THE POINTS ON THE SIDE OF BELOW --> 
-    <div class="panel panel-default col-xs-12 col-lg-offset-1 col-lg-6" >
+    <div id="listPoint" class="panel panel-default col-xs-12 col-lg-offset-1 col-lg-6" >
         <ul class="list-group" id="listOfPoints">
         </ul>
     </div>

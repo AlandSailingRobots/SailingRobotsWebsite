@@ -19,7 +19,7 @@
         this.radius        = radius;
         this.stay_time     = stay_time;
         // If no argument is provided, then this.harvested = false, otherwise, the provided argument
-        this.harvested     = (harvested === undefined ? false : harvested);
+        this.harvested     = (harvested === undefined ? 0 : harvested);
     }
 
     Point.prototype.print = function() 
@@ -74,17 +74,11 @@
     //                                                                            *
     //*****************************************************************************  
 
+
     // Initialisation of the map
-    var mymap = L.map('map').setView([60.1, 19.935], 13); 
-
-    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', 
-            { 
-                maxZoom: 18, 
-                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' + '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' + 'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-                id: 'mapbox.streets' 
-            }).addTo(mymap);
+    var mymap = L.map('map'); 
+    initMap(60.1, 19.935, mymap);
     var popup = L.popup();
-
 
     var listOfPoints = document.getElementById('listOfPoints'); // To manage the list of item
     var isOpen = false; // To handle the popup of creation of point
@@ -104,12 +98,25 @@
     {
         listOfPoints.parentNode.style.display = "none";
     }
+    
     // Hide the map while no mission is selected
     document.getElementById('myConfig').style.display = 'none'; 
 
-    // Event click on map
-    mymap.on('click', onMapClick); 
+    function initMap(lat, lon, mymap)
+    {
+        var accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
+    
+        mymap.setView([lat, lon], 13);
+        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token='+accessToken, 
+        { 
+            maxZoom: 18, 
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' + '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' + 'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            id: 'mapbox.streets' 
+        }).addTo(mymap);
 
+        // Event click on map
+        mymap.on('click', onMapClick);
+    }
 
     //*****************************************************************************
     //                                                                            *
@@ -118,7 +125,7 @@
     //*****************************************************************************
 
     // This function handles the click on the map.
-    // It will displau a popup asking the user which point he would liek to add
+    // It will display a popup asking the user which point he would liek to add
     // Then this function displays the modal form to add complete the creation
     // of the waypoint / checkpoint. The cancel button is also managed here.
     function onMapClick(e) 
@@ -387,9 +394,11 @@
     //*****************************************************************************
 
     // We get the point list in a JSON format, parse
-    function getMissionFromDB(id_mission)
+    function getMissionPointFromDB(id_mission)
     {
-        // TODO : Clean the map and the list
+        // Clean the map
+        mymap.remove();
+        mymap = L.map('map');
         
         // Clean the list
         while (listOfPoints.firstChild) 
@@ -398,12 +407,12 @@
         }
 
         // Clean the map
+        //initMap(60.1, 19.935, mymap);
 
         // Get the marker list in JSON object
         $.ajax({
             type: 'POST',
             url: 'php/getPointList.php',
-            //contentType: 'application/json; charset=utf-8', // What is sent
             data: {id_mission:id_mission},
             dataType: 'json', // What is expected
             async: true,
@@ -429,6 +438,11 @@
             listOfPoints.parentNode.style.display = "none";
         }
 
+        if (len == 0)
+        {
+            initMap(60.1, 19.935, mymap);
+        }
+
         for (var i = 0; i < len; i++)
         {
             var point = $.extend(new Point(), data[i]);
@@ -436,6 +450,12 @@
             // Fullfilling our variables
             lat = point.latitude;
             lon = point.longitude;
+
+            // Centering the map on the first point
+            if (i == 0)
+            {
+                initMap(lat, lon, mymap);
+            }
 
             // Creating the markers
             createMarker(point, lat, lon);
@@ -452,7 +472,7 @@
         newPoint.classList.add('list-group-item');
         newPoint.setAttribute("id", point.id);
 
-        if (point.isCheckpoint)
+        if (point.isCheckpoint == "1") // TODO : parse to float / int / bool when mapping to JS object Point()
         {
             newPoint.classList.add('isCheckpoint');
             color = greenIcon;
