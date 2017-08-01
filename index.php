@@ -51,7 +51,7 @@ else
       ?>
 
         <!-- start of weather widget -->
-        <?php include 'include/weather_widget.php' ?>
+        <?php //include 'include/weather_widget.php' ?>
         <!-- end of weather widget -->
 
 

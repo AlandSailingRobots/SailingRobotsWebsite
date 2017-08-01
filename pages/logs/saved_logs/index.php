@@ -116,7 +116,7 @@ $available_pages = array (0 => 'compass',
     <script src=<?php echo $relative_path . "assets/js/custom.min.js"?>></script>
 
     <!-- TODO Check if it's used or not  -->
-    <script src="jsfunctions.js"></script>
+    <!-- <script src="jsfunctions.js"></script> -->
 
   <!-- ##########################    JAVASCRIPT     ########################## -->
 </body>

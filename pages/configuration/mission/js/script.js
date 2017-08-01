@@ -161,10 +161,9 @@
         $('#cancelCreateButton').on('click', function(){
                 $('#createMissionModal').modal('hide');
             })
-
-        // Confirm
-        $('#confirmCreateButton').on('click', createMission);
     });
+    // Confirm
+    $('#confirmCreateButton').on('click', createMission);
 
     function createMission()
     {

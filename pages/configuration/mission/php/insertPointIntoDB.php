@@ -66,7 +66,7 @@ function insertPointIntoDB($params)
     } 
     else 
     {
-        $msg = sprintf("Success !\n<br />");
+        $msg = sprintf("Success !");
     }
 
     echo $msg;
