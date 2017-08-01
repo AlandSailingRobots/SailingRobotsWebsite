@@ -35,38 +35,52 @@
 
         result = "The " + type + " " + this.name + " is located at the coordinates (" 
                     + this.latitude + ", " + this.longitude + ")\n" + 
-                   "Radius: " + this.radius + " | Declination: " + this.declination + 
+                   "Radius: " + this.radius + " (m) | Declination: " + this.declination + 
                    " | Stay time: " + this.stay_time +" (sec)"; 
         return result;
     };
 
-    // declination=0;
+    //*****************************************************************************
+    //                                                                            *
+    //                             DECLINATION                                    *
+    //                                                                            *
+    //*****************************************************************************         
 
-        // function setdecl(v){
-        //     console.log("declination found: "+v);
-        //     declination=v;
-        // }
+        // declination=0;
+        function setdecl(v){
+            console.log("declination found: "+v);
+            declination=v;
+        }
 
-        // function lookupMag(lat, lon) {
-        //     var url =
-        //         "http://www.ngdc.noaa.gov/geomag-web/calculators/calculateIgrfgrid?lat1="+lat+"&lat2="+lat+"&lon1="+lon+"&lon2="+lon+
-        //         "&latStepSize=0.1&lonStepSize=0.1&magneticComponent=d&resultFormat=xml";
-        //     // $.get(url, function(xml, status){
-        //     //      setdecl( $(xml).find('declination').text());
-        //     // });
-        //     var xmlHTTP = new XMLHttpRequest();
-        //     xmlHTTP.onreadystatechange = function()
-        //         {
-        //             if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200)
-        //             {
-        //                 setdecl($(xml).find('declination').text());
-        //             }
-        //         }
-        //     xmlHTTP.open("GET", url, true);
-        //     xmlHTTP.send(null);
-        // }
+        function lookupMag(lat, lon) {
+            var url =
+                "http://www.ngdc.noaa.gov/geomag-web/calculators/calculateIgrfgrid?lat1="+lat+"&lat2="+lat+"&lon1="+lon+"&lon2="+lon+
+                "&latStepSize=0.1&lonStepSize=0.1&magneticComponent=d&resultFormat=xml";
+            // $.get(url, function(xml, status){
+            //      setdecl( $(xml).find('declination').text());
+            // });
+            var xmlHTTP = new XMLHttpRequest();
+            xmlHTTP.onreadystatechange = function()
+                {
+                    if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200)
+                    {
+                        setdecl($(xml).find('declination').text());
+                    }
+                }
+            xmlHTTP.open("GET", url, true);
+            xmlHTTP.send(null);
+        }
+        // var geomagnetism = require('geomagnetism');
 
-    // lookupMag(55.58552,12.1313);
+        // // information for "right now"
+        // var info = geomagnetism.model().point([44.53461, -109.05572]);
+        // console.log('declination:', info.decl);
+
+        // // use a specific date
+        // var model = geomagnetism.model(new Date('12/25/2017'));
+        // var info = model.point([44.53461, -109.05572]);
+        // console.log('declination:', info.decl);
+        // lookupMag(55.58552,12.1313);
 
     //*****************************************************************************
     //                                                                            *
@@ -235,58 +249,8 @@
         // We can now create an instance of the class Point
         var newPoint_JS = new Point(timeStamp, id_mission, isCheckpoint, rankInMission, name, lat, lon, declination, radius, stay_time);
         
+        // Add a marker on the map
         createMarker(newPoint_JS, lat, lon);
-        /* //
-            // We add it to the array
-            arrayOfPoints[rankInMission] = newPoint_JS;
-
-            // Add class attribute to the <li> element
-            newPoint.setAttribute("class", "point");
-            newPoint.classList.add('list-group-item');
-            newPoint.setAttribute("id", timeStamp);
-
-            // Add an item to the HTML list
-            newPoint.appendChild(document.createTextNode(newPoint_JS.print()));
-            listOfPoints.appendChild(newPoint);
-            
-            // Display the list (useful only once)
-            if (listOfPoints.parentNode.style.display == 'none')
-            {
-                listOfPoints.parentNode.style.display = "inline-block";
-            }
-            
-            // New draggable marker
-            marker = new L.marker( [lat, lon],
-                                    {draggable:'true',
-                                    icon: color, 
-                                    rankInMission: rankInMission,
-                                    id: timeStamp
-                                });
-            marker.bindPopup(name);
-
-            // Add in marker array
-            arrayOfMarker[rankInMission] = marker;
-            
-            // Drag & Drop management
-            marker.on('dragend', function(event)
-                {
-                    var marker = event.target;
-                    var position = marker.getLatLng();
-                    // console.log(position);
-                    // console.log("GPS : ", position);
-
-                    // Update the position on the map
-                    marker.setLatLng(position,{draggable:'true',
-                                                rankInMission: marker.options.rankInMission,
-                                                id: marker.options.id
-                                            }).update();
-
-                    // Update the position in our lists.
-                    updateListItems(marker);
-
-                });
-            mymap.addLayer(marker);
-        */ //
 
         // We now close the popup
         $('#createPointModal').modal('hide');
@@ -499,10 +463,17 @@
                                 rankInMission: point.rankInMission,
                                 id: point.id
                             });
-        marker.bindPopup(point.name);
+        marker.bindPopup(point.rankInMission + ' - ' + point.name);
 
         // Add in marker array
         arrayOfMarker[point.rankInMission] = marker;
+       
+        L.circle([lat, lon],
+                    point.radius, 
+                    {color: 'red',
+                    fillColor: '#f03',
+                    fillOpacity: 0.3 
+                }).addTo(mymap)
         
         // Drag & Drop management
         marker.on('dragend', function(event)

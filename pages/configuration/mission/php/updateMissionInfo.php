@@ -32,7 +32,9 @@ function updateMissionInfo($id_mission, $name, $description = "")
             'description' => $description,
             'id' => $id_mission)
         );
-    echo 'tetete';
+
+    // add success / failure message
+
 }
 
 if(is_ajax())

@@ -82,6 +82,7 @@ else
   if ($connected)
   {
     echo '<script src="' . $relative_path . 'assets/vendors/leafletjs/leaflet.js"></script>';
+    // echo '<script src="' . $relative_path . 'assets/vendors/geomagnetism/index.js"></script>';
 
     echo '<script src="./js/map_leaflet.js"></script>';
     echo '<script src="./js/script.js"></script>';

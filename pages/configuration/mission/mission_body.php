@@ -14,15 +14,15 @@ require_once('php/getMissionList.php');
         <select class="selectpicker" id="missionSelection" title="Not Selected" placeholder="mission" data-live-search="true">
             <option id="0" selected > Choose a mission </option>
             <?php 
-            $missionList = getMissionList();
-            if (empty($missionList))
-            {
-                echo '<option id="0" > You don\'t have any saved mission yet. </option>';
-            }
-            foreach ($missionList as $aMission)
-            {
-                echo '<option data_token="'.$aMission['id']. '" id="'.$aMission['id'] .'">' . $aMission['id'] . ' – ' . $aMission['name'] . '</option>';
-            }
+            // $missionList = getMissionList();
+            // if (empty($missionList))
+            // {
+            //     echo '<option id="0" > You don\'t have any saved mission yet. </option>';
+            // }
+            // foreach ($missionList as $aMission)
+            // {
+            //     echo '<option data_token="'.$aMission['id']. '" id="'.$aMission['id'] .'">' . $aMission['id'] . ' – ' . $aMission['name'] . '</option>';
+            // }
             ?>
         </select>
     </div>
@@ -214,29 +214,6 @@ require_once('php/getMissionList.php');
         <ul class="list-group" id="listOfPoints">
         </ul>
     </div>
-    <!-- Previous code  -->
-    <!-- <div class='panel panel-default col-xs-12 col-md-offset-1 col-md-6'> -->
-<!--         <div class='panel-heading'>Selected Waypoint
-        <div class="input-group row">
-            <span class="input-group-addon">Marker Latitude:
-            </span>
-            <input type="text" id="latStatus" class="form-control" placeholder="Drag a marker"/>
-            <span class="input-group-addon">Marker Longitude:
-            </span>
-            <input type="text" id="lngStatus" class="form-control" placeholder="Drag a marker"/>
-            <span class="input-group-addon">Marker ID:
-            </span>
-            <input type="text" id="idStatus" class="form-control" placeholder="Drag a marker"/>
-        </div>
-        </div>
-        <div class='panel-heading'>Insertion settings
-        </div>
-        <div class="input-group">
-            <span class="input-group-addon">New waypoint radius:
-            </span>
-            <input type="text" id="radSetting" class="form-control" value="15"/>
-        </div>
-    </div> -->
 </div>
 
 

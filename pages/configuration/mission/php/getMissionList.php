@@ -25,10 +25,31 @@ function getMissionList()
     $query = $db->prepare('SELECT * FROM mission ;');
     $query->execute();
 
-    $result = $query->fetchAll();
+    $result = $query->fetchAll(PDO::FETCH_ASSOC);
 
     $query->closeCursor();
 
     return $result;
 }
+
+if (is_ajax()) 
+{
+    define('__ROOT__', dirname(dirname(dirname(dirname(dirname(__FILE__))))));
+    require_once(__ROOT__.'/globalsettings.php');
+    session_start();
+    
+    // Get param & return JSON string
+    if ($_SESSION['right'] == 'admin')
+    {
+        $resultJSON = json_encode(getMissionList());
+        print_r($resultJSON);
+    }
+}
+
+// Function to check if the request is an AJAX request
+function is_ajax() 
+{
+    return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+}
+
 ?>

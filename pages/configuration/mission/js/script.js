@@ -24,36 +24,125 @@
     //*****************************************************************************
 
     $('#missionSelection').on('change', function()
+        {
+            id_mission = $(this).children(':selected').attr('id');
+            handleMissionSelection(id_mission);
+        });
+
+    getMissionListFromDB(0);
+
+    function handleMissionSelection(id_mission)
     {
-        id_mission = $(this).children(':selected').attr('id');
-        
         // Get the right point list, the name and the description of the mission
         if (id_mission != 0)
         {
             getMissionInfoFromDB(id_mission);
-            // refreshMap();
             getMissionPointFromDB(id_mission);
+        }
+        else
+        {
+            // Delete the previous name & description node when (if) the user goes
+            // back to the first field in the selector.
+            deleteAllChildren(document.getElementById('missionPresentation'));
         }
 
         // Update the delete button and the display of the map, as well as
         // the display of the button to save or discard change to the mission.
         if (id_mission != 0 && document.getElementById("deleteMissionButton").classList.contains('disabled'))
         {
+            // Disable buttons
             document.getElementById("deleteMissionButton").classList.remove('disabled'); 
-            document.getElementById("editMissionButton").classList.remove('disabled'); 
+            document.getElementById("editMissionButton").classList.remove('disabled');
+            
+            // Confirmation Popup before deleting the selected mission
+            // $("#deleteMissionButton").off('click', showDeleteConfirmationModal); 
+            
+            // Hide buttons 
             document.getElementById("saveMissionButton").classList.remove('hidden');
             document.getElementById("cancelMissionButton").classList.remove('hidden');
             document.getElementById('myConfig').style.display = 'inline';   
         }
         if (id_mission == 0 && !(document.getElementById("deleteMissionButton").classList.contains('disabled')))
         {
+            // Enable buttons
             document.getElementById("deleteMissionButton").classList.add('disabled');   
-            document.getElementById("editMissionButton").classList.add('disabled');   
+            document.getElementById("editMissionButton").classList.add('disabled');
+            
+            // Confirmation Popup before deleting the selected mission
+            // $("#deleteMissionButton").on('click', showDeleteConfirmationModal); 
+            
+            // Display buttons
             document.getElementById("saveMissionButton").classList.add('hidden');
             document.getElementById("cancelMissionButton").classList.add('hidden');
             document.getElementById('myConfig').style.display = 'none';   
         }
-    });
+    }
+
+    function getMissionListFromDB(id)
+    {
+        // Get the mission list in a JSON object
+        $.ajax({
+            type: 'POST',
+            url: 'php/getMissionList.php',
+            dataType: 'json', // What is expected
+            async: true,
+            timeout: 3000,
+            success: function(data) {
+                displayMissionList(data, id);},
+            error: function() {
+                alert('Fail !'); }
+        }); 
+    }
+
+    function deleteAllChildren(parentNode)
+    {
+        while(parentNode.firstChild)
+        {
+            parentNode.removeChild(parentNode.firstChild);
+        }
+    }
+
+    function displayMissionList(data, id)
+    {
+        var selectNode = document.getElementById('missionSelection');
+        var optionNode = document.createElement('option');
+
+        deleteAllChildren(selectNode);
+        
+        optionNode.setAttribute('id', '0');
+        // optionNode.setAttribute('selected', '');
+        optionNode.appendChild(document.createTextNode('Choose a mission'));
+        selectNode.appendChild(optionNode);
+
+        if (id == 0)
+        {
+            handleMissionSelection(0);
+            optionNode.selected = true;
+        }
+
+        if (len == 0)
+        {
+            optionNode = document.createElement('option');
+            optionNode.setAttribute('id', '-1'); // TODO : adapt test for activation of button
+            optionNode.appendChild(document.createTextNode('You don\'t have any saved mision yet.'));
+            selectNode.appendChild(optionNode);
+        }
+        else
+        {
+            for (var i = 0, len = data.length ; i < len ; i++)
+            {
+                optionNode = document.createElement('option');
+                optionNode.setAttribute("id", data[i]['id']);
+                optionNode.setAttribute("data_token", data[i]['id']);
+                optionNode.appendChild(document.createTextNode(data[i]['id'] + ' - ' + data[i]['name']));
+                if (id == data[i]['id'])
+                {
+                    optionNode.selected = true;
+                }
+                selectNode.appendChild(optionNode);
+            }
+        }
+    }
 
     function getMissionInfoFromDB(id_mission)
     {
@@ -96,16 +185,7 @@
     function cleanMissionInfo()
     {
         var parentNode = document.getElementById('missionPresentation');
-        
-        // We can call the function everytime, it will check id there is stg
-        // to be deleted before raising an error if it is not the case.
-        if (parentNode.childElementCount > 0)
-        {
-            while (parentNode.firstChild) 
-            {
-                parentNode.removeChild(parentNode.firstChild);
-            }
-        }
+        deleteAllChildren(parentNode);
     }
 
     //*****************************************************************************
@@ -114,18 +194,22 @@
     //                                                                            *
     //*****************************************************************************
 
-    // Confirmation Popup before deleting the selected mission
-    $("#deleteMissionButton").on('click', function(){
+    $("#deleteMissionButton").on('click', showDeleteConfirmationModal); 
+    
+    // Try to remove the listener when the button is disabled.
+    // KNOWN BUG : modal still display when button are disabled
+    function showDeleteConfirmationModal()
+    {
         $('#deleteConfirmationModal').modal('show');
+    }
 
-        // Cancel
-        $('#cancelDeleteButton').on('click', function(){
-                $('#deleteConfirmationModal').modal('hide');
-            })
+    // Cancel
+    $('#cancelDeleteButton').on('click', function(){
+            $('#deleteConfirmationModal').modal('hide');
+        })
 
-        // Confirm
-        $('#confirmDeleteButton').on('click', deleteMission);
-    });
+    // Confirm
+    $('#confirmDeleteButton').on('click', deleteMission);
 
     function deleteMission()
     {
@@ -139,8 +223,8 @@
             timeout: 3000,
             success: function(data) {
                 // alert(data);
-                // $('#missionSelector').load(document.URL + ' #missionSelector', main); },
-                location.reload(); },
+                getMissionListFromDB(0);
+                },
             error: function() {
                 alert('Fail !'); }
         });
@@ -155,13 +239,14 @@
     //*****************************************************************************
 
     $('#createMissionButton').on('click', function(){
-        $('#createMissionModal').modal('show');
+            $('#createMissionModal').modal('show');
+        });
 
-        // Cancel
-        $('#cancelCreateButton').on('click', function(){
-                $('#createMissionModal').modal('hide');
-            })
-    });
+    // Cancel
+    $('#cancelCreateButton').on('click', function(){
+            $('#createMissionModal').modal('hide');
+        })
+    
     // Confirm
     $('#confirmCreateButton').on('click', createMission);
 
@@ -181,7 +266,9 @@
                 // alert(data);
                 // $('#missionSelector').load(document.URL + ' #missionSelector'); },
                 // $('#right_col').load(document.URL + ' #right_col', main); },
-                location.reload(); },
+                // location.reload();
+                getMissionListFromDB(0);
+                 },
             error: function() {
                 alert('Fail !'); }
         });
@@ -222,11 +309,9 @@
             timeout: 3000,
             success: function(data) {
                 // alert(data);
-                // $('#missionSelector').load(document.URL + ' #missionSelector'); },
-                // $('#right_col').load(document.URL + ' #right_col', main); },
-                // location.reload(); 
-                alert('Saved !');
+                alert(data);
                 getMissionInfoFromDB(id_mission);
+                getMissionListFromDB(id_mission);
                 $('#editMissionModal').modal('hide');
             },
             error: function() {
