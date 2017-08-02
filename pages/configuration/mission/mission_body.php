@@ -4,18 +4,18 @@ require_once('php/getMissionList.php');
 
 <div class="jumbotron">
     <h1>Mission Configuration</h1>      
-    <p>On this page, you can configure missions : create or delete a mission, add waypoints & checkpoints, load a mission on ASPire. <span class="btn" id="missionInstructionLink">More information.</span></p>
+    <p>On this page, you can configure missions : create or delete a mission, add waypoints & checkpoints, load a mission on ASPire. <span class="btn btn-link" id="missionInstructionLink">More information</span></p>
 </div>
 
 <!-- MISSION SELECTION -->
 <div class="row myrow" id="missionSelector">
-    <div class="form-group col-xs-12 col-md-6"  >
+    <div class="form-group col-xs-12 col-sm-offset-1 col-md-offset-0 col-md-6"  >
         <label for="mission">Please select your mission:</label>
         <select class="selectpicker" id="missionSelection" title="Not Selected" placeholder="mission" data-live-search="true">
             <option id="0" selected > Choose a mission </option>
         </select>
     </div>
-    <button type="button" class="btn col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-5 disabled" id="editMissionButton" >Edit Mission Properties</button>
+    <button type="button" class="btn btn-default col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-5 disabled" id="editMissionButton" >Edit Mission Properties</button>
 </div>
 <div class="row">
     <button type="button" class="btn btn-primary col-xs-12 col-sm-offset-1 col-sm-5 col-md-offset-0 col-md-5 " id="createMissionButton" >Create Mission</button>
@@ -175,12 +175,12 @@ require_once('php/getMissionList.php');
 
             <!-- Textarea -->
             <div class="form-group">
-                <label class="col-md-4 control-label" for="radius">Radius</label>
+                <label class="col-sm-4 control-label" for="radius">Radius</label>
                 <input type="number" class="form-control" id="newPointRadius" name="radius" value="15" required="1" ></input>
                 <span class="input-group-addon">meters</span>
                 <span class="help-block">Give the size of the <span class="waypointOrCheckpoint"><span></span></span>.</span>
 
-                <label class="col-md-4 control-label" for="stay_time">Stay time</label>
+                <label class="col-sm-4 control-label" for="stay_time">Stay time</label>
                 <input type="number" class="form-control" id="newPointStay_time" name="stay_time" value="1" required="1" ></input>
                 <span class="input-group-addon">minutes</span>
                 <span class="help-block">How long should the boat stay at the <span class="waypointOrCheckpoint"><span></span></span>?</span>
@@ -242,10 +242,11 @@ require_once('php/getMissionList.php');
     </div>
 
     <!-- DISPLAY OF THE POINTS ON THE SIDE OF BELOW --> 
-    <div id="listPoint" class="panel panel-default col-xs-12 col-lg-offset-1 col-lg-6" >
+    <div id="listPoint" class="panel panel-default col-xs-12 col-lg-offset-1 col-lg-5" >
         <ul class="list-group" id="listOfPoints">
         </ul>
     </div>
+    <button type="button" class="btn btn-info btn-lg col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10 col-lg-offset-1 col-lg-5" id="loadMissionButton" >Load Mission</button>
 </div>
 
 

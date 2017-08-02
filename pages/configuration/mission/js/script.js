@@ -15,6 +15,7 @@
 {
     var missionName         = "",   // Name of the mission
         missionDescription  = "",   // Its description
+        missionLastUse      = "",   // Last use of the mission (clicked on laod button)
         id_mission          = 0;    // It id
 
     //*****************************************************************************
@@ -167,6 +168,8 @@
                 // I use the 'global' var within the IEFE
                 missionName = data[0]["name"];
                 missionDescription = data[0]["description"];
+                missionLastUse = data[0]['last_use'];
+                console.log(missionLastUse);
                 cleanMissionInfo();
                 displayMissionInfo(); },
             error: function() {
@@ -188,6 +191,16 @@
 
         parentNode.appendChild(nameNode);
         parentNode.appendChild(descriptionNode);
+        
+        if (missionLastUse != null)
+        {
+            var lastUseNode = document.createElement('p');
+            lastUseNode.appendChild(document.createTextNode(
+                    'This mission has been loaded on ASPire for the last time on the ' + missionLastUse
+                ));
+            parentNode.appendChild(lastUseNode);
+        }
+
     }
 
     // This function clean the display of the mission info
@@ -307,13 +320,11 @@
         // Load values
         $('#editMissionName').val(missionName);
         $('#editMissionDescription').val(missionDescription);
-
-        // Cancel
-        $('#cancelEditMissionButton').on('click', function(){
-            $('#editMissionModal').modal('hide');
-        })
-
     });
+
+    // Cancel
+    $('#cancelEditMissionButton').on('click', function(){
+        $('#editMissionModal').modal('hide');});
 
     // Confirm
     $('#confirmEditMissionButton').on('click', function(){
@@ -333,7 +344,7 @@
             error: function() {
                 alert('Fail !'); }
         });
-    })
+    });
 
     //*****************************************************************************
     //                                                                            *
@@ -355,5 +366,33 @@
 
     $('#saveMissionButton').on('click', saveMissionIntoDB); // Mission in the other file
 
+    //*****************************************************************************
+    //                                                                            *
+    //                             LOAD MISSION                                   *
+    //                                                                            *
+    //*****************************************************************************
+
+    $('#loadMissionButton').on('click', function()
+        {
+            saveMissionIntoDB();
+            // Use the 'global' var of the IEFE.   
+            loadMissionToBoat(id_mission);
+        });
+
+    function loadMissionToBoat(id_mission)
+    {
+        $.ajax({
+            type: 'POST',
+            url: 'php/loadMissionToBoat.php',
+            data: {id_mission:id_mission},
+            // dataType: 'json', // What is expected
+            async: true,
+            timeout: 3000,
+            success: function(data) {
+                alert(data); },
+            error: function() {
+                alert('Fail !'); }
+        });
+    }
 
 }());
