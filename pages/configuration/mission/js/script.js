@@ -22,7 +22,17 @@
     //                        Display A Mission                                   *
     //                                                                            *
     //*****************************************************************************
+    
+    // Hide the list if there is no point in the mission
+    if (listOfPoints.childElementCount == 0)
+    {
+        listOfPoints.parentNode.style.display = "none";
+    }
+    
+    // Hide the map while no mission is selected
+    document.getElementById('myConfig').style.display = 'none'; 
 
+    // Read the selected mission
     $('#missionSelection').on('change', function()
         {
             id_mission = $(this).children(':selected').attr('id');
@@ -34,7 +44,7 @@
     function handleMissionSelection(id_mission)
     {
         // Get the right point list, the name and the description of the mission
-        if (id_mission != 0)
+        if (id_mission > 0)
         {
             getMissionInfoFromDB(id_mission);
             getMissionPointFromDB(id_mission);
@@ -48,7 +58,7 @@
 
         // Update the delete button and the display of the map, as well as
         // the display of the button to save or discard change to the mission.
-        if (id_mission != 0 && document.getElementById("deleteMissionButton").classList.contains('disabled'))
+        if (id_mission > 0)
         {
             // Disable buttons
             document.getElementById("deleteMissionButton").classList.remove('disabled'); 
@@ -62,7 +72,7 @@
             document.getElementById("cancelMissionButton").classList.remove('hidden');
             document.getElementById('myConfig').style.display = 'inline';   
         }
-        if (id_mission == 0 && !(document.getElementById("deleteMissionButton").classList.contains('disabled')))
+        if (id_mission <= 0)
         {
             // Enable buttons
             document.getElementById("deleteMissionButton").classList.add('disabled');   
@@ -94,13 +104,6 @@
         }); 
     }
 
-    function deleteAllChildren(parentNode)
-    {
-        while(parentNode.firstChild)
-        {
-            parentNode.removeChild(parentNode.firstChild);
-        }
-    }
 
     function displayMissionList(data, id)
     {
@@ -144,9 +147,15 @@
         }
     }
 
+    //*****************************************************************************
+    //                                                                            *
+    //                          Mission Information                               *
+    //                                                                            *
+    //*****************************************************************************
+
+    // Get the mission info in a JSON object
     function getMissionInfoFromDB(id_mission)
     {
-        // Get the mission info in a JSON object
         $.ajax({
             type: 'POST',
             url: 'php/getMissionInfoFromDB.php',
@@ -188,6 +197,11 @@
         deleteAllChildren(parentNode);
     }
 
+    //*****************************************************************************
+    //                                                                            *
+    //                          Instructions                                      *
+    //                                                                            *
+    //*****************************************************************************
 
     $('#missionInstructionLink').on('click', function(){
         $('#instructionModal').modal('show'); 
@@ -199,7 +213,7 @@
 
     //*****************************************************************************
     //                                                                            *
-    //                      Delete A Mission                                      *
+    //                          Delete A Mission                                  *
     //                                                                            *
     //*****************************************************************************
 
@@ -220,9 +234,9 @@
     // Confirm
     $('#confirmDeleteButton').on('click', deleteMission);
 
+    // This function send an AJAX request to delete the selected mission from the DB
     function deleteMission()
     {
-        // This function send an AJAX request to delete the selected mission from the DB
         var selectedMission = $('#missionSelection').children(':selected').attr('id');
 
         $.ajax({
@@ -259,13 +273,12 @@
     // Confirm
     $('#confirmCreateButton').on('click', createMission);
 
+    // This function sends an AJAX Query to create a new mission in the DB
     function createMission()
     {
-        // console.warn('you clicked on the button !');
         var nameF        = $('#newMissionName').val(),
             descriptionF = $('#newMissionDescription').val();
 
-        // console.log('name : ' + nameF + ' | description : ' + descriptionF);
         $.ajax({
             type: 'POST',
             url: 'php/insertMissionIntoDB.php',
@@ -273,9 +286,6 @@
             timeout: 3000,
             success: function(data) {
                 // alert(data);
-                // $('#missionSelector').load(document.URL + ' #missionSelector'); },
-                // $('#right_col').load(document.URL + ' #right_col', main); },
-                // location.reload();
                 getMissionListFromDB(0);
                  },
             error: function() {
@@ -301,9 +311,6 @@
         // Cancel
         $('#cancelEditMissionButton').on('click', function(){
             $('#editMissionModal').modal('hide');
-            // Clean values of the form
-            // $('#editMissionName').val("");
-            // $('#editMissionDescription').val("");
         })
 
     });
@@ -346,11 +353,7 @@
     //                                                                            *
     //*****************************************************************************
 
-    $('#saveMissionButton').on('click', saveMissionIntoDB);
+    $('#saveMissionButton').on('click', saveMissionIntoDB); // Mission in the other file
 
-    // function saveMissionIntoDB()
-    // {
-
-    // }
 
 }());

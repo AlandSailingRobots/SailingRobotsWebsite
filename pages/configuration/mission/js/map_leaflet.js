@@ -107,14 +107,7 @@
         lon,
         rankInMission;
 
-    // Hide the list if there is no point in the mission
-    if (listOfPoints.childElementCount == 0)
-    {
-        listOfPoints.parentNode.style.display = "none";
-    }
-    
-    // Hide the map while no mission is selected
-    document.getElementById('myConfig').style.display = 'none'; 
+
 
     function initMap(lat, lon, mymap)
     {
@@ -285,37 +278,6 @@
         
         // And we delete the old child
         listOfPoints.removeChild(listItem);
-    }
-
-    function askNewPoint()
-    {
-        // Popup for creation of a point
-        return  "<br/> Do you want to add a point here ? <br /> \n"+
-                "<div id='buttonContainerMap'> \n" +
-                    "<button name='newWaypoint'   class='btn btn-info addPoint'    id='newWaypoint' >Waypoint</button> \n" +
-                    "<button name='newCheckpoint' class='btn btn-success addPoint' id='newCheckpoint' >Checkpoint</button> \n" +
-                "</div>";
-    }
-
-    function splitGPS(string)
-    {
-        // This function cleans the result send by leaflet when the user clicks on the map.
-        // TODO : check if marker.getLatLng().lat; & marker.getLatLng().lon; do the same
-        var res;
-
-        res = string.split("(")[1].split(")")[0];
-        return res;
-    }
-
-    function computeDeclination(lat, lon)
-    {
-        // TODO : write the function
-        return 0;
-    }
-
-    function currentTimeStamp()
-    {
-        return Math.floor(Date.now() / 1000);
     }
 
     //*****************************************************************************
@@ -494,6 +456,50 @@
         mymap.addLayer(marker);
     }
 
+    //*****************************************************************************
+    //                                                                            *
+    //                          TOOLS & UTILITIES                                 *
+    //                                                                            *
+    //*****************************************************************************
+
+    function deleteAllChildren(parentNode)
+    {
+        while(parentNode.firstChild)
+        {
+            parentNode.removeChild(parentNode.firstChild);
+        }
+    }
+
+    function askNewPoint()
+    {
+        // Popup for creation of a point
+        return  "<br/> Do you want to add a point here ? <br /> \n"+
+                "<div id='buttonContainerMap'> \n" +
+                    "<button name='newWaypoint'   class='btn btn-info addPoint'    id='newWaypoint' >Waypoint</button> \n" +
+                    "<button name='newCheckpoint' class='btn btn-success addPoint' id='newCheckpoint' >Checkpoint</button> \n" +
+                "</div>";
+    }
+
+    function splitGPS(string)
+    {
+        // This function cleans the result send by leaflet when the user clicks on the map.
+        // TODO : check if marker.getLatLng().lat; & marker.getLatLng().lon; do the same
+        var res;
+
+        res = string.split("(")[1].split(")")[0];
+        return res;
+    }
+
+    function computeDeclination(lat, lon)
+    {
+        // TODO : write the function
+        return 0;
+    }
+
+    function currentTimeStamp()
+    {
+        return Math.floor(Date.now() / 1000);
+    }
     // return  {
     //             createNewPoint: createNewPoint()
     //         };
@@ -503,8 +509,3 @@
 // var main_leaflet_var = map_leaflet();
 // map_leaflet();
 
-
-//////////////////:
-// L.marker([51.5, -0.09]).addTo(mymap).bindPopup("<b>Hello world!</b><br />I am a popup.").openPopup();
-// L.circle([51.508, -0.11], 500, { color: 'red', fillColor: '#f03', fillOpacity: 0.5 }).addTo(mymap).bindPopup("I am a circle."); 
-// L.polygon([ [51.509, -0.08], [51.503, -0.06], [51.51, -0.047] ]).addTo(mymap).bindPopup("I am a polygon."); 
