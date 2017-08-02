@@ -4,7 +4,7 @@ require_once('php/getMissionList.php');
 
 <div class="jumbotron">
     <h1>Mission Configuration</h1>      
-    <p>On this page, you can configure missions : create or delete a mission, add waypoints & checkpoints, load a mission on ASPire.</p>
+    <p>On this page, you can configure missions : create or delete a mission, add waypoints & checkpoints, load a mission on ASPire. <span class="btn" id="missionInstructionLink">More information.</span></p>
 </div>
 
 <!-- MISSION SELECTION -->
@@ -13,17 +13,6 @@ require_once('php/getMissionList.php');
         <label for="mission">Please select your mission:</label>
         <select class="selectpicker" id="missionSelection" title="Not Selected" placeholder="mission" data-live-search="true">
             <option id="0" selected > Choose a mission </option>
-            <?php 
-            // $missionList = getMissionList();
-            // if (empty($missionList))
-            // {
-            //     echo '<option id="0" > You don\'t have any saved mission yet. </option>';
-            // }
-            // foreach ($missionList as $aMission)
-            // {
-            //     echo '<option data_token="'.$aMission['id']. '" id="'.$aMission['id'] .'">' . $aMission['id'] . ' – ' . $aMission['name'] . '</option>';
-            // }
-            ?>
         </select>
     </div>
     <button type="button" class="btn col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-5 disabled" id="editMissionButton" >Edit Mission Properties</button>
@@ -43,6 +32,49 @@ require_once('php/getMissionList.php');
 <div id="missionPresentation" class="row col-xs-12 col-lg-11">
    <!-- Generated code with JS --> 
 </div>
+
+<!-- INSTRUCTION MODAL PART -->
+<div class="modal fade" id="instructionModal" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">x</button>
+          <h4 id="modalTitle" class="modal-title">How to use that page ?</h4>
+        </div>
+        <div class="modal-body">
+            <h3>1 - Select your mission</h3>
+            <p class="text-justify">
+                First thing first, select your mission by using the selector just bellow the title of this page. 
+                If you want to create a new mission, click on the right button and fill the different fields of the form.
+                Then, you can select the new mission in the selector.<br/>
+            </p>
+            <h3>2 - Prepare your mssion</h3>
+            <p class="text-justify">
+                To add a point on the map, click wherever you would like to add it. Then you can choose whether you want to add a waypoint or a checkpoint. <br/>
+                - A WAYPOINT is a point to help the boat with its route planning. If the boat does not exactly go that point, that is not a problem.<br/>
+                - A CHECKPOINT is a point to which the boat will go to take measurements.<br/>
+                You can move a marker position by drag'n'droping it on the map. It will automatically update its position on the page. But don't forget to save your changes before selecting another mission.<br/>
+            </p>
+            <h3>3 - Save your mission</h3>
+            <p class="text-justify">
+                Click on the 'Save Mission' button to save the mission into the database of the server.<br/>
+            </p>
+            <h3>4 - Launch a mission</h3>
+            <p class="text-justify">
+                To load a mission on ASPire, select your mission, and click on the 'Launch the Selected Mission' button. It will make a copy of the list of the waypoint & checkpoint to another database, which is synchronized with ASPire.<br/>
+            </p>
+            <h3>Remarks</h3>
+            <p class="text-justify">
+                Pay attention to the fact that, you cannot edit your point for the moment. It means that you cannot change its properties once it has been added to the map.<br/>
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary myfooter" id="closeInstructionButton">Close</button>
+        </div>
+      </div>
+    </div>
+</div>
+
 
 <!-- DELETE CONFIRMATION MODAL PART -->
 <div class="modal fade" id="deleteConfirmationModal" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
