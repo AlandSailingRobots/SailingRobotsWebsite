@@ -175,13 +175,21 @@ require_once('php/getMissionList.php');
 
             <!-- Textarea -->
             <div class="form-group">
-                <label class="col-sm-4 control-label" for="radius">Radius</label>
-                <input type="number" class="form-control" id="newPointRadius" name="radius" value="15" required="1" ></input>
+                <label class="col-md-4 control-label" for="latitude">Latitude</label>
+                <input type="number" class="form-control" id="newPointLatitude" name="" value="" required="1" ></input>
+                <span class="help-block">Give the latitude of the <span class="waypointOrCheckpoint"><span></span></span>.</span>
+
+                <label class="col-md-4 control-label" for="longitude">Longitude</label>
+                <input type="number" class="form-control" id="newPointLongitude" name="longitude" value="" required="1" ></input>
+                <span class="help-block">Give the longitude of the <span class="waypointOrCheckpoint"><span></span></span>.</span>
+
+                <label class="col-md-4 control-label" for="radius">Radius</label>
+                <input type="number" class="form-control" id="newPointRadius" name="radius" value="" required="1" ></input>
                 <span class="input-group-addon">meters</span>
                 <span class="help-block">Give the size of the <span class="waypointOrCheckpoint"><span></span></span>.</span>
 
-                <label class="col-sm-4 control-label" for="stay_time">Stay time</label>
-                <input type="number" class="form-control" id="newPointStay_time" name="stay_time" value="1" required="1" ></input>
+                <label class="col-md-4 control-label" for="stay_time">Stay time</label>
+                <input type="number" class="form-control" id="newPointStay_time" name="stay_time" value="" required="1" ></input>
                 <span class="input-group-addon">minutes</span>
                 <span class="help-block">How long should the boat stay at the <span class="waypointOrCheckpoint"><span></span></span>?</span>
 

@@ -160,11 +160,15 @@
                 {
                     var text = 'checkpoint';
                     var classText = 'isCheckpoint';
+                    var defaultRadius = 15;
+                    var defaultStay_time = 5;
                 }
                 else
                 {
                     var text = 'waypoint';
                     var classText = 'isWaypoint';
+                    var defaultRadius = 50;
+                    var defaultStay_time = 1;
                 }
                 for (var i = waypointOrCheckpoint.length - 1; i >= 0; i--) 
                 {
@@ -178,24 +182,32 @@
                     waypointOrCheckpoint[i].appendChild(txt_env);
                 }
 
+                // Change the default values depending on which type of point we want to add
+                // We loose the 'feature' of having the previous entered value.
+                $('#newPointRadius').val(defaultRadius);
+                $('#newPointStay_time').val(defaultStay_time);
+
+                // Modify the value of the longitude and latitude form to allow 
+                // the user to correct the value manually if needed.
+                $('#newPointLatitude').val(coordGPS.split(', ')[0]);
+                $('#newPointLongitude').val(coordGPS.split(', ')[1]);
+
                 // Display the modal form
                 $('#createPointModal').modal('show');
-                // Cancel
-                $('#cancelNewPoint').on('click', function()
-                    {
-                        // Reset to default values
-                        $(':input','#createPointModal').val("");
-                        $('#newPointRadius').val("15");
-                        $('#newPointStay_time').val("1");
-                        
-                        // Hide
-                        $('#createPointModal').modal('hide');
-                        mymap.closePopup();
-                        isOpen = false;
-                    })
-
             });
     }
+
+    // Cancel
+    $('#cancelNewPoint').on('click', function()
+        {
+            // Reset to default values
+            $(':input','#createPointModal').val("");
+
+            // Hide
+            $('#createPointModal').modal('hide');
+            mymap.closePopup();
+            isOpen = false;
+        });
 
     // It would be better to use an event in the script, but this doesn't work, I don't know why.
     // $('#confirmNewPoint').on('click', createNewPoint());
@@ -213,8 +225,8 @@
             id_mission     = $('#missionSelection').children(':selected').attr('id'),
             radius         = $('#newPointRadius').val(),
             stay_time      = parseInt($('#newPointStay_time').val())*60, // So we get seconds
-            lat            = coordGPS.split(',')[0],
-            lon            = coordGPS.split(',')[1],
+            lat            = $('#newPointLatitude').val(),
+            lon            = $('#newPointLongitude').val(),
             rankInMission  = ++numberOfPoints, 
             isCheckpoint, 
             declination;
