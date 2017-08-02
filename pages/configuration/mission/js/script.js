@@ -188,6 +188,15 @@
         deleteAllChildren(parentNode);
     }
 
+
+    $('#missionInstructionLink').on('click', function(){
+        $('#instructionModal').modal('show'); 
+    });
+
+    $('#closeInstructionButton').on('click', function(){
+        $('#instructionModal').modal('hide');
+    });
+
     //*****************************************************************************
     //                                                                            *
     //                      Delete A Mission                                      *
