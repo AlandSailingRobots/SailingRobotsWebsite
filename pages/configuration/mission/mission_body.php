@@ -175,24 +175,34 @@ require_once('php/getMissionList.php');
 
             <!-- Textarea -->
             <div class="form-group">
-                <label class="col-md-4 control-label" for="latitude">Latitude</label>
-                <input type="number" class="form-control" id="newPointLatitude" name="" value="" required="1" ></input>
-                <span class="help-block">Give the latitude of the <span class="waypointOrCheckpoint"><span></span></span>.</span>
+                <div class="col-xs-12 col-md-6">
+                    <label class="col-md-4 control-label" for="latitude">Latitude</label>
+                    <input type="number" class="form-control" id="newPointLatitude" name="" value="" required="1" ></input>
+                    <span class="help-block">Give the latitude of the <span class="waypointOrCheckpoint"><span></span></span>.</span>
+                </div>
 
-                <label class="col-md-4 control-label" for="longitude">Longitude</label>
-                <input type="number" class="form-control" id="newPointLongitude" name="longitude" value="" required="1" ></input>
-                <span class="help-block">Give the longitude of the <span class="waypointOrCheckpoint"><span></span></span>.</span>
+                <div class="col-xs-12 col-md-6">
+                    <label class="col-md-4 control-label" for="longitude">Longitude</label>
+                    <input type="number" class="form-control" id="newPointLongitude" name="longitude" value="" required="1" ></input>
+                    <span class="help-block">Give the longitude of the <span class="waypointOrCheckpoint"><span></span></span>.</span>
+                </div>
 
-                <label class="col-md-4 control-label" for="radius">Radius</label>
-                <input type="number" class="form-control" id="newPointRadius" name="radius" value="" required="1" ></input>
-                <span class="input-group-addon">meters</span>
-                <span class="help-block">Give the size of the <span class="waypointOrCheckpoint"><span></span></span>.</span>
+                <div class="col-xs-12 col-md-6">
+                    <label class="col-md-4 control-label" for="radius">Radius</label>
+                    <input type="number" class="form-control" id="newPointRadius" name="radius" value="" required="1" ></input>
+                    <span class="input-group-addon">meters</span>
+                    <span class="help-block">Give the size of the <span class="waypointOrCheckpoint"><span></span></span>.</span>
+                </div>
 
-                <label class="col-md-4 control-label" for="stay_time">Stay time</label>
-                <input type="number" class="form-control" id="newPointStay_time" name="stay_time" value="" required="1" ></input>
-                <span class="input-group-addon">minutes</span>
-                <span class="help-block">How long should the boat stay at the <span class="waypointOrCheckpoint"><span></span></span>?</span>
-
+                <div class="col-xs-12 col-md-6">
+                    <label class="col-md-4 control-label" for="stay_time">Stay time</label>
+                    <input type="number" class="form-control" id="newPointStay_time" name="stay_time" value="" required="1" ></input>
+                    <span class="input-group-addon">minutes</span>
+                    <span class="help-block">How long should the boat stay at the <span class="waypointOrCheckpoint"><span></span></span>?</span>
+                </div>
+                <div class="col-xs-12 col-md-6">
+                    <br>
+                </div>
             </div>
         </div>
         <div class="modal-footer">
@@ -221,20 +231,49 @@ require_once('php/getMissionList.php');
 
             <!-- Textarea -->
             <div class="form-group">
-                <label class="col-md-4 control-label" for="radius">Radius</label>
-                <input type="number" class="form-control" id="editPointRadius" name="radius" value="15" required="1" ></input>
-                <span class="input-group-addon">meters</span>
-                <span class="help-block">Give the size of the <span class="waypointOrCheckpoint"><span></span></span>.</span>
 
-                <label class="col-md-4 control-label" for="stay_time">Stay time</label>
-                <input type="number" class="form-control" id="editPointStay_time" name="stay_time" value="1" required="1" ></input>
-                <span class="input-group-addon">minutes</span>
-                <span class="help-block">How long should the boat stay at the <span class="waypointOrCheckpoint"><span></span></span>?</span>
+                <div class="col-xs-12 col-md-6">
+                    <label class="col-md-4 control-label" for="latitude">Latitude</label>
+                    <input type="number" class="form-control" id="editPointLatitude" name="" value="" required="1" ></input>
+                    <span class="help-block">Give the latitude of the <span class="waypointOrCheckpoint"><span></span></span>.</span>
+                </div>
+
+                <div class="col-xs-12 col-md-6">
+                    <label class="col-md-4 control-label" for="longitude">Longitude</label>
+                    <input type="number" class="form-control" id="editPointLongitude" name="longitude" value="" required="1" ></input>
+                    <span class="help-block">Give the longitude of the <span class="waypointOrCheckpoint"><span></span></span>.</span>
+                </div>
+
+                <div class="col-xs-12 col-md-6">
+                    <label class="col-md-4 control-label" for="radius">Radius</label>
+                    <input type="number" class="form-control" id="editPointRadius" name="radius" value="" required="1" ></input>
+                    <span class="input-group-addon">meters</span>
+                    <span class="help-block">Give the size of the <span class="waypointOrCheckpoint"><span></span></span>.</span>
+                </div>
+
+                <div class="col-xs-12 col-md-6">
+                    <label class="col-md-4 control-label" for="stay_time">Stay time</label>
+                    <input type="number" class="form-control" id="editPointStay_time" name="stay_time" value="" required="1" ></input>
+                    <span class="input-group-addon">minutes</span>
+                    <span class="help-block">How long should the boat stay at the <span class="waypointOrCheckpoint"><span></span></span>?</span>
+                </div>
+
+                <label class="col-md-4 control-label" for="stay_time">Declination</label>
+                <input type="number" class="form-control" id="editPointDeclination" name="declination" value="" required="1" ></input>
+                <span class="input-group-addon">degrees</span>
+                <br>
+
+<!--                 <label class="col-md-4 control-label" for="isCheckpoint">Is Checkpoint ?</label>
+                <div class="btn-group btn-toggle"> 
+                    <button id="isCheckpointButton" class="btn btn-default">Yes</button>
+                    <button id="isWaypointButton" class="btn btn-info">No</button>
+                </div> -->
+
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary myfooter" id="cancelEditPoint">Cancel</button>
-            <button  type="submit" class="btn btn-success myfooter" id="confirmEditPoint" <!-- onClick="editPoint();"--> >Edit <span class="waypointOrCheckpoint"><span></span></span></button>
+            <button type="button" class="btn btn-primary myfooter " id="cancelEditPointButton">Cancel</button>
+            <button  type="submit" class="btn btn-success myfooter" id="confirmEditPointButton" >Edit <span class="waypointOrCheckpoint"><span></span></span></button>
         </div>
       </div>
     </div>
@@ -256,31 +295,3 @@ require_once('php/getMissionList.php');
     </div>
     <button type="button" class="btn btn-info btn-lg col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10 col-lg-offset-1 col-lg-5" id="loadMissionButton" >Load Mission</button>
 </div>
-
-
- 
-<!-- <div class ="row">
-    <div class='panel panel-default'>
-        <div class='panel-heading'>Waypoints
-        </div>
-
-        <div class='panel panel-default'>
-            <div class='panel-heading'>Waypoint list (reload to see changes)
-            </div>
-            <?php
-            //printWaypointList();
-            //$waypointString = json_encode($getWaypointsService->getWaypoints());
-            //echo "<div>.$waypointString.</div>";
-            ?>
-        </div>
-        <div class="col-md-4 col-md-offset-1">
-            <input type='button' value='Undo changes' class='btn btn-danger btn-lg' onclick='reloadPage()'/>
-            <br>
-        </div>
-        <div class="col-md-4 col-md-offset-3">
-            <input type='button' value='Submit waypoint changes' class='btn btn-success btn-lg' onclick='waypointsToDatabase()'/>
-            <br>
-        </div>
-    </div>
-</div> 
- -->

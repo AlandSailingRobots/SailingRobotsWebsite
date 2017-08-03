@@ -40,7 +40,7 @@ function loadMissionToBoat($id_mission)
     $exec1 = $query1->execute(array($id_mission));
 
     // Delete the table which on the ASPire config
-    $query2 = $db_boat->prepare('DELETE FROM pointList');
+    $query2 = $db_boat->prepare('DELETE FROM currentMission');
     $exec2 = $query2->execute();
 
     // We get the pointList to insert into another array
@@ -64,7 +64,7 @@ function loadMissionToBoat($id_mission)
         $emptyArray = substr($emptyArray, 1);
 
         // Now we insert every waypoints / checkpoint into the DB 
-        $query4 = $db_boat->prepare('INSERT INTO pointList (  id, 
+        $query4 = $db_boat->prepare('INSERT INTO currentMission (  id, 
                                                         id_mission, 
                                                         rankInMission,
                                                         isCheckpoint, 
@@ -123,8 +123,6 @@ if (is_ajax())
     // Get param & return JSON string
     if ($_SESSION['right'] == 'admin')
     {
-        // $resultJSON = json_encode(getMissionList());
-        // print_r($resultJSON);
         loadMissionToBoat($_POST['id_mission']);
     }
 }

@@ -26,14 +26,14 @@
     {
         if (this.isCheckpoint)
         {
-            type = "checkpoint";
+            var type = "checkpoint";
         }
         else
         {
-            type = "waypoint";
+            var type = "waypoint";
         }
 
-        result = "The " + type + " " + this.name + " is located at the coordinates (" 
+        var result = "The " + type + " " + this.rankInMission + " - " + this.name + " is located at the coordinates (" 
                     + this.latitude + ", " + this.longitude + ")\n" + 
                    "Radius: " + this.radius + " (m) | Declination: " + this.declination + 
                    " | Stay time: " + this.stay_time +" (sec)"; 
@@ -120,7 +120,7 @@
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' + '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' + 'Imagery © <a href="http://mapbox.com">Mapbox</a>',
             id: 'mapbox.streets' 
         }).addTo(mymap);
-
+        
         // Event click on map
         mymap.on('click', onMapClick);
     }
@@ -150,51 +150,57 @@
             popup.setLatLng(e.latlng).setContent("You clicked the map at " + coordGPS + askNewPoint()).openOn(mymap);
             isOpen = true;
         }
+    }
 
-        // Event when click on a button of the popup
-        $('.addPoint').on('click', function(e)
-            {   
-                // Edit the modal form depending of which kind of point we want to create.
-                var waypointOrCheckpoint = $('.waypointOrCheckpoint');
-                if ($(this).attr('id') == 'newCheckpoint')
-                {
-                    var text = 'checkpoint';
-                    var classText = 'isCheckpoint';
-                    var defaultRadius = 15;
-                    var defaultStay_time = 5;
-                }
-                else
-                {
-                    var text = 'waypoint';
-                    var classText = 'isWaypoint';
-                    var defaultRadius = 50;
-                    var defaultStay_time = 1;
-                }
-                for (var i = waypointOrCheckpoint.length - 1; i >= 0; i--) 
-                {
-                    // Deleting previous text
-                    waypointOrCheckpoint[i].removeChild(waypointOrCheckpoint[i].firstChild);
+    // Event when click on a button of the popup
+    $('#map').on('click', '.addPoint', function(e)
+        {   
+            // Edit the modal form depending of which kind of point we want to create.
+            if ($(this).attr('id') == 'newCheckpoint')
+            {
+                var text = 'checkpoint';
+                var classText = 'isCheckpoint';
+                var defaultRadius = 15;
+                var defaultStay_time = 5;
+            }
+            else
+            {
+                var text = 'waypoint';
+                var classText = 'isWaypoint';
+                var defaultRadius = 50;
+                var defaultStay_time = 1;
+            }
+            editModalToPoint(classText, text);
 
-                    // Creating a child (easier to remove than just using TexteNode)
-                    var txt_env = document.createElement('span');
-                    txt_env.classList.add(classText);
-                    txt_env.appendChild(document.createTextNode(text));
-                    waypointOrCheckpoint[i].appendChild(txt_env);
-                }
+            // Change the default values depending on which type of point we want to add
+            // We loose the 'feature' of having the previous entered value.
+            $('#newPointRadius').val(defaultRadius);
+            $('#newPointStay_time').val(defaultStay_time);
 
-                // Change the default values depending on which type of point we want to add
-                // We loose the 'feature' of having the previous entered value.
-                $('#newPointRadius').val(defaultRadius);
-                $('#newPointStay_time').val(defaultStay_time);
+            // Modify the value of the longitude and latitude form to allow 
+            // the user to correct the value manually if needed.
+            $('#newPointLatitude').val(coordGPS.split(', ')[0]);
+            $('#newPointLongitude').val(coordGPS.split(', ')[1]);
 
-                // Modify the value of the longitude and latitude form to allow 
-                // the user to correct the value manually if needed.
-                $('#newPointLatitude').val(coordGPS.split(', ')[0]);
-                $('#newPointLongitude').val(coordGPS.split(', ')[1]);
+            // Display the modal form
+            $('#createPointModal').modal('show');
+        });
 
-                // Display the modal form
-                $('#createPointModal').modal('show');
-            });
+    function editModalToPoint(classText, text)
+    {
+        var waypointOrCheckpoint = $('.waypointOrCheckpoint');
+
+        for (var i = waypointOrCheckpoint.length - 1; i >= 0; i--) 
+        {
+            // Deleting previous text
+            waypointOrCheckpoint[i].removeChild(waypointOrCheckpoint[i].firstChild);
+
+            // Creating a child (easier to remove than just using TexteNode)
+            var txt_env = document.createElement('span');
+            txt_env.classList.add(classText);
+            txt_env.appendChild(document.createTextNode(text));
+            waypointOrCheckpoint[i].appendChild(txt_env);
+        }
     }
 
     // Cancel
@@ -264,15 +270,18 @@
     }
 
     // This function update the display of the list by manipulating the DOM
-    // elements of the page
-    function updateListItems(marker)
+    // elements of the page when a marker is "dragged'n'dropped"
+    function updateListItems(marker, editOrMove)
     {
         var index = marker.options.rankInMission,
             id    = marker.options.id;
 
-        // Update the position according to the marker
-        arrayOfPoints[index].latitude  = marker.getLatLng().lat;
-        arrayOfPoints[index].longitude = marker.getLatLng().lng;
+        if (editOrMove == "move")
+        {
+            // Update the position according to the marker
+            arrayOfPoints[index].latitude  = roundNumber(marker.getLatLng().lat, 6);
+            arrayOfPoints[index].longitude = roundNumber(marker.getLatLng().lng, 6);
+        }
 
         // We create another li element
         var listOfPoints = document.getElementById('listOfPoints');
@@ -437,23 +446,25 @@
                                 rankInMission: point.rankInMission,
                                 id: point.id
                             });
-        marker.bindPopup(point.rankInMission + ' - ' + point.name);
+        marker.bindPopup(askEditPoint(point));
 
         // Add in marker array
         arrayOfMarker[point.rankInMission] = marker;
        
+       // TODO : fix the circle behaviour
         L.circle([lat, lon],
-                    point.radius, 
+                    parseFloat(point.radius), 
                     {color: 'red',
                     fillColor: '#f03',
                     fillOpacity: 0.3 
                 }).addTo(mymap)
         
-        // Drag & Drop management
+        // Handle the Drag & Drop
         marker.on('dragend', function(event)
             {
                 var marker = event.target;
                 var position = marker.getLatLng();
+                console.log(position);
 
                 // Update the position on the map
                 marker.setLatLng(position,{draggable:'true',
@@ -462,7 +473,7 @@
                                         }).update();
 
                 // Update the position in our lists.
-                updateListItems(marker);
+                updateListItems(marker, "move");
 
             });
         mymap.addLayer(marker);
@@ -470,7 +481,110 @@
 
     //*****************************************************************************
     //                                                                            *
-    //                          TOOLS & UTILITIES                                 *
+    //                              EDIT A POINT                                  *
+    //                                                                            *
+    //*****************************************************************************
+    
+    var editedMarkerIndex;
+
+    // The HTML we put in bindPopup doesn't exist yet, so we can't just say
+    // $('#mybutton'). Instead, we listen for click events on the map element which
+    // will bubble up from the tooltip, once it's created and someone clicks on it.
+    $('#map').on('click', '.editPointButton', function() {
+            // Adapt the modal to the point properties we clicked on
+            if ($(this).hasClass('Checkpoint'))
+            {
+                var text        = 'checkpoint';
+                var classText   = 'isCheckpoint';
+                // $('#isCheckpointButton').addClass('active');
+            }
+            else
+            {
+                var text        = 'waypoint';
+                var classText   = 'isWaypoint';
+                // $('#isWaypointButton').addClass('active');
+            }
+            editModalToPoint(classText, text);
+
+            // Fill the form with the properties of the marker we selected
+            var id_element      = $(this).attr('id');
+            editedMarkerIndex   = id_element.split('|')[0].split(':')[1]; // It's ugly right ? :p
+            var id_marker       = id_element.split('|')[1].split(':')[1];
+            var point           = arrayOfPoints[editedMarkerIndex];
+
+            $('#editPointName').val(point.name);
+            $('#editPointLatitude').val(point.latitude);
+            $('#editPointLongitude').val(point.longitude);
+            $('#editPointRadius').val(point.radius);
+            $('#editPointStay_time').val(parseInt(point.stay_time)/60);
+            $('#editPointDeclination').val(point.declination);
+            
+            // Show the modal
+            $('#editPointModal').modal('show');
+        });
+
+    // This works because the modal are already in the HTML document
+    $('#cancelEditPointButton').on('click', function() {
+            $('#editPointModal').modal('hide');
+        });
+
+    $('#confirmEditPointButton').on('click', function() {
+            // $('#isCheckpointButton').removeClass('active');
+            // $('#isWaypointButton').removeClass('active');
+
+            $('#editPointModal').modal('hide');
+
+            // Get the entered value, update the object in the array and the list
+            var point = arrayOfPoints[editedMarkerIndex];
+
+            // Name
+            if( point.name != escapeHtml($('#editPointName').val()) )
+            {
+                point.name = escapeHtml($('#editPointName').val());
+            }
+            // Latitude
+            if( point.latitude != escapeHtml($('#editPointLatitude').val()) )
+            {
+                point.latitude = parseFloat(escapeHtml($('#editPointLatitude').val()));
+            }
+            // Longitude
+            if ( point.longitude != escapeHtml($('#editPointLongitude').val()) )
+            {
+                point.longitude = parseFloat(escapeHtml($('#editPointLongitude').val()));
+            }
+            // Radius
+            if( point.radius != escapeHtml($('#editPointRadius').val()) )
+            {
+                point.radius = parseInt(escapeHtml($('#editPointRadius').val()));
+            }
+            // Stay time
+            if( point.stay_time != parseInt(escapeHtml($('#editPointStay_time').val()))*60 )
+            {
+                point.stay_time = parseInt(escapeHtml($('#editPointStay_time').val()));
+            }
+            // Declination
+            if( point.declination != escapeHtml($('#editPointDeclination').val()) )
+            {
+                point.declination = parseFloat(escapeHtml($('#editPointDeclination').val()));
+            }
+
+            // Update the list item
+            updateListItems(arrayOfMarker[editedMarkerIndex], "drag");
+
+            // Update the position of the marker on the map
+            var position = [point.latitude, point.longitude];
+            var marker   = arrayOfMarker[editedMarkerIndex];
+            marker.setLatLng(position,{draggable:'true',
+                                        rankInMission: marker.options.rankInMission,
+                                        id: marker.options.id
+                                    }).update();
+        });
+
+
+
+    //*****************************************************************************
+    //                                                                            *
+    //                            TOOLS & UTILITIES                               *
     //                                                                            *
     //*****************************************************************************
 
@@ -489,6 +603,29 @@
                 "<div id='buttonContainerMap'> \n" +
                     "<button name='newWaypoint'   class='btn btn-info addPoint'    id='newWaypoint' >Waypoint</button> \n" +
                     "<button name='newCheckpoint' class='btn btn-success addPoint' id='newCheckpoint' >Checkpoint</button> \n" +
+                "</div>";
+    }
+
+    function askEditPoint(point)
+    {
+        if (point.isCheckpoint == "1")
+        {
+            var type = "Checkpoint";
+        }
+        else
+        {
+            var type = "Waypoint";
+        }
+ 
+        // Popup when click on a marker
+        // I know I do something ugly with the id, but I din't find any better solution to get the marker on which the user clicks
+        return  type + ": " + point.rankInMission + ' - ' + point.name + "<br /> \n" +
+                "Position: " + point.latitude + ", " + point.longitude + "<br /> \n" +
+                "Radius: " + point.radius + " (m) | Stay_time: " + point.stay_time +  " (sec) <br /> \n" +
+                "<br /> \n" +
+                "<div> \n"+
+                    "<button name='deletePointButton' class='btn btn-danger deletePoint'  id='rankInMission:"+point.rankInMission+"|id:"+point.id+"' >Delete Point</button> \n" +
+                    "<button name='editPointButton'   class='btn btn-info   editPointButton "+type+"' id='rankInMission:"+point.rankInMission+"|id:"+point.id+"' >Edit Point</button> \n" +
                 "</div>";
     }
 
@@ -511,6 +648,25 @@
     function currentTimeStamp()
     {
         return Math.floor(Date.now() / 1000);
+    }
+
+    function escapeHtml(text) {
+        var map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+
+        return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    }
+
+    function roundNumber(number, digits) 
+    {
+        var multiple = Math.pow(10, digits);
+        var rndedNum = Math.round(number * multiple) / multiple;
+        return rndedNum;
     }
     // return  {
     //             createNewPoint: createNewPoint()

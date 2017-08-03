@@ -169,7 +169,6 @@
                 missionName = data[0]["name"];
                 missionDescription = data[0]["description"];
                 missionLastUse = data[0]['last_use'];
-                console.log(missionLastUse);
                 cleanMissionInfo();
                 displayMissionInfo(); },
             error: function() {
