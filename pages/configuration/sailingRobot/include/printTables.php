@@ -1,7 +1,7 @@
 <?php
 function printTables($table, $tableName)
 {?>
-    <div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
+    <div class='col-xs-12 col-sm-6 col-md-4'>
         <div class="form-group" id="<?php echo $tableName ;?>">
             <div class='panel panel-default'>
                 <div class='panel-heading'><?php echo $tableName ;
