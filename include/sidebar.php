@@ -53,17 +53,17 @@
                 <li>
                   <a><i class="fa fa-bar-chart-o"></i>Data Presentation<span class="fa fa-chevron-down"></span><span class="label label-danger pull-right">Soon</span></a>
                   <ul class="nav child_menu">
-                    <li><a href="#">Chart JS</a></li>
+                    <li><a href="#">Measurements</a></li>
                   </ul>
                 </li>
 
                 <!-- Second Menu -->
                 <li>
-                  <a><i class="fa fa-desktop"></i>Configuration<span class="fa fa-chevron-down"></span><span class="label label-warning pull-right">WIP</span></a>
+                  <a><i class="fa fa-desktop"></i>Configuration<span class="fa fa-chevron-down"></span></a>
                   <ul class="nav child_menu">
-                  <li><a href= <?php echo $relative_path . "pages/configuration/sailingRobot/index.php?boat=aspire"?>>Configure ASPire<span class="label label-warning pull-right">In Progress !</span></a></li>
-                  <li><a href= <?php echo $relative_path . "pages/configuration/sailingRobot/index.php?boat=janet"?>>Configure Janet<span class="label label-warning pull-right">In Progress !</span></a></li>
-                    <li><a href=<?php echo $relative_path . "pages/configuration/mission/index.php"?>>Mission<span class="label label-success pull-right">Done !</span></a></li>
+                  <li><a href= <?php echo $relative_path . "pages/configuration/sailingRobot/index.php?boat=aspire"?>>Configure ASPire</a></li>
+                  <li><a href= <?php echo $relative_path . "pages/configuration/sailingRobot/index.php?boat=janet"?>>Configure Janet</a></li>
+                    <li><a href=<?php echo $relative_path . "pages/configuration/mission/index.php"?>>Mission</a></li>
                   </ul>
                 </li>
                 
