@@ -109,6 +109,7 @@
 
 
 
+    // Initialize the map which is centered on the given lat, lng
     function initMap(lat, lon, mymap)
     {
         var accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
@@ -186,6 +187,7 @@
             $('#createPointModal').modal('show');
         });
 
+    // Use the span tags inside the modal form to adapt the text for a waypoint or a checkpoint
     function editModalToPoint(classText, text)
     {
         var waypointOrCheckpoint = $('.waypointOrCheckpoint');
@@ -286,12 +288,13 @@
         // We create another li element
         var listOfPoints = document.getElementById('listOfPoints');
         var newPoint     = document.createElement('li');
-        
+
         newPoint.setAttribute("id", id);
-        newPoint.setAttribute("class", "point");
-        newPoint.classList.add('list-group-item');
+        newPoint.setAttribute("class", "point list-group-item");
         newPoint.appendChild(document.createTextNode(arrayOfPoints[index].print()));
         
+        addDeleteSymbol(newPoint);
+
         // Which is inserted at the the right place
         var listItem = document.getElementById(id);
         
@@ -300,6 +303,7 @@
         // And we delete the old child
         listOfPoints.removeChild(listItem);
     }
+
 
     //*****************************************************************************
     //                                                                            *
@@ -406,6 +410,7 @@
         numberOfPoints = listOfPoints.childElementCount;
     }
 
+    // Handle the creation of a marker
     function createMarker(point, lat, lon)
     {
         newPoint = document.createElement('li');
@@ -431,6 +436,7 @@
 
         // Add an item to the HTML list
         newPoint.appendChild(document.createTextNode(point.print()));
+        addDeleteSymbol(newPoint);
         listOfPoints.appendChild(newPoint);
         
         // Display the list (useful only once)
@@ -581,6 +587,64 @@
         });
 
 
+    //*****************************************************************************
+    //                                                                            *
+    //                            DELETE A POINT                                  *
+    //                                                                            *
+    //*****************************************************************************
+
+    // This is the event 'click' on one delete button.
+    // This function is pretty ugly because I used JS Object {} rather than Array []
+    // It turned out that using {} is simplier for the creation of an JSON Object
+    // The only solution I could come up with, is to copy every point & markers in
+    // a new object and change the 'rankInMission' of the points after the deleted one
+    $('#listOfPoints').on('click', '.customDelete', function()
+        {
+            var id_marker        = $(this).parent().attr('id');
+            var parentNodeList   = document.getElementById('listOfPoints').children;
+            var newArrayOfPoint  = {},
+                newArrayOfMarker = {};
+            // var rank = 1 + Array.from(parentNodeList).indexOf(document.getElementById(id_marker));
+
+            var changeRank = 0;
+            var j;
+
+            for( var i = 1, len = parentNodeList.length; i <= len; i++)
+            {
+                j = i;
+                if (changeRank)
+                {
+                    arrayOfPoints[i].rankInMission = i - 1;
+                    arrayOfMarker[i].options.rankInMission = i - 1;
+                    j = i-1;
+                }
+                if (arrayOfPoints[i].id == id_marker)
+                {
+                    changeRank++;
+                    // Remove marker from the map
+                    mymap.removeLayer(arrayOfMarker[i]);
+                    // Delete node from the DOM
+                    document.getElementById('listOfPoints').removeChild(document.getElementById(id_marker));
+                }
+                else
+                {
+                    newArrayOfMarker[j] = arrayOfMarker[i];
+                    newArrayOfPoint[j] = arrayOfPoints[i]; 
+                }
+            }
+            arrayOfPoints = newArrayOfPoint;
+            arrayOfMarker = newArrayOfMarker;
+        });
+
+    // Add a delete span to the given node.
+    function addDeleteSymbol(newNode)
+    {
+        var newDelete    = document.createElement('span');
+        
+        newDelete.setAttribute("class", "label label-default pull-right customDelete");
+        newDelete.appendChild(document.createTextNode('Delete'));
+        newNode.appendChild(newDelete);        
+    }
 
     //*****************************************************************************
     //                                                                            *

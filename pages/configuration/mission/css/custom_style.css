@@ -1,15 +1,19 @@
-.myrow {
+.myrow 
+{
     font-size: 0;
 }
-.myrow > * {
+.myrow > * 
+{
     float: none;
     display: inline-block;
     font-size: 14px; /* if using LESS it's quicker to just use @font-size-base */
 }
-.myrow > *:last-child {
+.myrow > *:last-child 
+{
     vertical-align: bottom;
 }
-.myrow p:last-child {
+.myrow p:last-child 
+{
     margin-bottom: 0; /* optional */
 }
 
@@ -69,4 +73,26 @@ textarea
 #descriptionNode
 {
 	font-size: 1.5em;
+}
+.list-group-item
+{
+	position: relative;
+}
+.customDelete
+{
+	/*position: absolute;*/
+	background-color: rgba(30, 30, 30, 0.3);
+	font-size: 0.8em;
+	vertical-align: bottom;
+	align-content: right;
+	/*margin-bottom: 0;*/
+	/*margin-right: 0;*/
+	bottom: -8px;
+}
+
+.customDelete:hover
+{
+	background-color: rgba(30, 30, 30, 0.8);
+	cursor: pointer;
+
 }
