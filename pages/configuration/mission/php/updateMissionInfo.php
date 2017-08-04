@@ -1,6 +1,7 @@
 <?php
 define('__ROOT__', dirname(dirname(dirname(dirname(dirname(__FILE__))))));
 require_once(__ROOT__.'/globalsettings.php');
+require_once('is_ajax.php');
 session_start();
 
 function updateMissionInfo($id_mission, $name, $description = "")
@@ -28,9 +29,9 @@ function updateMissionInfo($id_mission, $name, $description = "")
 
     $query = $db->prepare('UPDATE mission SET name = :name, description = :description WHERE id = :id ;');
     $query->execute(array(
-            'name' => $name,
-            'description' => $description,
-            'id' => $id_mission)
+            'name' => htmlspecialchars($name),
+            'description' => htmlspecialchars($description),
+            'id' => htmlspecialchars($id_mission))
         );
 
     // add success / failure message
@@ -49,9 +50,5 @@ if(is_ajax())
     }
 }
 
-// Function to check if the request is an AJAX request
-function is_ajax() 
-{
-    return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
-}
+
 ?>

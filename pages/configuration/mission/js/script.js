@@ -42,6 +42,72 @@
 
     getMissionListFromDB(0);
 
+    function getMissionListFromDB(id)
+    {
+        // Get the mission list in a JSON object
+        $.ajax({
+            type: 'POST',
+            url: 'php/getMissionList.php',
+            dataType: 'json', // What is expected
+            async: true,
+            timeout: 3000,
+            success: function(data) {
+                displayMissionList(data, id);},
+            error: function() {
+                alert('Fail !'); }
+        }); 
+    }
+
+    function displayMissionList(data, id)
+    {
+        var selectNode = document.getElementById('missionSelection');
+        var optionNode = document.createElement('option');
+
+        // Clean before writing again
+        deleteAllChildren(selectNode);
+        
+        // First element - nothing is selected
+        optionNode.setAttribute('id', '0');
+        optionNode.appendChild(document.createTextNode('Choose a mission'));
+        selectNode.appendChild(optionNode);
+
+        // Force the focus on the 1st item
+        if (id == 0)
+        {
+            handleMissionSelection(0);
+            optionNode.selected = true;
+        }
+
+        // If there is any mission in the DB
+        if (len == 0)
+        {
+            optionNode = document.createElement('option');
+            optionNode.setAttribute('id', '-1'); // TODO : adapt test for activation of button
+            optionNode.appendChild(document.createTextNode('You don\'t have any saved mision yet.'));
+            selectNode.appendChild(optionNode);
+        }
+        else
+        {
+            // Display the name of the mission
+            for (var i = 0, len = data.length ; i < len ; i++)
+            {
+                optionNode = document.createElement('option');
+                optionNode.setAttribute("id", data[i]['id']);
+                optionNode.setAttribute("data_token", data[i]['id']);
+                optionNode.appendChild(document.createTextNode(data[i]['id'] + ' - ' + data[i]['name']));
+                
+                // This is used when the list of mission is refreshed after the edition of the mission properties
+                if (id == data[i]['id'])
+                {
+                    optionNode.selected = true;
+                }
+
+                selectNode.appendChild(optionNode);
+            }
+        }
+    }
+
+    // This function handles the display of the button depending on which one is selected
     function handleMissionSelection(id_mission)
     {
         // Get the right point list, the name and the description of the mission
@@ -89,65 +155,6 @@
         }
     }
 
-    function getMissionListFromDB(id)
-    {
-        // Get the mission list in a JSON object
-        $.ajax({
-            type: 'POST',
-            url: 'php/getMissionList.php',
-            dataType: 'json', // What is expected
-            async: true,
-            timeout: 3000,
-            success: function(data) {
-                displayMissionList(data, id);},
-            error: function() {
-                alert('Fail !'); }
-        }); 
-    }
-
-
-    function displayMissionList(data, id)
-    {
-        var selectNode = document.getElementById('missionSelection');
-        var optionNode = document.createElement('option');
-
-        deleteAllChildren(selectNode);
-        
-        optionNode.setAttribute('id', '0');
-        // optionNode.setAttribute('selected', '');
-        optionNode.appendChild(document.createTextNode('Choose a mission'));
-        selectNode.appendChild(optionNode);
-
-        if (id == 0)
-        {
-            handleMissionSelection(0);
-            optionNode.selected = true;
-        }
-
-        if (len == 0)
-        {
-            optionNode = document.createElement('option');
-            optionNode.setAttribute('id', '-1'); // TODO : adapt test for activation of button
-            optionNode.appendChild(document.createTextNode('You don\'t have any saved mision yet.'));
-            selectNode.appendChild(optionNode);
-        }
-        else
-        {
-            for (var i = 0, len = data.length ; i < len ; i++)
-            {
-                optionNode = document.createElement('option');
-                optionNode.setAttribute("id", data[i]['id']);
-                optionNode.setAttribute("data_token", data[i]['id']);
-                optionNode.appendChild(document.createTextNode(data[i]['id'] + ' - ' + data[i]['name']));
-                if (id == data[i]['id'])
-                {
-                    optionNode.selected = true;
-                }
-                selectNode.appendChild(optionNode);
-            }
-        }
-    }
-
     //*****************************************************************************
     //                                                                            *
     //                          Mission Information                               *
@@ -166,13 +173,13 @@
             timeout: 3000,
             success: function(data) {
                 // I use the 'global' var within the IEFE
-                missionName = data[0]["name"];
-                missionDescription = data[0]["description"];
-                missionLastUse = data[0]['last_use'];
+                missionName         = data[0]["name"];
+                missionDescription  = data[0]["description"];
+                missionLastUse      = data[0]['last_use'];
                 cleanMissionInfo();
                 displayMissionInfo(); },
             error: function() {
-                alert('Fail !'); }
+                alert('Fail to get mission info !'); }
         });
     }
 
@@ -257,7 +264,7 @@
             data: {id_mission:selectedMission},
             timeout: 3000,
             success: function(data) {
-                // alert(data);
+                alert(data);
                 getMissionListFromDB(0);
                 },
             error: function() {
@@ -297,11 +304,11 @@
             data: {name:nameF ,decription:descriptionF},
             timeout: 3000,
             success: function(data) {
-                // alert(data);
+                alert(data);
                 getMissionListFromDB(0);
                  },
             error: function() {
-                alert('Fail !'); }
+                alert('Fail creating mission !'); }
         });
 
         $('#createMissionModal').modal('hide');

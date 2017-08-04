@@ -80,7 +80,7 @@ function loadMissionToBoat($id_mission)
         $exec4 = $query4->execute($arrayOfPoints);
         if ($exec4 === false)
         {
-            $msg = sprintf("Error while inserting pointList into DB (ASPire_config) because execute() failed: %s\n<br />", htmlspecialchars($query1->error));
+            $msg = sprintf("Error while inserting pointList into DB (ASPire_config) because execute() failed: %s\n<br />", htmlspecialchars($query4->error));
         }
         $query4->closeCursor();
 
@@ -100,11 +100,11 @@ function loadMissionToBoat($id_mission)
     }
     else if ($exec2 === false)
     {
-        $msg = sprintf("Error while deleting old pointList into DB (ASPire_config) because execute() failed: %s\n<br />", htmlspecialchars($query1->error));
+        $msg = sprintf("Error while deleting old pointList into DB (ASPire_config) because execute() failed: %s\n<br />", htmlspecialchars($query2->error));
     }
      else if ($exec3 === false)
     {
-        $msg = sprintf("Error while getting pointList from DB (website) because execute() failed: %s\n<br />", htmlspecialchars($query1->error));
+        $msg = sprintf("Error while getting pointList from DB (website) because execute() failed: %s\n<br />", htmlspecialchars($query3->error));
     }   
     echo $msg;
 

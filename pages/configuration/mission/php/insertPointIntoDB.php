@@ -1,5 +1,6 @@
 <?php
 define('__ROOT__', dirname(dirname(dirname(dirname(dirname(__FILE__))))));
+require_once('./is_ajax.php');
 require_once(__ROOT__.'/globalsettings.php');
 session_start();
 
@@ -80,10 +81,4 @@ if (is_ajax())
     $params = json_decode($request,true);           // true for return as array
 
     insertPointIntoDB($params);
-}
-
-// Function to check if the request is an AJAX request
-function is_ajax() 
-{
-    return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
 }

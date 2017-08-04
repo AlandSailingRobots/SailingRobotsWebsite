@@ -1,6 +1,7 @@
 <?php
 define('__ROOT__', dirname(dirname(dirname(dirname(dirname(__FILE__))))));
 require_once(__ROOT__.'/globalsettings.php');
+require_once('is_ajax.php');
 
 function insertMissionIntoDB($name, $description = "")
 {
@@ -27,21 +28,33 @@ function insertMissionIntoDB($name, $description = "")
     }
 
     $query = $db->prepare('INSERT INTO mission (name, description) VALUES (:name, :description);');
-    $query->execute(array(
-            'name' => $name,
-            'description' => $description)
+    $exec = $query->execute(array(
+            'name' => htmlspecialchars($name),
+            'description' => htmlspecialchars($description))
         );
 
-    // return $result;
+    if ($exec == false)
+    {
+        $msg = sprintf("Error while writing mission into DB (website) because execute() failed: %s\n<br />", htmlspecialchars($query->error));
+    }
+    elseif ($exec)
+    {
+        $msg = 'Success !';
+    }
+    echo $msg;
+
 }
 
-session_start();
-if (isset($_POST['name']) && isset($_POST['description']) && $_SESSION['right'] == 'admin')
+if (is_ajax())
 {
-    insertMissionIntoDB($_POST['name'], $_POST['description']);
-}
-elseif (isset($_POST['name']) && $_SESSION['right'] == 'admin')
-{
-    insertMissionIntoDB($_POST['name']);
+    session_start();
+    if (isset($_POST['name']) && isset($_POST['description']) && $_SESSION['right'] == 'admin')
+    {
+        insertMissionIntoDB($_POST['name'], $_POST['description']);
+    }
+    elseif (isset($_POST['name']) && $_SESSION['right'] == 'admin')
+    {
+        insertMissionIntoDB($_POST['name']);
+    }
 }
 ?>

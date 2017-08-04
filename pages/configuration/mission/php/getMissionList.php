@@ -1,4 +1,6 @@
 <?php
+require_once('is_ajax.php');
+
 function getMissionList()
 {
     /* 
@@ -44,12 +46,6 @@ if (is_ajax())
         $resultJSON = json_encode(getMissionList());
         print_r($resultJSON);
     }
-}
-
-// Function to check if the request is an AJAX request
-function is_ajax() 
-{
-    return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
 }
 
 ?>

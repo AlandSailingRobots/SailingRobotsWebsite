@@ -40,47 +40,6 @@
         return result;
     };
 
-    //*****************************************************************************
-    //                                                                            *
-    //                             DECLINATION                                    *
-    //                                                                            *
-    //*****************************************************************************         
-
-        // declination=0;
-        function setdecl(v){
-            console.log("declination found: "+v);
-            declination=v;
-        }
-
-        function lookupMag(lat, lon) {
-            var url =
-                "http://www.ngdc.noaa.gov/geomag-web/calculators/calculateIgrfgrid?lat1="+lat+"&lat2="+lat+"&lon1="+lon+"&lon2="+lon+
-                "&latStepSize=0.1&lonStepSize=0.1&magneticComponent=d&resultFormat=xml";
-            // $.get(url, function(xml, status){
-            //      setdecl( $(xml).find('declination').text());
-            // });
-            var xmlHTTP = new XMLHttpRequest();
-            xmlHTTP.onreadystatechange = function()
-                {
-                    if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200)
-                    {
-                        setdecl($(xml).find('declination').text());
-                    }
-                }
-            xmlHTTP.open("GET", url, true);
-            xmlHTTP.send(null);
-        }
-        // var geomagnetism = require('geomagnetism');
-
-        // // information for "right now"
-        // var info = geomagnetism.model().point([44.53461, -109.05572]);
-        // console.log('declination:', info.decl);
-
-        // // use a specific date
-        // var model = geomagnetism.model(new Date('12/25/2017'));
-        // var info = model.point([44.53461, -109.05572]);
-        // console.log('declination:', info.decl);
-        // lookupMag(55.58552,12.1313);
 
     //*****************************************************************************
     //                                                                            *
@@ -95,12 +54,14 @@
     var popup = L.popup();
 
     var listOfPoints = document.getElementById('listOfPoints'); // To manage the list of item
-    var isOpen = false; // To handle the popup of creation of point
+    var isOpen = false;                 // To handle the popup of creation of point
     var numberOfPoints = listOfPoints.childElementCount;
-    var arrayOfPoints = {}; // new Array(); // To store the different waypoints & checkpoints
-    var arrayOfMarker = {}; // new Array(); // To store the different marker of the map.
-    var coordGPS; // Coord of where we clicked on the map
+    var arrayOfPoints = {};             // To store the different waypoints & checkpoints
+    var arrayOfMarker = {};             // To store the different marker of the map.
+    var arrayOfCircle = {};
+    var coordGPS;                       // Coord of where we clicked on the map
     var timeStamp = currentTimeStamp(); // We need an unique ID to link the html tag / the marker object / the point object
+    var polyline;
 
     var name,
         lat, 
@@ -229,15 +190,15 @@
         var color; // Of Icon on the map
         
         // Var to create a new point object
-        var name           = $('#newPointName').val(),
+        var name           = escapeHtml($('#newPointName').val()),
             id_mission     = $('#missionSelection').children(':selected').attr('id'),
-            radius         = $('#newPointRadius').val(),
+            radius         = escapeHtml($('#newPointRadius').val()),
             stay_time      = parseInt($('#newPointStay_time').val())*60, // So we get seconds
-            lat            = $('#newPointLatitude').val(),
-            lon            = $('#newPointLongitude').val(),
+            lat            = escapeHtml($('#newPointLatitude').val()),
+            lon            = escapeHtml($('#newPointLongitude').val()),
+            declination    = escapeHtml($('#newPointDeclination').val()),
             rankInMission  = ++numberOfPoints, 
-            isCheckpoint, 
-            declination;
+            isCheckpoint; 
 
         // console.log("GPS : ", coordGPS, " lat ", coordGPS.split(',')[0], " lon ", coordGPS.split(',')[1]);
         // Update the timestamp for the new point
@@ -246,18 +207,15 @@
         // Checkpoint or Waypoint
         if ($('.waypointOrCheckpoint')[0].firstChild.classList.contains('isCheckpoint'))
         {
-            // newPoint.classList.add('isCheckpoint');
             isCheckpoint = 1;
-            // color = greenIcon;
         }
         else
         {
-            // newPoint.classList.add('isWaypoint');
             isCheckpoint = 0;
-            // color = blueIcon;
         }
+
         // Last thing to compute
-        declination = computeDeclination(lat, lon);
+        // declination = computeDeclination(lat, lon);
 
         // We can now create an instance of the class Point
         var newPoint_JS = new Point(timeStamp, id_mission, isCheckpoint, rankInMission, name, lat, lon, declination, radius, stay_time);
@@ -281,8 +239,13 @@
         if (editOrMove == "move")
         {
             // Update the position according to the marker
-            arrayOfPoints[index].latitude  = roundNumber(marker.getLatLng().lat, 6);
-            arrayOfPoints[index].longitude = roundNumber(marker.getLatLng().lng, 6);
+            arrayOfPoints[index].latitude  = roundNumber(marker.getLatLng().lat, 5);
+            arrayOfPoints[index].longitude = roundNumber(marker.getLatLng().lng, 5);
+            
+            // Update the position of the associated circle
+            arrayOfCircle[index].setLatLng(marker.getLatLng(), {});
+            // arrayOfCircle[index].options.lat  = roundNumber(marker.getLatLng().lat, 5);
+            // arrayOfCircle[index].options.longitude = roundNumber(marker.getLatLng().lng, 5);
         }
 
         // We create another li element
@@ -376,8 +339,9 @@
     function displayPointFromDB(data)
     {
         // We clean the variables
-        arrayOfPoints = {},
+        arrayOfPoints = {};
         arrayOfMarker = {};
+        arrayOfCircle = {};
 
         var len = data.length;
         if (len == 0)
@@ -408,12 +372,16 @@
             createMarker(point, lat, lon);
         }
         numberOfPoints = listOfPoints.childElementCount;
+        console.log(arrayOfMarker);
+        console.log(arrayOfPoints);
+        drawLineBetweenMarkers();
+
     }
 
     // Handle the creation of a marker
     function createMarker(point, lat, lon)
     {
-        newPoint = document.createElement('li');
+        var newPoint = document.createElement('li');
 
         // Add class attribute to the <li> element
         newPoint.setAttribute("class", "point");
@@ -457,20 +425,26 @@
         // Add in marker array
         arrayOfMarker[point.rankInMission] = marker;
        
-       // TODO : fix the circle behaviour
-        L.circle([lat, lon],
-                    parseFloat(point.radius), 
-                    {color: 'red',
-                    fillColor: '#f03',
-                    fillOpacity: 0.3 
-                }).addTo(mymap)
+        // New 'following' circle
+        var circle = L.circle([lat, lon],
+                                parseFloat(point.radius), 
+                                {color: 'red',
+                                fillColor: '#f03',
+                                fillOpacity: 0.3,
+                                rankInMission: point.rankInMission,
+                                id: point.id
+                            }).addTo(mymap)
+        
+        // Store the circle in an array. It works the same way as it does for the marker
+        arrayOfCircle[point.rankInMission] = circle;
+        
         
         // Handle the Drag & Drop
         marker.on('dragend', function(event)
             {
                 var marker = event.target;
                 var position = marker.getLatLng();
-                console.log(position);
+                // console.log(position);
 
                 // Update the position on the map
                 marker.setLatLng(position,{draggable:'true',
@@ -481,8 +455,26 @@
                 // Update the position in our lists.
                 updateListItems(marker, "move");
 
+                // Update the polyline
+                mymap.removeLayer(polyline);
+                drawLineBetweenMarkers();
             });
         mymap.addLayer(marker);
+
+    }
+
+    function drawLineBetweenMarkers()
+    {
+        var size    = document.getElementById('listOfPoints').children.length;
+        var LatLngs = Array();
+        if(size > 1)
+        {
+            for (var i = size; i > 0; i--) 
+            {
+                LatLngs.push(arrayOfMarker[i].getLatLng());
+            }
+        }
+        polyline = L.polyline(LatLngs, {color: 'red'}).addTo(mymap);
     }
 
     //*****************************************************************************
@@ -603,7 +595,8 @@
             var id_marker        = $(this).parent().attr('id');
             var parentNodeList   = document.getElementById('listOfPoints').children;
             var newArrayOfPoint  = {},
-                newArrayOfMarker = {};
+                newArrayOfMarker = {},
+                newArrayOfCircle = {};
             // var rank = 1 + Array.from(parentNodeList).indexOf(document.getElementById(id_marker));
 
             var changeRank = 0;
@@ -623,6 +616,7 @@
                     changeRank++;
                     // Remove marker from the map
                     mymap.removeLayer(arrayOfMarker[i]);
+                    mymap.removeLayer(arrayOfCircle[i]);
                     // Delete node from the DOM
                     document.getElementById('listOfPoints').removeChild(document.getElementById(id_marker));
                 }
@@ -630,10 +624,17 @@
                 {
                     newArrayOfMarker[j] = arrayOfMarker[i];
                     newArrayOfPoint[j] = arrayOfPoints[i]; 
+                    newArrayOfCircle[j] = arrayOfCircle[i]; 
                 }
             }
+
+            // Update the polyline
+            mymap.removeLayer(polyline);
+            drawLineBetweenMarkers();
+
             arrayOfPoints = newArrayOfPoint;
             arrayOfMarker = newArrayOfMarker;
+            arrayOfCircle = newArrayOfCircle;
         });
 
     // Add a delete span to the given node.
@@ -645,6 +646,48 @@
         newDelete.appendChild(document.createTextNode('Delete'));
         newNode.appendChild(newDelete);        
     }
+
+    //*****************************************************************************
+    //                                                                            *
+    //                             DECLINATION                                    *
+    //                                                                            *
+    //*****************************************************************************         
+
+    // declination=0;
+    function setdecl(v){
+        console.log("declination found: "+v);
+        declination=v;
+    }
+
+    function lookupMag(lat, lon) {
+        var url =
+            "http://www.ngdc.noaa.gov/geomag-web/calculators/calculateIgrfgrid?lat1="+lat+"&lat2="+lat+"&lon1="+lon+"&lon2="+lon+
+            "&latStepSize=0.1&lonStepSize=0.1&magneticComponent=d&resultFormat=xml";
+        // $.get(url, function(xml, status){
+        //      setdecl( $(xml).find('declination').text());
+        // });
+        var xmlHTTP = new XMLHttpRequest();
+        xmlHTTP.onreadystatechange = function()
+            {
+                if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200)
+                {
+                    setdecl($(xml).find('declination').text());
+                }
+            }
+        xmlHTTP.open("GET", url, true);
+        xmlHTTP.send(null);
+    }
+    // var geomagnetism = require('geomagnetism');
+
+    // // information for "right now"
+    // var info = geomagnetism.model().point([44.53461, -109.05572]);
+    // console.log('declination:', info.decl);
+
+    // // use a specific date
+    // var model = geomagnetism.model(new Date('12/25/2017'));
+    // var info = model.point([44.53461, -109.05572]);
+    // console.log('declination:', info.decl);
+    // lookupMag(55.58552,12.1313);
 
     //*****************************************************************************
     //                                                                            *

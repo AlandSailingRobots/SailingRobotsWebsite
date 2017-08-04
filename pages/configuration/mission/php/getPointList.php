@@ -1,6 +1,7 @@
 <?php
 define('__ROOT__', dirname(dirname(dirname(dirname(dirname(__FILE__))))));
 require_once(__ROOT__.'/globalsettings.php');
+require_once('./is_ajax.php');
 session_start();
 
 function getPointList($id_mission)
@@ -55,12 +56,6 @@ if (is_ajax())
     {
         getPointList($_POST['id_mission']);
     }
-}
-
-// Function to check if the request is an AJAX request
-function is_ajax() 
-{
-    return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
 }
 
 ?>

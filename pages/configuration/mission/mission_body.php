@@ -200,9 +200,12 @@ require_once('php/getMissionList.php');
                     <span class="input-group-addon">minutes</span>
                     <span class="help-block">How long should the boat stay at the <span class="waypointOrCheckpoint"><span></span></span>?</span>
                 </div>
-                <div class="col-xs-12 col-md-6">
-                    <br>
-                </div>
+
+                <label class="col-md-4 control-label" for="declination">Declination</label>
+                <input type="number" class="form-control" id="newPointDeclination" name="declination" value="0" required="1" ></input>
+                <span class="input-group-addon">degrees</span>
+                <br>
+
             </div>
         </div>
         <div class="modal-footer">
@@ -258,7 +261,7 @@ require_once('php/getMissionList.php');
                     <span class="help-block">How long should the boat stay at the <span class="waypointOrCheckpoint"><span></span></span>?</span>
                 </div>
 
-                <label class="col-md-4 control-label" for="stay_time">Declination</label>
+                <label class="col-md-4 control-label" for="declination">Declination</label>
                 <input type="number" class="form-control" id="editPointDeclination" name="declination" value="" required="1" ></input>
                 <span class="input-group-addon">degrees</span>
                 <br>
