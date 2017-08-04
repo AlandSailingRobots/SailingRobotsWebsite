@@ -1,6 +1,7 @@
 <?php
 // Body of the page when connected
 require_once('include/printTables.php');
+require_once('include/getConfigData.php');
 ?>
 
 
@@ -18,23 +19,22 @@ require_once('include/printTables.php');
                 <?php
                 if (isset($_GET['boat']) && $_GET['boat'] == "janet")
                 {
-                    require_once('include/getConfigDataJanet.php');
                     echo '<input type="text" class="hidden" name="boat|janet" value="janet" size="1">';
                     // We get every table from the database
-                    $bufferConfigArray            = getConfigData("buffer_config");
-                    $courseCalculationConfigArray = getConfigData("course_calculation_config");
-                    $maestroControllerConfigArray = getConfigData("maestro_controller_config");
-                    $rudderCommandConfigArray     = getConfigData("rudder_command_config");
-                    $rudderServoConfigArray       = getConfigData("rudder_servo_config");
-                    $sailCommandConfigArray       = getConfigData("sail_command_config");
-                    $sailServoConfigArray         = getConfigData("sail_servo_config");
-                    $sailingRobotConfigArray      = getConfigData("sailing_robot_config");
-                    $waypointRoutingConfigArray   = getConfigData("waypoint_routing_config");
-                    $windVaneConfigArray          = getConfigData("wind_vane_config");
-                    $windsensorConfigArray        = getConfigData("windsensor_config");
-                    $xbeeConfigArray              = getConfigData("xbee_config");
-                    $httpSyncConfigArray          = getConfigData("httpsync_config");
-                    
+                    $bufferConfigArray            = getConfigData("buffer_config"             , "janet");
+                    $courseCalculationConfigArray = getConfigData("course_calculation_config" , "janet");
+                    $maestroControllerConfigArray = getConfigData("maestro_controller_config" , "janet");
+                    $rudderCommandConfigArray     = getConfigData("rudder_command_config"     , "janet");
+                    $rudderServoConfigArray       = getConfigData("rudder_servo_config"       , "janet");
+                    $sailCommandConfigArray       = getConfigData("sail_command_config"       , "janet");
+                    $sailServoConfigArray         = getConfigData("sail_servo_config"         , "janet");
+                    $sailingRobotConfigArray      = getConfigData("sailing_robot_config"      , "janet");
+                    $waypointRoutingConfigArray   = getConfigData("waypoint_routing_config"   , "janet");
+                    $windVaneConfigArray          = getConfigData("wind_vane_config"          , "janet");
+                    $windsensorConfigArray        = getConfigData("windsensor_config"         , "janet");
+                    $xbeeConfigArray              = getConfigData("xbee_config"               , "janet");
+                    $httpSyncConfigArray          = getConfigData("httpsync_config"           , "janet");
+
                     // We display the different tables
                     printTables($bufferConfigArray            , "buffer_config");
                     printTables($courseCalculationConfigArray , "course_calculation_config");
@@ -55,16 +55,15 @@ require_once('include/printTables.php');
                 }
                 else if (isset($_GET['boat']) && $_GET['boat'] == "aspire")
                 {
-                    require_once('include/getConfigDataASPire.php');
                     echo '<input type="text" class="hidden" name="boat|aspire" value="aspire" size="1">';
                     
-                    $configBufferArray          = getConfigData("config_buffer");
-                    $configHTTPSyncArray        = getConfigData("config_httpsync");
-                    $configHTTPSyncNodeArray    = getConfigData("config_HTTPSyncNode");
-                    $configI2CArray             = getConfigData("config_i2c");
-                    $configStateEstimationArray = getConfigData("config_StateEstimationNode");
-                    $configWindvaneArray        = getConfigData("config_wind_vane");
-                    $scanningMeasurementsArray   = getConfigData("scanning_measurements");
+                    $configBufferArray           = getConfigData("config_buffer"              , "aspire");
+                    $configHTTPSyncArray         = getConfigData("config_httpsync"            , "aspire");
+                    $configHTTPSyncNodeArray     = getConfigData("config_HTTPSyncNode"        , "aspire");
+                    $configI2CArray              = getConfigData("config_i2c"                 , "aspire");
+                    $configStateEstimationArray  = getConfigData("config_StateEstimationNode" , "aspire");
+                    $configWindvaneArray         = getConfigData("config_wind_vane"           , "aspire");
+                    $scanningMeasurementsArray   = getConfigData("scanning_measurements"      , "aspire");
 
                     // We display the different tables
                     printTables($configBufferArray          , "config_httpsync");
