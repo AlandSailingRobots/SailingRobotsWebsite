@@ -66,11 +66,11 @@ require_once('include/getConfigData.php');
                     $scanningMeasurementsArray   = getConfigData("scanning_measurements"      , "aspire");
 
                     // We display the different tables
-                    printTables($configBufferArray          , "config_httpsync");
-                    printTables($configHTTPSyncArray        , "course_calculation_config");
+                    printTables($configBufferArray          , "config_buffer");
+                    printTables($configHTTPSyncArray        , "config_httpsync");
                     printTables($configHTTPSyncNodeArray    , "config_HTTPSyncNode");
+                    printTables($configI2CArray             , "config_i2c");
 
-                    printTables($configI2CArray              , "config_i2c");
                     printTables($configStateEstimationArray  , "config_StateEstimationNode");
                     printTables($configWindvaneArray         , "config_wind_vane");
                     printTables($scanningMeasurementsArray   , "scanning_measurements");

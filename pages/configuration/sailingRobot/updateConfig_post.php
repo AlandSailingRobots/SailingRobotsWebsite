@@ -16,7 +16,7 @@ foreach ($_POST as $key => $value)
         {
         // echo 'value changed : ' . $value . ' for the key ' . $exploded_key[1] . ' of the table ' . $exploded_key[0] .' <br/>' ;
 
-        $query = $db->prepare("UPDATE $exploded_key[0] SET  $exploded_key[1] = ? ;");
+        $query = $db->prepare("UPDATE $exploded_key[0] SET $exploded_key[1] = ? ;");
         $query->execute(array(htmlspecialchars($value)));
         }
     }
