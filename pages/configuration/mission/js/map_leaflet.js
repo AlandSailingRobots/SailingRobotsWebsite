@@ -61,7 +61,8 @@
     var arrayOfCircle = {};
     var coordGPS;                       // Coord of where we clicked on the map
     var timeStamp = currentTimeStamp(); // We need an unique ID to link the html tag / the marker object / the point object
-    var polyline;
+    var polyline;                       // Declaration of a global variable. LeafletJS object (polyline)
+    var LatLngs = Array();              // Array used to store the coordinates of the markers to draw the polyline
 
     var name,
         lat, 
@@ -344,16 +345,16 @@
         arrayOfCircle = {};
 
         var len = data.length;
+
+        // Initialization if there is not point in the mission
+        // Centered on Mariehamn
         if (len == 0)
         {
             listOfPoints.parentNode.style.display = "none";
-        }
-
-        if (len == 0)
-        {
             initMap(60.1, 19.935, mymap);
         }
 
+        // Adding all points
         for (var i = 0; i < len; i++)
         {
             var point = $.extend(new Point(), data[i]);
@@ -374,8 +375,10 @@
         numberOfPoints = listOfPoints.childElementCount;
         console.log(arrayOfMarker);
         console.log(arrayOfPoints);
-        drawLineBetweenMarkers();
 
+        // Join the markers
+        mymap.removeLayer(polyline);
+        drawLineBetweenMarkers();
     }
 
     // Handle the creation of a marker
@@ -437,8 +440,19 @@
         
         // Store the circle in an array. It works the same way as it does for the marker
         arrayOfCircle[point.rankInMission] = circle;
-        
-        
+
+
+        console.log(polyline);
+        if (polyline != undefined)
+        {
+            console.log('clicked !');
+            mymap.removeLayer(polyline)
+        }        
+        LatLngs.push(marker.getLatLng());
+        polyline = L.polyline(LatLngs, {color: 'red'}).addTo(mymap);
+
+
+
         // Handle the Drag & Drop
         marker.on('dragend', function(event)
             {
@@ -459,17 +473,21 @@
                 mymap.removeLayer(polyline);
                 drawLineBetweenMarkers();
             });
-        mymap.addLayer(marker);
 
+        // Finally we display the marker on the map
+        mymap.addLayer(marker);
     }
 
+    // This functions uses the coordinates of all markers to draw a line between them
     function drawLineBetweenMarkers()
     {
         var size    = document.getElementById('listOfPoints').children.length;
-        var LatLngs = Array();
+        
+        LatLngs = Array();
+        
         if(size > 1)
         {
-            for (var i = size; i > 0; i--) 
+            for (var i = 1; i <= size; i++) 
             {
                 LatLngs.push(arrayOfMarker[i].getLatLng());
             }
@@ -628,13 +646,13 @@
                 }
             }
 
-            // Update the polyline
-            mymap.removeLayer(polyline);
-            drawLineBetweenMarkers();
-
             arrayOfPoints = newArrayOfPoint;
             arrayOfMarker = newArrayOfMarker;
             arrayOfCircle = newArrayOfCircle;
+
+            // Update the polyline // TODO fix bug here
+            mymap.removeLayer(polyline);
+            drawLineBetweenMarkers();
         });
 
     // Add a delete span to the given node.

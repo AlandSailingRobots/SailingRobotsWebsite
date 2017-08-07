@@ -18,7 +18,7 @@ require_once('php/getMissionList.php');
     <button type="button" class="btn btn-default col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-0 col-md-5 disabled" id="editMissionButton" >Edit Mission Properties</button>
 </div>
 <div class="row">
-    <button type="button" class="btn btn-primary col-xs-12 col-sm-offset-1 col-sm-5 col-md-offset-0 col-md-5 " id="createMissionButton" >Create Mission</button>
+    <button type="button" class="btn btn-primary col-xs-12 col-sm-offset-1 col-sm-5 col-md-offset-0 col-md-5 " id="createMissionButton" >Create New Mission</button>
     <button type="button" class="btn btn-danger col-xs-12 col-sm-5 col-md-offset-1 col-md-5 disabled" id="deleteMissionButton" >Delete Mission</button>
 </div>
 
