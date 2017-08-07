@@ -63,6 +63,10 @@
     var timeStamp = currentTimeStamp(); // We need an unique ID to link the html tag / the marker object / the point object
     var polyline;                       // Declaration of a global variable. LeafletJS object (polyline)
     var LatLngs = Array();              // Array used to store the coordinates of the markers to draw the polyline
+    var polylineSup,
+        LatLngsSup = Array(),
+        polylineInf,
+        LatLngsInf = Array();
 
     var name,
         lat, 
@@ -441,17 +445,13 @@
         // Store the circle in an array. It works the same way as it does for the marker
         arrayOfCircle[point.rankInMission] = circle;
 
-
-        console.log(polyline);
+        // Update the polyline
         if (polyline != undefined)
         {
-            console.log('clicked !');
             mymap.removeLayer(polyline)
-        }        
+        }  
         LatLngs.push(marker.getLatLng());
         polyline = L.polyline(LatLngs, {color: 'red'}).addTo(mymap);
-
-
 
         // Handle the Drag & Drop
         marker.on('dragend', function(event)
@@ -490,6 +490,7 @@
             for (var i = 1; i <= size; i++) 
             {
                 LatLngs.push(arrayOfMarker[i].getLatLng());
+                // TODO : compute points for upper and lower lines for the path
             }
         }
         polyline = L.polyline(LatLngs, {color: 'red'}).addTo(mymap);
@@ -611,49 +612,64 @@
     $('#listOfPoints').on('click', '.customDelete', function()
         {
             var id_marker        = $(this).parent().attr('id');
-            var parentNodeList   = document.getElementById('listOfPoints').children;
-            var newArrayOfPoint  = {},
-                newArrayOfMarker = {},
-                newArrayOfCircle = {};
-            // var rank = 1 + Array.from(parentNodeList).indexOf(document.getElementById(id_marker));
 
-            var changeRank = 0;
-            var j;
-
-            for( var i = 1, len = parentNodeList.length; i <= len; i++)
-            {
-                j = i;
-                if (changeRank)
-                {
-                    arrayOfPoints[i].rankInMission = i - 1;
-                    arrayOfMarker[i].options.rankInMission = i - 1;
-                    j = i-1;
-                }
-                if (arrayOfPoints[i].id == id_marker)
-                {
-                    changeRank++;
-                    // Remove marker from the map
-                    mymap.removeLayer(arrayOfMarker[i]);
-                    mymap.removeLayer(arrayOfCircle[i]);
-                    // Delete node from the DOM
-                    document.getElementById('listOfPoints').removeChild(document.getElementById(id_marker));
-                }
-                else
-                {
-                    newArrayOfMarker[j] = arrayOfMarker[i];
-                    newArrayOfPoint[j] = arrayOfPoints[i]; 
-                    newArrayOfCircle[j] = arrayOfCircle[i]; 
-                }
-            }
-
-            arrayOfPoints = newArrayOfPoint;
-            arrayOfMarker = newArrayOfMarker;
-            arrayOfCircle = newArrayOfCircle;
-
-            // Update the polyline // TODO fix bug here
-            mymap.removeLayer(polyline);
-            drawLineBetweenMarkers();
+            deleteMarker(id_marker);
         });
+        
+    $('#map').on('click', '.deletePoint', function()
+        {
+            var id_element      = $(this).attr('id');
+            var id_marker       = id_element.split('|')[1].split(':')[1];
+
+            deleteMarker(id_marker);
+
+        });
+
+    function deleteMarker(id_marker)
+    {
+        var parentNodeList   = document.getElementById('listOfPoints').children;
+        var newArrayOfPoints = {},
+            newArrayOfMarker = {},
+            newArrayOfCircle = {};
+        // var rank = 1 + Array.from(parentNodeList).indexOf(document.getElementById(id_marker));
+
+        var changeRank = 0;
+        var j;
+
+        for( var i = 1, len = parentNodeList.length; i <= len; i++)
+        {
+            j = i;
+            if (changeRank)
+            {
+                arrayOfPoints[i].rankInMission = i - 1;
+                arrayOfMarker[i].options.rankInMission = i - 1;
+                j = i-1;
+            }
+            if (arrayOfPoints[i].id == id_marker)
+            {
+                changeRank++;
+                // Remove marker from the map
+                mymap.removeLayer(arrayOfMarker[i]);
+                mymap.removeLayer(arrayOfCircle[i]);
+                // Delete node from the DOM
+                document.getElementById('listOfPoints').removeChild(document.getElementById(id_marker));
+            }
+            else
+            {
+                newArrayOfMarker[j] = arrayOfMarker[i];
+                newArrayOfPoints[j] = arrayOfPoints[i]; 
+                newArrayOfCircle[j] = arrayOfCircle[i]; 
+            }
+        }
+
+        arrayOfPoints = newArrayOfPoints;
+        arrayOfMarker = newArrayOfMarker;
+        arrayOfCircle = newArrayOfCircle;
+
+        // Update the polyline // TODO fix bug here
+        mymap.removeLayer(polyline);
+        drawLineBetweenMarkers();
+    };
 
     // Add a delete span to the given node.
     function addDeleteSymbol(newNode)
@@ -793,6 +809,24 @@
         var rndedNum = Math.round(number * multiple) / multiple;
         return rndedNum;
     }
+
+    // Functions used to get the coordinates of the point on the circle in order to 
+    // draw to the limits of the path of the sailing robot.
+    function computeTheta(vectorA, vectorB)
+    {
+        return Math.atan2(vectorB[1] - vectorA[1], vectorB[0] - vectorA[0]);
+    }
+
+    function rotationVector(theta, vector)
+    {
+        var result = {};
+
+        result[0] = Math.cos(theta)*vector[0] - Math.sin(theta)*vector[1];
+        result[1] = Math.sin(theta)*vector[0] + Math.cos(theta)*vector[1];
+
+        return result;
+    }
+
     // return  {
     //             createNewPoint: createNewPoint()
     //         };
