@@ -63,10 +63,6 @@ require_once('php/getMissionList.php');
             <p class="text-justify">
                 To load a mission on ASPire, select your mission, and click on the 'Launch the Selected Mission' button. It will make a copy of the list of the waypoint & checkpoint to another database, which is synchronized with ASPire.<br/>
             </p>
-            <h3>Remarks</h3>
-            <p class="text-justify">
-                Pay attention to the fact that, you cannot edit your point for the moment. It means that you cannot change its properties once it has been added to the map.<br/>
-            </p>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-primary myfooter" id="closeInstructionButton">Close</button>
@@ -296,5 +292,5 @@ require_once('php/getMissionList.php');
         <ul class="list-group" id="listOfPoints">
         </ul>
     </div>
-    <button type="button" class="btn btn-info btn-lg col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10 col-lg-offset-1 col-lg-5" id="loadMissionButton" >Load Mission</button>
+    <button type="button" class="btn btn-info btn-lg col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-1 col-md-10 col-lg-offset-1 col-lg-5" id="loadMissionButton" >Load Mission on ASPire</button>
 </div>

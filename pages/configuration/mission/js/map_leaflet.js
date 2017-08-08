@@ -24,7 +24,7 @@
 
     Point.prototype.print = function() 
     {
-        if (this.isCheckpoint)
+        if (this.isCheckpoint == "1")
         {
             var type = "checkpoint";
         }
@@ -63,10 +63,8 @@
     var timeStamp = currentTimeStamp(); // We need an unique ID to link the html tag / the marker object / the point object
     var polyline;                       // Declaration of a global variable. LeafletJS object (polyline)
     var LatLngs = Array();              // Array used to store the coordinates of the markers to draw the polyline
-    var polylineSup,
-        LatLngsSup = Array(),
-        polylineInf,
-        LatLngsInf = Array();
+    var arrayOfPolylineSup = Array(),
+        arrayOfPolylineInf = Array();
 
     var name,
         lat, 
@@ -293,7 +291,7 @@
             contentType: 'application/json; charset=utf-8', // What is sent
             data: JSON.stringify(arrayOfPoints),
             // dataType: 'json',
-            async: true,
+            async: false,
             timeout: 3000,
             success: function(data) {
                 alert(data);},
@@ -377,11 +375,11 @@
             createMarker(point, lat, lon);
         }
         numberOfPoints = listOfPoints.childElementCount;
-        console.log(arrayOfMarker);
-        console.log(arrayOfPoints);
 
         // Join the markers
         mymap.removeLayer(polyline);
+        // mymap.removeLayer(polylineSup);
+        // mymap.removeLayer(polylineInf);
         drawLineBetweenMarkers();
     }
 
@@ -448,7 +446,9 @@
         // Update the polyline
         if (polyline != undefined)
         {
-            mymap.removeLayer(polyline)
+            mymap.removeLayer(polyline);
+            //mymap.removeLayer(polylineSup);
+            //mymap.removeLayer(polylineInf);
         }  
         LatLngs.push(marker.getLatLng());
         polyline = L.polyline(LatLngs, {color: 'red'}).addTo(mymap);
@@ -471,6 +471,7 @@
 
                 // Update the polyline
                 mymap.removeLayer(polyline);
+                removePolylineInfSup();
                 drawLineBetweenMarkers();
             });
 
@@ -481,28 +482,110 @@
     // This functions uses the coordinates of all markers to draw a line between them
     function drawLineBetweenMarkers()
     {
-        var size    = document.getElementById('listOfPoints').children.length;
-        
-        LatLngs = Array();
-        
+        var size   = document.getElementById('listOfPoints').children.length;
+        var coordSupInf;
+
+        LatLngs    = Array();
+        var LatLngsSup = Array();
+        var LatLngsInf = Array();
+        // mymap.removeLayer(polylineSup);
+        // mymap.removeLayer(polylineInf);
+
         if(size > 1)
         {
-            for (var i = 1; i <= size; i++) 
+            // Because we start at i = 2 in the loop
+            LatLngs.push(arrayOfMarker[1].getLatLng());
+
+            for (var i = 2; i <= size; i++) 
             {
                 LatLngs.push(arrayOfMarker[i].getLatLng());
-                // TODO : compute points for upper and lower lines for the path
+                
+                // Compute points for upper and lower lines for the path
+                coordSupInf = computeCoordinatesOfLine(arrayOfMarker[i-1], arrayOfMarker[i]);
+                
+                // Upper line
+                LatLngsSup[0] = coordSupInf[0];
+                LatLngsSup[1] = coordSupInf[1];
+                polylineSup = L.polyline(LatLngsSup, {color: '#0000ff'}).addTo(mymap);
+                arrayOfPolylineSup.push(polylineSup);
+                
+                // Lower line
+                LatLngsInf[0] = coordSupInf[2];
+                LatLngsInf[1] = coordSupInf[3];
+                polylineInf = L.polyline(LatLngsInf, {color: '#00ff00'}).addTo(mymap);
+                arrayOfPolylineInf.push(polylineInf);
             }
         }
+        // Draw the main polyline
         polyline = L.polyline(LatLngs, {color: 'red'}).addTo(mymap);
     }
 
+    function computeCoordinatesOfLine(markerA, markerB)
+    {
+        // Origin of theta is the North
+        var theta = computeTheta(markerA.getLatLng(), markerB.getLatLng());
+        var result = {};
+        var radiusA = parseInt(arrayOfPoints[markerA.options.rankInMission].radius),
+            radiusB = parseInt(arrayOfPoints[markerB.options.rankInMission].radius);
+        // console.log(clear());
+        console.log('theta : ', theta*180/Math.PI, 'radiusA', radiusA, 'radiusB', radiusB);
+        
+        // For the upper line
+        result[0] = rotationVector(theta + Math.PI/2,
+                                    markerA.getLatLng()['lat'],
+                                    markerA.getLatLng()['lng'],
+                                    radiusA);
+        result[1] = rotationVector(theta + Math.PI/2,
+                                    markerB.getLatLng()['lat'],
+                                    markerB.getLatLng()['lng'],
+                                    radiusB);
+        // For the lower line
+        result[2] = rotationVector(theta - Math.PI/2,
+                                    markerA.getLatLng()['lat'],
+                                    markerA.getLatLng()['lng'],
+                                    radiusA);
+        result[3] = rotationVector(theta - Math.PI/2,
+                                    markerB.getLatLng()['lat'],
+                                    markerB.getLatLng()['lng'],
+                                    radiusB);
+        
+        return result;
+    }
+
+    function removePolylineInfSup()
+    {
+        for (var i = arrayOfPolylineSup.length - 1; i >= 0; i--) 
+        {
+            mymap.removeLayer(arrayOfPolylineSup[i]);
+            mymap.removeLayer(arrayOfPolylineInf[i]);
+        }
+        arrayOfPolylineInf = Array();
+        arrayOfPolylineSup = Array();
+    }
+
+    function computeTheta(vectorA, vectorB)
+    {
+        return Math.atan2(vectorB['lat'] - vectorA['lat'], vectorB['lng'] - vectorA['lng']);
+    }
+
+    function rotationVector(theta, vector_lat, vector_lng, radius)
+    {
+        var result = {};
+
+        // According to this answer on Stack Overflow :
+        // https://stackoverflow.com/questions/2187657/calculate-second-point-knowing-the-starting-point-and-distance
+        result['lat'] = vector_lat + radius*Math.sin(theta)/(110540);
+        result['lng'] = vector_lng + radius*Math.cos(theta)/(111320*Math.cos(vector_lng*Math.PI/180));
+
+        return result;
+    }
     //*****************************************************************************
     //                                                                            *
     //                              EDIT A POINT                                  *
     //                                                                            *
     //*****************************************************************************
     
-    var editedMarkerIndex;
+    var editedMarkerIndex; // To keep the index of the marker we clicked on
 
     // The HTML we put in bindPopup doesn't exist yet, so we can't just say
     // $('#mybutton'). Instead, we listen for click events on the map element which
@@ -636,6 +719,7 @@
         var changeRank = 0;
         var j;
 
+        // Update this different array without the deleted point
         for( var i = 1, len = parentNodeList.length; i <= len; i++)
         {
             j = i;
@@ -666,8 +750,10 @@
         arrayOfMarker = newArrayOfMarker;
         arrayOfCircle = newArrayOfCircle;
 
-        // Update the polyline // TODO fix bug here
+        // Update the polyline 
         mymap.removeLayer(polyline);
+        //mymap.removeLayer(polylineSup);
+        //mymap.removeLayer(polylineInf);
         drawLineBetweenMarkers();
     };
 
@@ -812,20 +898,9 @@
 
     // Functions used to get the coordinates of the point on the circle in order to 
     // draw to the limits of the path of the sailing robot.
-    function computeTheta(vectorA, vectorB)
-    {
-        return Math.atan2(vectorB[1] - vectorA[1], vectorB[0] - vectorA[0]);
-    }
 
-    function rotationVector(theta, vector)
-    {
-        var result = {};
 
-        result[0] = Math.cos(theta)*vector[0] - Math.sin(theta)*vector[1];
-        result[1] = Math.sin(theta)*vector[0] + Math.cos(theta)*vector[1];
 
-        return result;
-    }
 
     // return  {
     //             createNewPoint: createNewPoint()
