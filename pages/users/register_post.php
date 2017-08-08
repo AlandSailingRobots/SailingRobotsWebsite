@@ -1,7 +1,8 @@
 <?php
 require_once('./../../globalsettings.php');
+session_destroy();
 session_start();
-// Connexion à la base de données
+// Connexion to the DB
 
 $hostname  = $GLOBALS['hostname'];
 $username  = $GLOBALS['username'];
@@ -106,7 +107,7 @@ else
 
         $_SESSION['right'] = 'user';
         $_SESSION['username'] = $username;
-        header('Location: login.php?message=You are now logged-in :)');
+        header('Location: ../../index.php?message=You are now logged-in :)');
     }
 }
 ?>
