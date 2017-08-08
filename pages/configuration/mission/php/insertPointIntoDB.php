@@ -44,6 +44,10 @@ function insertPointIntoDB($params)
         $arrayOfPoints = array_merge($arrayOfPoints, array_values($value));
     }
     $emptyArray = substr($emptyArray, 1);
+    if (count($arrayOfPoints) < 11)
+    {
+        $arrayOfPoints = array(null, null, null, null, null, null, null, null, null, null, null);
+    }
 
     // Now we insert every waypoints / checkpoint into the DB 
     $query = $db->prepare('INSERT INTO pointList (  id, 
@@ -58,9 +62,19 @@ function insertPointIntoDB($params)
                                                     stay_time,
                                                     harvested
                                                 ) VALUES '. $emptyArray .' ;');
+    
+    // Failsafe on the size of the array
+    if (count($arrayOfPoints) > 10)
+    {
+        $exec = $query->execute($arrayOfPoints);
+    }
+    else
+    {
+        $exec = false;
+        echo "The provided object does not have all the required attributes to be saved into the DB.";
+    }
 
-    $exec = $query->execute($arrayOfPoints);
-
+    // Error message on execurtion
     if( false === $exec )
     {
         $msg = sprintf("Error while inserting into DB because execute() failed: %s\n<br />", htmlspecialchars($query->error));
@@ -79,6 +93,12 @@ if (is_ajax())
     // Parsing JSON object to 2D-Array
     $request = file_get_contents("php://input");    // gets the raw data
     $params = json_decode($request,true);           // true for return as array
-
-    insertPointIntoDB($params);
+    if (!empty($params))
+    {
+        insertPointIntoDB($params);
+    }
+    else
+    {
+        echo "Nothing has been saved into the DB";
+    }
 }

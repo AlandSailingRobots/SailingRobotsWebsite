@@ -88,6 +88,7 @@ function loadMissionToBoat($id_mission)
     else
     {
         $msg = "Empty array ! Are you sure this mission has points to be loaded ?";
+        $exec4 = false;
     }
 
     if( $exec1 === true && $exec2 === true && $exec3 === true && $exec4 === true )

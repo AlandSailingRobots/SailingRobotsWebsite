@@ -28,13 +28,22 @@ function updateMissionInfo($id_mission, $name, $description = "")
     }
 
     $query = $db->prepare('UPDATE mission SET name = :name, description = :description WHERE id = :id ;');
-    $query->execute(array(
-            'name' => htmlspecialchars($name),
-            'description' => htmlspecialchars($description),
-            'id' => htmlspecialchars($id_mission))
-        );
+    $exec = $query->execute(array(
+                'name' => htmlspecialchars($name),
+                'description' => htmlspecialchars($description),
+                'id' => htmlspecialchars($id_mission))
+            );
 
-    // add success / failure message
+    if( false === $exec )
+    {
+        $msg = sprintf("Error while updating mission info into DB because execute() failed: %s\n<br />", htmlspecialchars($query->error));
+    } 
+    else 
+    {
+        $msg = sprintf("Success !");
+    }
+
+    echo $msg;
 
 }
 
