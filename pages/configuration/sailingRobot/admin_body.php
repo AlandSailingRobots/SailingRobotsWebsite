@@ -57,25 +57,42 @@ require_once('include/getConfigData.php');
                 {
                     echo '<input type="text" class="hidden" name="boat|aspire" value="aspire" size="1">';
                     
+                    $configAISArray              = getConfigData("config_ais"                 , "aspire");
+                    $configAISProcessingArray    = getConfigData("config_ais_processing"      , "aspire");
+                    $configCanArduinoArray       = getConfigData("config_can_arduino"         , "aspire");
                     $configBufferArray           = getConfigData("config_buffer"              , "aspire");
+                    $configCourseRegulatorArray  = getConfigData("config_course_regulator"    , "aspire");
+                    $configDBLoggerArray         = getConfigData("config_dblogger"            , "aspire");
+                    $configGPSArray              = getConfigData("config_gps"                 , "aspire");
                     $configHTTPSyncArray         = getConfigData("config_httpsync"            , "aspire");
-                    $configHTTPSyncNodeArray     = getConfigData("config_HTTPSyncNode"        , "aspire");
                     $configI2CArray              = getConfigData("config_i2c"                 , "aspire");
-                    $configStateEstimationArray  = getConfigData("config_StateEstimationNode" , "aspire");
-                    $configWindvaneArray         = getConfigData("config_wind_vane"           , "aspire");
-                    $scanningMeasurementsArray   = getConfigData("scanning_measurements"      , "aspire");
+                    $configMarineSensorsArray    = getConfigData("config_marine_sensors"       , "aspire");
+                    $configSimulatorArray        = getConfigData("config_simulator"           , "aspire");
+                    
+                    $configSolarTrackerArray     = getConfigData("config_solar_tracker"       , "aspire");
+                    $configVesselStateArray      = getConfigData("config_vessel_state"         , "aspire");
+                    $configVoterSystemArray      = getConfigData("config_voter_system"        , "aspire");
+                    $configWindSensorArray       = getConfigData("config_wind_sensor"         , "aspire");
+                    $configXBeeArray             = getConfigData("config_xbee"                , "aspire");
 
                     // We display the different tables
+                    printTables($configAISArray             , "config_ais");
+                    printTables($configAISProcessingArray   , "config_ais_processing");
+                    printTables($configCanArduinoArray      , "config_can_arduino");
                     printTables($configBufferArray          , "config_buffer");
-                    printTables($configHTTPSyncArray        , "config_httpsync");
-                    printTables($configHTTPSyncNodeArray    , "config_HTTPSyncNode");
+                    printTables($configCourseRegulatorArray , "config_course_regulator");
+                    printTables($configDBLoggerArray        , "config_dblogger");
+                    printTables($configGPSArray             , "config_gps");
                     printTables($configI2CArray             , "config_i2c");
+                    printTables($configMarineSensorsArray   , "config_marine_sensors");
+                    printTables($configSimulatorArray       , "config_simulator");
 
-                    printTables($configStateEstimationArray  , "config_StateEstimationNode");
-                    printTables($configWindvaneArray         , "config_wind_vane");
-                    printTables($scanningMeasurementsArray   , "scanning_measurements");
-                    
- 
+                    printTables($configSolarTrackerArray    , "config_solar_tracker");
+                    printTables($configVesselStateArray     , "config_vessel_state");
+                    printTables($configWindSensorArray      , "config_wind_sensor");
+                    printTables($configVoterSystemArray     , "config_voter_system");
+                    printTables($configHTTPSyncArray        , "config_httpsync");
+                    printTables($configXBeeArray            , "config_xbee");
 
                 }
                 ?>

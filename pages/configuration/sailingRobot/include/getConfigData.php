@@ -23,12 +23,21 @@ function getConfigData($table, $boatName)
     {
         $database_name = $GLOBALS['database_ASPire'];
         $allowed_query = array (0 => 'config_buffer',
-                                1 => 'config_httpsync',
-                                2 => 'config_HTTPSyncNode',
-                                3 => 'config_i2c',
-                                4 => 'config_StateEstimationNode',
-                                5 => 'config_wind_vane',
-                                6 => 'scanning_measurements'
+                                1 => 'config_course_regulator',
+                                2 => 'config_dblogger',
+                                3 => 'config_gps',
+                                4 => 'config_i2c',
+                                5 => 'config_httpsync',
+                                6 => 'config_marine_sensors',
+                                7 => 'config_simulator',
+                                8 => 'config_solar_tracker',
+                                9 => 'config_vessel_state',
+                               10 => 'config_voter_system',
+                               11 => 'config_wind_sensor',
+                               12 => 'config_xbee',
+                               13 => 'config_ais',
+                               14 => 'config_ais_processing',
+                               15 => 'config_can_arduino'
                                 );
     }
 
