@@ -527,6 +527,10 @@
         var result = {};
         var radiusA = parseInt(arrayOfPoints[markerA.options.rankInMission].radius),
             radiusB = parseInt(arrayOfPoints[markerB.options.rankInMission].radius);
+
+            radiusA = (radiusA + radiusB)/2;
+            radiusB = radiusA;
+
         // console.log(clear());
         console.log('theta : ', theta*180/Math.PI, 'radiusA', radiusA, 'radiusB', radiusB);
         
@@ -552,17 +556,6 @@
         return result;
     }
 
-    function removePolylineInfSup()
-    {
-        for (var i = arrayOfPolylineSup.length - 1; i >= 0; i--) 
-        {
-            mymap.removeLayer(arrayOfPolylineSup[i]);
-            mymap.removeLayer(arrayOfPolylineInf[i]);
-        }
-        arrayOfPolylineInf = Array();
-        arrayOfPolylineSup = Array();
-    }
-
     function computeTheta(vectorA, vectorB)
     {
         return Math.atan2(vectorB['lat'] - vectorA['lat'], vectorB['lng'] - vectorA['lng']);
@@ -578,6 +571,17 @@
         result['lng'] = vector_lng + radius*Math.cos(theta)/(111320*Math.cos(vector_lng*Math.PI/180));
 
         return result;
+    }
+
+    function removePolylineInfSup()
+    {
+        for (var i = arrayOfPolylineSup.length - 1; i >= 0; i--) 
+        {
+            mymap.removeLayer(arrayOfPolylineSup[i]);
+            mymap.removeLayer(arrayOfPolylineInf[i]);
+        }
+        arrayOfPolylineInf = Array();
+        arrayOfPolylineSup = Array();
     }
     //*****************************************************************************
     //                                                                            *
