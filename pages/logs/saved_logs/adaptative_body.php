@@ -1,9 +1,20 @@
 <?php
-    /* This file generates the body of the page to read saved logs from the past mission. 
+    /* 
+     * This file generates the body of the page to read saved logs from the past mission. 
      * The previous version used 5 different pages, there is only this one now. 
      */
 
     /* Declaration of the variables for the script */
+    $boat = $_GET['boat'];
+    if ($boat == 'janet')
+    {
+        $boatName = 'janet';
+    }
+    elseif($boat == 'aspire')
+    {
+        $boatName = 'aspire';
+    }
+
     $data = $_GET['data']; // If that page is called, that variable has been set & checked
     if ($data === 'gps')
     {
@@ -91,19 +102,19 @@
                         if($number <= 1)
                         {
                             echo '<span>&laquo; prev</span> |
-                                 <a href="?data='.$_GET['data'].'&page='.$next.'">next &raquo;</a>';
+                                 <a href="?boat='.$boatName.'&data='.$_GET['data'].'&page='.$next.'">next &raquo;</a>';
                         }
                         # last page
                         elseif($number == ($pages ))
                         {
-                            echo '<a href="?data='.$_GET['data'].'&page='.$prev.'">&laquo; prev</a> |
+                            echo '<a href="?boat='.$boatName.'&data='.$_GET['data'].'&page='.$prev.'">&laquo; prev</a> |
                                  <span>next &raquo;</span';
                         }
                         # in range
                         else
                         {
-                            echo '<a href="?data='.$_GET['data'].'&page='.$prev.'">&laquo; prev</a> |
-                                  <a href="?data='.$_GET['data'].'&page='.$next.'">next &raquo;</a>';
+                            echo '<a href="?boat='.$boatName.'&data='.$_GET['data'].'&page='.$prev.'">&laquo; prev</a> |
+                                  <a href="?boat='.$boatName.'&data='.$_GET['data'].'&page='.$next.'">next &raquo;</a>';
                         }
                     }
                     else
@@ -134,7 +145,7 @@
                                             echo '<td>' . $row[$column] . '</td>' ;
                                         }
                                         echo '<td>';
-                                            echo    '<a href=more_info.php?number='.$i.'&name='.$list_columns[0].'&table='.$data.'_dataLogs&id='.$row[0].'>More</a>';
+                                            echo    '<a href=more_info.php?boat='.$boatName.'&number='.$i.'&name='.$list_columns[0].'&table='.$data.'_dataLogs&id='.$row[0].'>More</a>';
                                         echo '</td>';
                                     echo '</tr>';
                                 }
