@@ -72,7 +72,8 @@
                   <a><i class="fa fa-table"></i>Logs<span class="fa fa-chevron-down"></span><span class="label label-info pull-right">WIP</span></a>
                   <ul class="nav child_menu">
                     <li><a href=<?php echo $relative_path . "pages/logs/live/index.php"?>>Live Logs<span class="label label-warning pull-right">Coming Soon</span></a></li>
-                    <li><a href=<?php echo $relative_path . "pages/logs/saved_logs/index.php"?>>Saved Logs<span class="label label-success pull-warning pull-right">Done</span></a></li>
+                    <li><a href=<?php echo $relative_path . "pages/logs/saved_logs/index.php?boat=aspire"?>>ASPire Saved Logs<span class="label label-success pull-warning pull-right">WIP</span></a></li>
+                    <li><a href=<?php echo $relative_path . "pages/logs/saved_logs/index.php?boat=janet"?>>Janet Saved Logs<span class="label label-success pull-warning pull-right">Done</span></a></li>
                   </ul>
                 </li>
               </ul>
