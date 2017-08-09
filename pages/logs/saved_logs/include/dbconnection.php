@@ -54,7 +54,7 @@ function dbConnASPire()
 
 function getPerPage()
 {
-    $perpage = 1;
+    $perpage = 50;
     return $perpage;
 }
 
