@@ -8,7 +8,8 @@
   */
 
 
-function dbConn() {
+function dbConn() 
+{
     $user           = $GLOBALS['username'];
     $password       = $GLOBALS['password'];
     $hostname       = $GLOBALS['hostname'];
@@ -29,26 +30,75 @@ function dbConn() {
     return $conn;
 }
 
+function dbConnASPire() 
+{
+    $user           = $GLOBALS['username'];
+    $password       = $GLOBALS['password'];
+    $hostname       = $GLOBALS['hostname'];
+    $database_name  = $GLOBALS['database_ASPire'];
+    try
+    {
+        $conn = new PDO("mysql:host=$hostname;
+                        dbname=$database_name;
+                        charset=utf8;port=3306", 
+                        $user, 
+                        $password, 
+                        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+    }
+    catch(Exception $e)
+    {
+        die('Connection failed : '.$e->getMessage());
+    }
+    return $conn;
+}
+
 function getPerPage()
 {
-    $perpage = 50;
+    $perpage = 1;
     return $perpage;
 }
 
-function getPages($table) 
+// Gives the total number of pages
+function getPages($table, $dbName) 
 {
-    $conn    = dbConn();
+    if ($dbName == 'janet')
+    {
+        $conn    = dbConn();
+    }
+    elseif ($dbName == 'aspire')
+    {
+        $conn = dbConnASPire();
+    }
     $total   = $conn->query("SELECT COUNT(*) as rows FROM $table") ->fetch(PDO::FETCH_OBJ);
     $perpage = getPerPage();
     $posts   = $total->rows;
     $pages   = ceil($posts / $perpage);
+
+    $conn = null;
     return $pages;
+}
+
+// Return the total number of lines in the given table of the given DB
+function getNumberOfEntries($table, $dbName) 
+{
+    if ($dbName == 'janet')
+    {
+        $conn    = dbConn();
+    }
+    elseif ($dbName == 'aspire')
+    {
+        $conn = dbConnASPire();
+    }
+    $total   = $conn->query("SELECT COUNT(*) as rows FROM $table") ->fetch(PDO::FETCH_OBJ);
+    $perpage = getPerPage();
+    $posts   = $total->rows;
+
+    $conn = null;
+    return $posts;
 }
 
 function getNumber($pages) 
 {
-    # default
-    /* $pages = getPages($page); */
     $get_pages = isset($_GET['page']) ? $_GET['page'] : 1;
     $data = array(
         'options' => array(
@@ -68,19 +118,15 @@ function getData($table, $pages)
     $conn = dbConn();
     try 
     {
-        /* $pages   = getPages($table); */
         $perpage = getPerPage();
-        $number  = getNumber($table, $pages);
+        $number  = getNumber($pages);
         $range   = $perpage * ($number - 1);
         $stmt    = $conn->prepare("SELECT * FROM $table LIMIT :limit, :perpage;");
-
-        $stmt->bindParam(':perpage', $perpage, PDO::PARAM_INT);
+        echo $number, ' ';
+        echo $range, ' ', $perpage;
         $stmt->bindParam(':limit', $range, PDO::PARAM_INT);
+        $stmt->bindParam(':perpage', $perpage, PDO::PARAM_INT);
         $stmt->execute();
-        /* $stmt->execute(array( */
-        /*     'limit'   => $range, */
-        /*     'perpage' => $perpage) */
-        /* ); */
 
         $result = $stmt->fetchAll();
 
@@ -91,6 +137,45 @@ function getData($table, $pages)
     }
 
     $conn = null;
+    return $result;
+}
+
+function getDataInverted($table, $pages, $dbName)
+{
+    if ($dbName == 'janet')
+    {
+        $conn    = dbConn();
+    }
+    elseif ($dbName == 'aspire')
+    {
+        $conn = dbConnASPire();
+    }
+    
+    $numberMaxPages = getNumber($table);
+    $numberOfLines = getNumberOfEntries($table, $dbName);
+    $current_page = isset($_GET['page']) ? $_GET['page'] : 1;
+    $perpage = 2;
+    $range = min(abs($numberOfLines - $current_page*$perpage), 0);
+    $range = $perpage * ($current_page - 1);
+    // echo $range;
+    echo $current_page, ' ', $range;
+    try
+    {
+        $stmt    = $conn->prepare("SELECT * FROM $table  LIMIT :limit_min, :perpage ;"); // TODO : check for use of DESC
+
+        echo ' --- '.$range . ' ' . $perpage;
+        $stmt->bindParam(':limit_min', $range, PDO::PARAM_INT);
+        $stmt->bindParam(':perpage', $perpage, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    catch(PDOException $e) 
+    {
+        $error = $e->getMessage();
+        $result = array();
+    }
+    print_r($result);
     return $result;
 }
 

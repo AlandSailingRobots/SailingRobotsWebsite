@@ -1,21 +1,13 @@
 <?php
-    /* 
-     * This file generates the body of the page to read saved logs from the past mission. 
-     * The previous version used 5 different pages, there is only this one now. 
-     */
+/* 
+ * This file generates the body of the page to read saved logs from the past mission. 
+ * The previous version used 5 different pages, there is only this one now. 
+ */
 
-    /* Declaration of the variables for the script */
-    $boat = $_GET['boat'];
-    if ($boat == 'janet')
-    {
-        $boatName = 'janet';
-    }
-    elseif($boat == 'aspire')
-    {
-        $boatName = 'aspire';
-    }
-
-    $data = $_GET['data']; // If that page is called, that variable has been set & checked
+/* Declaration of the variables for the script */
+$data = $_GET['data']; // If that page is called, that variable has been set & checked
+if ($boatName == 'janet')
+{
     if ($data === 'gps')
     {
         $list_columns = array('id_gps', 
@@ -71,33 +63,58 @@
                             );
         $page_title = 'System Data';
     }
-    else
+    $dataName = $data . '_dataLogs';
+    if ($data == 'actuator_feedback')
     {
-        echo '<h1 class="sub-header jumbotron">Error !</h1>';
+        $page_title = 'Actuator Feedback';
+        $dataName = 'dataLogs_' . $data;
+        $list_columns = array('id',
+                                'rudder_position',
+                                'wingsail_position',
+                                'rc_on',
+                                'wind_vane_angle',
+                                'time_stamp'
+                            );
     }
+    elseif ($data == 'marine_sensors') 
+    {
+        $page_title = "Marine Sensors Measurements";
+        $dataName = 'dataLogs_' . $data;
+        $list_columns = array('id',
+                                'temperature',
+                                'conductivity',
+                                'ph',
+                                'time_stamp'
+                            );
+    }
+}
+else
+{
+    echo '<h1 class="sub-header jumbotron">Error !</h1>';
+}
 
 ?>
 
 <?php
     require('include/dbconnection.php');
-    $pages  = getPages($data . '_dataLogs');
-    $result = getData($data . '_dataLogs', $pages);
+    $pages  = getPages($dataName, 'janet');
+    $result = getData($dataName, $pages);
+    // $result = getDataInverted($dataName, $pages, 'janet');
     $number = getNumber($pages);
-    $next   = $number + 1;//getNext($data . '_dataLogs');
-    $prev   = $number - 1;// getPrev($data . '_dataLogs');
+    $next   = $number + 1;
+    $prev   = $number - 1;
 ?>
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-9 col-md-10 main">
         <h1 class="sub-header jumbotron"><?php echo $page_title ;?></h1>
             <div class="table-responsive">
-                <table class="table table-striped">
                     <?php
                     if($result && count($result) > 0)
                     {
                         $pages = $pages;
-                        echo '<h3>Total pages: '. $pages .'</h3>';
-                        echo '<p>' . $number .  '/' . $pages .'<br /> </p>';
+                        echo '<h3>Total pages: '. $pages .'</h3>'."\n";
+                        echo '<p>' . $number .  '/' . $pages .'</p><br /> '."\n";
                         # first page
                         if($number <= 1)
                         {
@@ -108,7 +125,7 @@
                         elseif($number == ($pages ))
                         {
                             echo '<a href="?boat='.$boatName.'&data='.$_GET['data'].'&page='.$prev.'">&laquo; prev</a> |
-                                 <span>next &raquo;</span';
+                                 <span>next &raquo;</span>';
                         }
                         # in range
                         else
@@ -122,13 +139,15 @@
                         echo "<p>No results found.</p>";
                     }
                     ?>
+                    <table class="table table-striped">
                     <thead>
                         <tr>
                             <?php 
                                 foreach ($list_columns as $column)
                                 {
-                                    echo '<th>' . $column . '</th>';
+                                    echo '<th>' . $column . '</th>'."\n";
                                 }
+                                echo '<th>More</th>'."\n";
                             ?>
                         </tr>
                     </thead>
@@ -142,12 +161,12 @@
                                         $i++;
                                         foreach($list_columns as $column)
                                         {
-                                            echo '<td>' . $row[$column] . '</td>' ;
+                                            echo '<td>' . $row[$column] . '</td>' . "\n" ;
                                         }
-                                        echo '<td>';
-                                            echo    '<a href=more_info.php?boat='.$boatName.'&number='.$i.'&name='.$list_columns[0].'&table='.$data.'_dataLogs&id='.$row[0].'>More</a>';
-                                        echo '</td>';
-                                    echo '</tr>';
+                                        echo '<td>'. "\n";
+                                            echo    '<a href=more_info.php?boat='.$boatName.'&number='.$i.'&name='.$list_columns[0].'&table='.$dataName.'&id='.$row[0].'>More</a>'. "\n";
+                                        echo '</td>'. "\n";
+                                    echo '</tr>'. "\n";
                                 }
                             ?>
                     </tbody>

@@ -18,12 +18,57 @@ else
   $_SESSION['username'] = 'Guest';
   $name = 'Guest';
 }
-$available_pages = array (0 => 'compass',
-                        1 => 'course',
-                        2 => 'system',
-                        3 => 'windsensor',
-                        4 => 'gps'
+
+
+if (!isset($_GET['boat']))
+{
+    // We force aspire by default
+    $_GET['boat'] = "aspire";
+}
+if ($_GET['boat'] == 'janet')
+{
+    $boatName = 'janet';
+    $available_pages = array (0 => 'compass',
+                                1 => 'gps',
+                                2 => 'course',
+                                3 => 'windsensor',
+                                4 => 'system',
+                                5 => 'marine_sensors',
+                                6 => 'actuator_feedback'
+                        );
+    $pageName = array (0 => 'Compass Data',
+                        3 => 'GPS Data',
+                        1 => 'Course Data',
+                        2 => 'Wind Sensor Data',
+                        4 => 'System Datalogs',
+                        5 => 'Marine Sensors Measurements',
+                        6 => 'Actuator Feedback'
                     );
+}
+elseif($_GET['boat'] == 'aspire')
+{
+    $boatName = 'aspire';
+    $available_pages = array (0 => 'actuator_feedback',
+                                1 => 'compass',
+                                2 => 'course',
+                                3 => 'current_sensors',
+                                4 => 'gps',
+                                5 => 'system',
+                                6 => 'vessel_state',
+                                7 => 'windsensor',
+                                8 => 'wind_state'
+                        );
+    $pageName = array ( 0 => 'Actuator Feedback',
+                        1 => 'Compass Data',
+                        2 => 'Course Data',
+                        3 => 'Current Sensors',
+                        4 => 'GPS Data',
+                        5 => 'System Datalogs',
+                        6 => 'Vessel State',
+                        7 => 'Wind Sensor Data',
+                        8 => 'Wind State'
+                    );
+}
 
 ?>
 
@@ -59,11 +104,12 @@ $available_pages = array (0 => 'compass',
             <div class="">
                 <div class="col-sm-3 col-md-2 sidebar">
                     <ul class="nav nav-sidebar">
-                        <li><a href="index.php?data=gps"><i class="fa fa-desktop"></i> GPS Data</a></li>
-                        <li><a href="index.php?data=course">Course Data</a></li>
-                        <li><a href="index.php?data=windsensor">Wind Sensor Data</a></li>
-                        <li><a href="index.php?data=compass">Compass Data</a></li>
-                        <li><a href="index.php?data=system">System Datalogs</a></li>
+                    <?php
+                        foreach ($pageName as $key => $value) 
+                        {
+                            echo '<li><a href="index.php?boat='.$boatName.'&data='.$available_pages[$key].'">'.$value.'</a></li>';
+                        }
+                    ?>
                     </ul>
                 </div>
             </div>
@@ -72,10 +118,14 @@ $available_pages = array (0 => 'compass',
                 if (isset($_GET['data']))
                 {
                     $data = $_GET['data'];
-                    if (in_array($data, $available_pages))
+                    if ($boatName == 'janet' && in_array($data, $available_pages))
                     {
                         /* include 'pages/' . $data . '_body.php'; */
-                        include 'adaptative_body.php';
+                        include 'adaptative_body_janet.php';
+                    }
+                    elseif ($boatName == 'aspire' && in_array($data, $available_pages))
+                    {
+                        include 'adaptative_body_aspire.php';
                     }
                 }
                 else

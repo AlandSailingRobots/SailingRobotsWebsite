@@ -8,10 +8,6 @@
             $name = $_GET["name"];
             $table = $_GET["table"];
             $number = $_GET["number"];
-            // $_SESSION['number'] = $number;
-            // $_SESSION['idd'] = $id;
-            // $_SESSION['name'] = $name;
-            // $_SESSION['table'] = $table;
             $result = getAll($id, $name, $table);
             if (!empty($result))
             {
