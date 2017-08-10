@@ -107,31 +107,35 @@ else
                     <thead>
                         <tr>
                             <?php 
-                                foreach ($result[0] as $columnName => $value)
-                                {
-                                    echo '<th>' . $columnName . '</th>'."\n";
-                                }
-                                echo '<th>More</th>'."\n";
+                            // This is the head of the table
+                            foreach ($result[0] as $columnName => $value)
+                            {
+                                echo '<th>' . $columnName . '</th>'."\n";
+                            }
+                            echo '<th>More</th>'."\n";
                             ?>
                         </tr>
                     </thead>
 
                     <tbody>
                             <?php
-                                $i = 0;
-                                foreach($result as $key => $row)
-                                {
-                                    echo '<tr>';
-                                        $i++;
-                                        foreach($row as $column => $value)
-                                        {
-                                            echo '<td>' . $value . '</td>' . "\n" ;
-                                        }
-                                        echo '<td>'. "\n";
-                                            echo    '<a href=more_info_aspire.php?boat='.$boatName.'&number='.$i.'&name='.$column.'&table='.$dataName.'&id='.$row['id'].'>More</a>'. "\n";
-                                        echo '</td>'. "\n";
-                                    echo '</tr>'. "\n";
-                                }
+                            // This is the table
+                            $i = 0;
+                            $resultSize = count($result);
+                            for ($index = $resultSize - 1; $index >= 0; $index--)
+                            {
+                                echo '<tr>';
+                                    $i++;
+                                    // Each lines of the table
+                                    foreach($result[$index] as $column => $value)
+                                    {
+                                        echo '<td>' . $value . '</td>' . "\n" ;
+                                    }
+                                    echo '<td>'. "\n";
+                                        echo    '<a href=more_info_aspire.php?boat='.$boatName.'&number='.$i.'&name='.$column.'&table='.$dataName.'&id='.$result[$index]['id'].'>More</a>'. "\n";
+                                    echo '</td>'. "\n";
+                                echo '</tr>'. "\n";
+                            }
                             ?>
                     </tbody>
                 </table>

@@ -98,8 +98,8 @@ else
 <?php
     require('include/dbconnection.php');
     $pages  = getPages($dataName, 'janet');
-    $result = getData($dataName, $pages);
-    // $result = getDataInverted($dataName, $pages, 'janet');
+    // $result = getData($dataName, $pages);
+    $result = getDataInverted($dataName, $pages, 'janet');
     $number = getNumber($pages);
     $next   = $number + 1;
     $prev   = $number - 1;
@@ -155,16 +155,19 @@ else
                     <tbody>
                             <?php
                                 $i = 0;
-                                foreach($result as $key => $row)
-                                {
+                            $resultSize = count($result);
+                            // print_r($result[0]['id_gps']);
+                            for ($index = $resultSize - 1; $index >= 0; $index--)
+                            {
                                     echo '<tr>';
                                         $i++;
                                         foreach($list_columns as $column)
                                         {
-                                            echo '<td>' . $row[$column] . '</td>' . "\n" ;
+                                            echo '<td>' . $result[$index][$column] . '</td>' . "\n" ;
                                         }
                                         echo '<td>'. "\n";
-                                            echo    '<a href=more_info.php?boat='.$boatName.'&number='.$i.'&name='.$list_columns[0].'&table='.$dataName.'&id='.$row[0].'>More</a>'. "\n";
+                                            echo    '<a href=more_info.php?boat='.$boatName.'&number='.$i.'&name='.$list_columns[0].'&table='.$dataName.'&id='.$result[$index][$list_columns[0]].'>More</a>'. "\n";
+                                        
                                         echo '</td>'. "\n";
                                     echo '</tr>'. "\n";
                                 }

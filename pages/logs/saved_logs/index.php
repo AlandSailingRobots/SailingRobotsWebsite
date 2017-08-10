@@ -28,18 +28,18 @@ if (!isset($_GET['boat']))
 if ($_GET['boat'] == 'janet')
 {
     $boatName = 'janet';
-    $available_pages = array (0 => 'compass',
+    $available_pages = array (  0 => 'compass',
                                 1 => 'gps',
                                 2 => 'course',
                                 3 => 'windsensor',
                                 4 => 'system',
                                 5 => 'marine_sensors',
                                 6 => 'actuator_feedback'
-                        );
-    $pageName = array (0 => 'Compass Data',
-                        3 => 'GPS Data',
-                        1 => 'Course Data',
-                        2 => 'Wind Sensor Data',
+                            );
+    $pageName = array ( 0 => 'Compass Data',
+                        1 => 'GPS Data',
+                        2 => 'Course Data',
+                        3 => 'Wind Sensor Data',
                         4 => 'System Datalogs',
                         5 => 'Marine Sensors Measurements',
                         6 => 'Actuator Feedback'
@@ -48,7 +48,7 @@ if ($_GET['boat'] == 'janet')
 elseif($_GET['boat'] == 'aspire')
 {
     $boatName = 'aspire';
-    $available_pages = array (0 => 'actuator_feedback',
+    $available_pages = array (  0 => 'actuator_feedback',
                                 1 => 'compass',
                                 2 => 'course',
                                 3 => 'current_sensors',
@@ -57,7 +57,7 @@ elseif($_GET['boat'] == 'aspire')
                                 6 => 'vessel_state',
                                 7 => 'windsensor',
                                 8 => 'wind_state'
-                        );
+                            );
     $pageName = array ( 0 => 'Actuator Feedback',
                         1 => 'Compass Data',
                         2 => 'Course Data',
@@ -81,6 +81,7 @@ elseif($_GET['boat'] == 'aspire')
     <!-- Custom CSS for the page -->
     <!-- TODO Check if it's used or not -->
     <link href="main.css" rel="stylesheet">
+    <meta http-equiv="refresh" content="6" >
 </head>
 
 <body class="nav-md">
@@ -105,9 +106,9 @@ elseif($_GET['boat'] == 'aspire')
                 <div class="col-sm-3 col-md-2 sidebar">
                     <ul class="nav nav-sidebar">
                     <?php
-                        foreach ($pageName as $key => $value) 
+                        foreach ($pageName as $key => $displayedText) 
                         {
-                            echo '<li><a href="index.php?boat='.$boatName.'&data='.$available_pages[$key].'">'.$value.'</a></li>';
+                            echo '<li><a href="index.php?boat='.$boatName.'&data='.$available_pages[$key].'">'.$displayedText.'</a></li>';
                         }
                     ?>
                     </ul>

@@ -121,9 +121,7 @@ function getData($table, $pages)
         $perpage = getPerPage();
         $number  = getNumber($pages);
         $range   = $perpage * ($number - 1);
-        $stmt    = $conn->prepare("SELECT * FROM $table LIMIT :limit, :perpage;");
-        echo $number, ' ';
-        echo $range, ' ', $perpage;
+        $stmt    = $conn->prepare("SELECT * FROM $table ORDER BY 'Timestamp' DESC LIMIT :limit, :perpage;");
         $stmt->bindParam(':limit', $range, PDO::PARAM_INT);
         $stmt->bindParam(':perpage', $perpage, PDO::PARAM_INT);
         $stmt->execute();
@@ -151,21 +149,28 @@ function getDataInverted($table, $pages, $dbName)
         $conn = dbConnASPire();
     }
     
-    $numberMaxPages = getNumber($table);
     $numberOfLines = getNumberOfEntries($table, $dbName);
-    $current_page = isset($_GET['page']) ? $_GET['page'] : 1;
-    $perpage = 2;
-    $range = min(abs($numberOfLines - $current_page*$perpage), 0);
-    $range = $perpage * ($current_page - 1);
-    // echo $range;
-    echo $current_page, ' ', $range;
+    $perPage = getPerPage();
+
+    $numberMaxPages = ceil($numberOfLines / $perPage); //getNumber($table);
+    $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
+    
+    $range = min(abs($numberOfLines - $currentPage*$perPage), 0);
+    $range = $perPage * ($currentPage - 1);
+
+    $limit_min = $numberOfLines - $currentPage*$perPage;
+    $limit_min = $limit_min < 0 ? 0 : $limit_min;
+    $range = $limit_min;
+
     try
     {
+        //$stmt    = $conn->prepare("SELECT * FROM $table  LIMIT :limit_min, :perpage ;"); // TODO : check for use of DESC
         $stmt    = $conn->prepare("SELECT * FROM $table  LIMIT :limit_min, :perpage ;"); // TODO : check for use of DESC
 
-        echo ' --- '.$range . ' ' . $perpage;
-        $stmt->bindParam(':limit_min', $range, PDO::PARAM_INT);
-        $stmt->bindParam(':perpage', $perpage, PDO::PARAM_INT);
+        //echo '<br/> Range : '.$range . ' ' . $perPage . '<br/>';
+        //echo '<br/> limit_min : '.$limit_min . ' ' . $perPage . '<br/>';
+        $stmt->bindParam(':limit_min', $range,   PDO::PARAM_INT);
+        $stmt->bindParam(':perpage',   $perPage, PDO::PARAM_INT);
         $stmt->execute();
 
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -175,7 +180,6 @@ function getDataInverted($table, $pages, $dbName)
         $error = $e->getMessage();
         $result = array();
     }
-    print_r($result);
     return $result;
 }
 
