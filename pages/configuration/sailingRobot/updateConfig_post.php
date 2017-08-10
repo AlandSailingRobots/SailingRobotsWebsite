@@ -5,23 +5,23 @@ session_start();
 
 $i = 1; 
 
-
 // This is not very secure.
 foreach ($_POST as $key => $value) 
 {
+    // Update the DB
     if (!is_null($value) && !$i)
     {
         $exploded_key = explode('|', $key);
         if ($value)
         {
-        // echo 'value changed : ' . $value . ' for the key ' . $exploded_key[1] . ' of the table ' . $exploded_key[0] .' <br/>' ;
 
         $query = $db->prepare("UPDATE $exploded_key[0] SET $exploded_key[1] = ? ;");
         $query->execute(array(htmlspecialchars($value)));
         }
     }
 
-    // Just for the first loop
+    // Just for the first loop, in order to get the name of the DB to update
+    // Connection to the right DB
     if ($i)
     {
         if($value == "aspire")

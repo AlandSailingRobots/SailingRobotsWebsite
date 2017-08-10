@@ -1,4 +1,7 @@
 <?php
+/*
+ * This function takes the given array and display in a table with the given name
+ */
 function printTables($table, $tableName)
 {?>
     <div class='col-xs-12 col-sm-6 col-md-4'>

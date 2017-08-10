@@ -1,4 +1,8 @@
 <?php
+/*
+ * This function get the content of the different table as long as the name of
+ * the column in order to display it.
+ */
 function getConfigData($table, $boatName)
 {
     if ($boatName == "janet")
