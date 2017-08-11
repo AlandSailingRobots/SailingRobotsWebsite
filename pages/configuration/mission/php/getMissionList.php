@@ -47,5 +47,3 @@ if (is_ajax())
         print_r($resultJSON);
     }
 }
-
-?>

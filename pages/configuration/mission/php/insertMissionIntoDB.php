@@ -57,4 +57,3 @@ if (is_ajax())
         insertMissionIntoDB($_POST['name']);
     }
 }
-?>

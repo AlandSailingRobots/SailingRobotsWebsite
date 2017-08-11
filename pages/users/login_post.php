@@ -1,9 +1,8 @@
 <?php
 require_once('./../../globalsettings.php');
 // Vérification du remplissage de tous les champs
-if (!(isset($_POST['username']) and isset($_POST['password'])))
+if ( !(isset($_POST['username']) and isset($_POST['password'])) )
 {
-    // echo '<p> valeurs : ' . $username . ' | ' . $email . ' | ' . $password . '</p>';
     header('Location: connexion.php?message="Please fullfill the form"');
 }
 else
@@ -40,12 +39,12 @@ else
     // echo 'pass : ' . $_POST['password'] . ' / ' . $pass_hache . ' / ';
     if (!$resultat)
     {
-        echo 'Wrong username or password !';
         header('Location: login.php?message=Wrong credentials');
     }
     else
     {
-        session_start();
+        // session_destroy();
+        // session_start();
         $_SESSION['id'] = $resultat['id'];
         $_SESSION['username'] = $username;
 
@@ -59,9 +58,6 @@ else
         $req->closeCursor();
 
         // Now logged-in !
-        // echo 'You are now logged-in !';
-        // echo $username .' ' .$resultat['id'];
         header('Location: ../../index.php?message=You are now logged-in !');
     }
 }
-?>

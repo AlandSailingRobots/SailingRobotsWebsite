@@ -39,9 +39,7 @@ function checkNicknameInDB($nickname)
     $req->closeCursor();
     return $bool;
 }
-?>
 
-<?php
 $ok = 0;
 // Check that the form has been completed
 if (!(isset($_POST['username']) and
@@ -110,4 +108,3 @@ else
         header('Location: ../../index.php?message=You are now logged-in :)');
     }
 }
-?>

@@ -61,4 +61,4 @@ if (is_ajax() && isset($_POST['id_mission']) && $_SESSION['right'] == 'admin')
 {
     deleteMissionFromDB($_POST['id_mission']);
 }
-?>
+

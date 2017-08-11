@@ -54,5 +54,3 @@ if (is_ajax())
         getMissionInfoFromDB($_POST['id_mission']);
     }
 }
-
-?>
