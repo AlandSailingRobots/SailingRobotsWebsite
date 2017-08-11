@@ -374,6 +374,63 @@
 
     //*****************************************************************************
     //                                                                            *
+    //                            GPS CONVERTER                                   *
+    //                                                                            *
+    //*****************************************************************************
+
+    // Allow people to convert GPS coordinates from DEG, MIN, SEC to DEG, DEC
+    $('.convertGPSCoordinates').on('click', function()
+        {
+            if ($(this).attr('id') == "convertGPSCoordinatesNewPoint")
+            {
+                $('#createPointModal').modal('hide');
+                $('#confirmGPSConverterButton').addClass('gpsNewPoint');
+            }
+            if ($(this).attr('id') == "convertGPSCoordinatesEditPoint")
+            {
+                $('#editPointModal').modal('hide');
+                $('#confirmGPSConverterButton').addClass('gpsEditPoint');
+            }
+
+            $('#gpsConverterModal').modal('show');
+        });
+
+    $('#cancelGPSConverterButton').on('click', function(){
+            $('#gpsConverterModal').modal('hide');
+        });
+
+    $('#confirmGPSConverterButton').on('click', function()
+    {
+        var latitude, longitude;
+
+        // Conversion
+        latitude =  parseFloat($('#degLatitude').val()) +
+                    parseFloat($('#minLatitude').val())/60 + 
+                    parseFloat($('#secLatitude').val())/3600;
+    
+        longitude = parseFloat($('#degLongitude').val()) +
+                    parseFloat($('#minLongitude').val())/60 + 
+                    parseFloat($('#secLongitude').val())/3600;
+
+        // Insertion of the converted values at the right place
+        if ($(this).hasClass('gpsNewPoint'))
+        {
+            $('#gpsConverterModal').modal('hide');
+            $('#newPointLatitude').val(latitude);
+            $('#newPointLongitude').val(longitude);
+            $('#createPointModal').modal('show');
+        }
+        if ($(this).hasClass('gpsEditPoint'))
+        {
+            $('#editPointLatitude').val(latitude);
+            $('#editPointLongitude').val(longitude);
+            $('#gpsConverterModal').modal('hide');
+            $('#editPointModal').modal('show');
+        }
+    });
+
+    //*****************************************************************************
+    //                                                                            *
     //                             LOAD MISSION                                   *
     //                                                                            *
     //*****************************************************************************

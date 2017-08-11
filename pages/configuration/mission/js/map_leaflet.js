@@ -66,10 +66,10 @@
     var arrayOfPolylineSup = Array(),
         arrayOfPolylineInf = Array();
 
-    var name,
-        lat, 
-        lon,
-        rankInMission;
+    var name;
+    var lat; 
+    var lon;
+    var rankInMission;
 
 
 
@@ -531,8 +531,7 @@
             radiusA = (radiusA + radiusB)/2;
             radiusB = radiusA;
 
-        // console.log(clear());
-        console.log('theta : ', theta*180/Math.PI, 'radiusA', radiusA, 'radiusB', radiusB);
+        //console.log('theta : ', theta*180/Math.PI, 'radiusA', radiusA, 'radiusB', radiusB);
         
         // For the upper line
         result[0] = rotationVector(theta + Math.PI/2,
@@ -750,15 +749,18 @@
             }
         }
 
+        // The new points will correctly be indexed
+        rankInMission--;
+        numberOfPoints--;
+        // We 'return' the modified arrayk
         arrayOfPoints = newArrayOfPoints;
         arrayOfMarker = newArrayOfMarker;
         arrayOfCircle = newArrayOfCircle;
 
         // Update the polyline 
-        mymap.removeLayer(polyline);
-        //mymap.removeLayer(polylineSup);
-        //mymap.removeLayer(polylineInf);
-        drawLineBetweenMarkers();
+        mymap.removeLayer(polyline);    // Delete the central polyline
+        removePolylineInfSup();         // Delete the upper and the lower polylines
+        drawLineBetweenMarkers();       // Draw them again
     };
 
     // Add a delete span to the given node.
