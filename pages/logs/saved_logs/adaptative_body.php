@@ -5,7 +5,9 @@
  */
 
 /* Declaration of the variables for the script */
+require('include/dbconnection.php');
 $data = $_GET['data']; // If that page is called, that variable has been set & checked
+
 if ($boatName == 'janet')
 {
     if ($data === 'gps')
@@ -87,20 +89,70 @@ if ($boatName == 'janet')
                                 'time_stamp'
                             );
     }
+
+    $pages  = getPages($dataName, 'janet');
+    $result = getDataFromDB($dataName, $pages, 'janet');
+}
+elseif ($boatName == 'aspire')
+{
+    if ($data === 'gps')
+    {
+        $page_title = 'GPS Logs';
+    }
+    elseif ($data === 'course')
+    {
+        $page_title = 'Courses Logs';
+        $data = 'course_calculation';   // Because the previous developper did not 
+                                        // call that DB table the same way...
+    }
+    elseif ($data === 'windsensor')
+    {
+        $page_title = 'Windsensor Logs';
+    }
+    elseif ($data === 'compass')
+    {
+        $page_title = 'Compass Data';
+    }
+    elseif ($data === 'system')
+    {
+        $page_title = 'System Data';
+    }
+    elseif ($data == 'actuator_feedback')
+    {
+        $page_title = 'Actuator Feedback';
+    }
+    elseif ($data == 'marine_sensors') 
+    {
+        $page_title = "Marine Sensors Measurements";
+    }
+    elseif ($data == 'current_sensors')
+    {
+        $page_title = 'Current Sensors Logs';
+    }
+    elseif ($data == 'vessel_state')
+    {
+        $page_title = 'Vessel State Logs';
+    }
+    elseif ($data == 'wind_state')
+    {
+        $page_title = 'Wind State Logs';
+    }
+
+    $dataName = 'dataLogs_' . $data;
+
+    $pages  = getPages($dataName, 'aspire');
+    $result = getDataFromDB($dataName, $pages, 'aspire');
 }
 else
 {
-    echo '<h1 class="sub-header jumbotron">Error !</h1>';
+    echo '<h1 class="sub-header jumbotron col-md-offset-2">Error !</h1>';
 }
+
 
 ?>
 
 <?php
-    require('include/dbconnection.php');
-    $pages  = getPages($dataName, 'janet');
-    // $result = getData($dataName, $pages);
-    $result = getDataInverted($dataName, $pages, 'janet');
-    $number = getNumber($pages);
+    $number =  isset($_GET['page']) ? $_GET['page'] : 1;
     $next   = $number + 1;
     $prev   = $number - 1;
 ?>
@@ -112,17 +164,21 @@ else
                     <?php
                     if($result && count($result) > 0)
                     {
-                        $pages = $pages;
                         echo '<h3>Total pages: '. $pages .'</h3>'."\n";
                         echo '<p>' . $number .  '/' . $pages .'</p><br /> '."\n";
+                        
+                        if ($pages == 1)
+                        {
+                            echo '<span>&laquo; prev | next &raquo;</span>';
+                        }
                         # first page
-                        if($number <= 1)
+                        elseif($number <= 1)
                         {
                             echo '<span>&laquo; prev</span> |
                                  <a href="?boat='.$boatName.'&data='.$_GET['data'].'&page='.$next.'">next &raquo;</a>';
                         }
                         # last page
-                        elseif($number == ($pages ))
+                        elseif($number == $pages)
                         {
                             echo '<a href="?boat='.$boatName.'&data='.$_GET['data'].'&page='.$prev.'">&laquo; prev</a> |
                                  <span>next &raquo;</span>';
@@ -143,33 +199,57 @@ else
                     <thead>
                         <tr>
                             <?php 
+                            if($boatName == 'janet')
+                            {
                                 foreach ($list_columns as $column)
                                 {
                                     echo '<th>' . $column . '</th>'."\n";
                                 }
-                                echo '<th>More</th>'."\n";
+                            }
+                            elseif ($boatName == 'aspire')
+                            {
+                                // This is the head of the table
+                                foreach ($result[0] as $columnName => $value)
+                                {
+                                    echo '<th>' . $columnName . '</th>'."\n";
+                                }
+                            }
+                            echo '<th>More</th>'."\n";
                             ?>
                         </tr>
                     </thead>
 
                     <tbody>
                             <?php
-                                $i = 0;
+                            $i = 0;
                             $resultSize = count($result);
                             // print_r($result[0]['id_gps']);
                             for ($index = $resultSize - 1; $index >= 0; $index--)
                             {
-                                    echo '<tr>';
-                                        $i++;
-                                        foreach($list_columns as $column)
-                                        {
-                                            echo '<td>' . $result[$index][$column] . '</td>' . "\n" ;
-                                        }
-                                        echo '<td>'. "\n";
-                                            echo    '<a href=more_info.php?boat='.$boatName.'&number='.$i.'&name='.$list_columns[0].'&table='.$dataName.'&id='.$result[$index][$list_columns[0]].'>More</a>'. "\n";
-                                        
-                                        echo '</td>'. "\n";
-                                    echo '</tr>'. "\n";
+                                echo '<tr>';
+                                $i++;
+                                // Each lines of the table
+                                if ($boatName == 'janet')
+                                {
+                                    foreach($list_columns as $column)
+                                    {
+                                        echo '<td>' . $result[$index][$column] . '</td>' . "\n" ;
+                                    }
+                                    echo '<td>'. "\n";
+                                        echo    '<a href=more_info.php?boat='.$boatName.'&number='.$i.'&name='.$list_columns[0].'&table='.$dataName.'&id='.$result[$index][$list_columns[0]].'>More</a>'. "\n";
+                                    
+                                }
+                                elseif($boatName == 'aspire')
+                                {
+                                    foreach($result[$index] as $column => $value)
+                                    {
+                                        echo '<td>' . $value . '</td>' . "\n" ;
+                                    }
+                                    echo '<td>'. "\n";
+                                        echo    '<a href=more_info_aspire.php?boat='.$boatName.'&number='.$i.'&name='.$column.'&table='.$dataName.'&id='.$result[$index]['id'].'>More</a>'. "\n";                                           
+                                }
+                                    echo '</td>'. "\n";
+                                echo '</tr>'. "\n";
                                 }
                             ?>
                     </tbody>

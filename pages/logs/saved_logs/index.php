@@ -119,15 +119,18 @@ elseif($_GET['boat'] == 'aspire')
                 if (isset($_GET['data']))
                 {
                     $data = $_GET['data'];
-                    if ($boatName == 'janet' && in_array($data, $available_pages))
+                    if (in_array($data, $available_pages))
                     {
-                        /* include 'pages/' . $data . '_body.php'; */
+                        include ('adaptative_body.php');
+                    }
+/*                    if ($boatName == 'janet' && in_array($data, $available_pages))
+                    {
                         include 'adaptative_body_janet.php';
                     }
                     elseif ($boatName == 'aspire' && in_array($data, $available_pages))
                     {
                         include 'adaptative_body_aspire.php';
-                    }
+                    }*/
                 }
                 else
                 {   
