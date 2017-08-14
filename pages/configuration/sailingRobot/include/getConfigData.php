@@ -21,7 +21,7 @@ function getConfigData($table, $boatName)
                                 10 => 'windsensor_config',
                                 11 => 'xbee_config',
                                 12 => 'httpsync_config'
-                                );
+                            );
     }
     elseif ($boatName == "aspire") 
     {
@@ -41,8 +41,10 @@ function getConfigData($table, $boatName)
                                12 => 'config_xbee',
                                13 => 'config_ais',
                                14 => 'config_ais_processing',
-                               15 => 'config_can_arduino'
-                                );
+                               15 => 'config_can_arduino',
+                               16 => 'config_line_follow',
+                               17 => 'config_sail_control'
+                            );
     }
 
     $user          = $GLOBALS['username'];

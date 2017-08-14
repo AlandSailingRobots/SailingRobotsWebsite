@@ -66,14 +66,17 @@ require_once('include/getConfigData.php');
                     $configGPSArray              = getConfigData("config_gps"                 , "aspire");
                     $configHTTPSyncArray         = getConfigData("config_httpsync"            , "aspire");
                     $configI2CArray              = getConfigData("config_i2c"                 , "aspire");
-                    $configMarineSensorsArray    = getConfigData("config_marine_sensors"       , "aspire");
+                    $configMarineSensorsArray    = getConfigData("config_marine_sensors"      , "aspire");
                     $configSimulatorArray        = getConfigData("config_simulator"           , "aspire");
                     
                     $configSolarTrackerArray     = getConfigData("config_solar_tracker"       , "aspire");
-                    $configVesselStateArray      = getConfigData("config_vessel_state"         , "aspire");
+                    $configVesselStateArray      = getConfigData("config_vessel_state"        , "aspire");
                     $configVoterSystemArray      = getConfigData("config_voter_system"        , "aspire");
                     $configWindSensorArray       = getConfigData("config_wind_sensor"         , "aspire");
                     $configXBeeArray             = getConfigData("config_xbee"                , "aspire");
+
+                    $configLineFollowArray       = getConfigData("config_line_follow"         , "aspire");
+                    $configSailControlArray      = getConfigData("config_sail_control"        , "aspire");
 
                     // We display the different tables
                     printTables($configAISArray             , "config_ais");
@@ -93,6 +96,9 @@ require_once('include/getConfigData.php');
                     printTables($configVoterSystemArray     , "config_voter_system");
                     printTables($configHTTPSyncArray        , "config_httpsync");
                     printTables($configXBeeArray            , "config_xbee");
+
+                    printTables($configLineFollowArray      , "config_line_follow");
+                    printTables($configSailControlArray     , "config_sail_control");
 
                 }
                 ?>
