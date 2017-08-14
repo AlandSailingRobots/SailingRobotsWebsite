@@ -506,13 +506,13 @@
                 // Upper line
                 LatLngsSup[0] = coordSupInf[0];
                 LatLngsSup[1] = coordSupInf[1];
-                polylineSup = L.polyline(LatLngsSup, {color: '#0000ff'}).addTo(mymap);
+                polylineSup = L.polyline(LatLngsSup, {fillOpacity: 0.3, color: '#afafaf'}).addTo(mymap);
                 arrayOfPolylineSup.push(polylineSup);
                 
                 // Lower line
                 LatLngsInf[0] = coordSupInf[2];
                 LatLngsInf[1] = coordSupInf[3];
-                polylineInf = L.polyline(LatLngsInf, {color: '#00ff00'}).addTo(mymap);
+                polylineInf = L.polyline(LatLngsInf, {fillOpacity: 0.3, color: '#afafaf'}).addTo(mymap);
                 arrayOfPolylineInf.push(polylineInf);
             }
         }
@@ -528,29 +528,30 @@
         var radiusA = parseInt(arrayOfPoints[markerA.options.rankInMission].radius),
             radiusB = parseInt(arrayOfPoints[markerB.options.rankInMission].radius);
 
-            radiusA = (radiusA + radiusB)/2;
-            radiusB = radiusA;
+        // radius = Math.min(radiusA, radiusB);
+        radiusA = parseFloat((radiusA + radiusB)/2);
+        radiusB = radiusA;
 
-        //console.log('theta : ', theta*180/Math.PI, 'radiusA', radiusA, 'radiusB', radiusB);
+        console.log('theta : ', theta*180/Math.PI, 'radiusA', radiusA, 'radiusB', radiusB);
         
         // For the upper line
         result[0] = rotationVector(theta + Math.PI/2,
                                     markerA.getLatLng()['lat'],
                                     markerA.getLatLng()['lng'],
-                                    radiusA);
+                                    radiusA*(1 + Math.abs( Math.sin(theta)) ) );
         result[1] = rotationVector(theta + Math.PI/2,
                                     markerB.getLatLng()['lat'],
                                     markerB.getLatLng()['lng'],
-                                    radiusB);
+                                    radiusB*(1 + Math.abs( Math.sin(theta)) ) );
         // For the lower line
         result[2] = rotationVector(theta - Math.PI/2,
                                     markerA.getLatLng()['lat'],
                                     markerA.getLatLng()['lng'],
-                                    radiusA);
+                                    radiusA*(1 + Math.abs( Math.sin(theta)) ) );
         result[3] = rotationVector(theta - Math.PI/2,
                                     markerB.getLatLng()['lat'],
                                     markerB.getLatLng()['lng'],
-                                    radiusB);
+                                    radiusB*(1 + Math.abs( Math.sin(theta)) ) );
         
         return result;
     }
