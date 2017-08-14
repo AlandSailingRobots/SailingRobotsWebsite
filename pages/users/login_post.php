@@ -43,21 +43,23 @@ else
     }
     else
     {
-        // session_destroy();
-        // session_start();
+        session_start();
         $_SESSION['id'] = $resultat['id'];
         $_SESSION['username'] = $username;
 
-        // This is for getting the rights of the current user
         $req-> closeCursor();
+        
+        // This is for getting the rights of the current user
         $req = $bdd->prepare('SELECT rights FROM users_rights WHERE id_user = :id_user');
-        $req->execute(array(
-                'id_user' => $_SESSION['id']));
+        $req->execute(array('id_user' => $_SESSION['id']));
         $resultat = $req->fetch();
+        
         $_SESSION['right'] = $resultat['rights'];
+        
         $req->closeCursor();
 
         // Now logged-in !
         header('Location: ../../index.php?message=You are now logged-in !');
     }
 }
+
