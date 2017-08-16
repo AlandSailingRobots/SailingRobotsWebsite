@@ -1,6 +1,65 @@
 <?php
 // ASPire
-class ASRService 
+
+function pushAllLogs($boat, $data) 
+{
+    $db = $GLOBALS['db_connection'];
+    $data = json_decode($data,true);
+    // print_r($data);
+    if (!empty($data))
+    {
+        echo '####################################################';
+        foreach ($data as $table_name => $table) 
+        {
+            // Generate the array to be bind with the prepared SQL query
+            // echo "\ntable name : $table_name\n";
+            // print_r($table);
+            // echo '---------------------------------------';
+            foreach ($table as $id_log => $log) 
+            {
+                $param_stmt = "(";
+                $param_array = array();
+                foreach ($log as $column_name => $value) 
+                {
+                    $param_array[$column_name] = $value;
+                    // if ($column_name != 'id')   // Leave the first field NULL to get the auto_increment from the DB
+                    // {
+                    //     $param_array[$column_name] = $value;
+                    // }
+                    $param_stmt = $param_stmt . ' ' . $column_name . '= :'.$column_name . ',';
+                    // if ($column_name != 'id') 
+                    // {
+                    //     $param_stmt = $param_stmt . ' ' . $column_name . '= :'.$column_name . ',';
+                    // }
+                    // else
+                    // {
+                    //     $param_stmt = $param_stmt . 'NULL,';
+                    // }
+                }
+
+                // Remove the extra comma
+                $param_stmt = substr($param_stmt, 0, -1).')'; // Now whe hace something like (?, ?, ?, ?)
+                // echo "\n@@@@@@@@@@@@@@@\n";
+                // echo "table name : $table_name\n";
+                // echo "param_stmt : ".$param_stmt . "\n";
+                // echo "param_array: \n";
+                // print_r($param_array);
+                // echo "\n".'INSERT INTO '.$table_name . ' VALUES ' . $param_stmt  .';';
+                // Prepare the SQL Query
+                $query = $db->prepare('INSERT INTO '.$table_name . ' VALUES ' . $param_stmt  .';');
+                $query->execute($param_array);
+            }
+            // $query->close()
+        }     
+        $result = array('result' => 1);
+        return json_encode($result);
+    }
+}
+
+
+
+
+/*class ASRService 
 {
     private $db;
 
@@ -206,17 +265,17 @@ class ASRService
         }
         $windSensorStmt->close();
 	
-	$result = array('result' => 1);
+	    $result = array('result' => 1);
         return json_encode($result);
     }
 }
-echo 'nouveau test ';
-//when in non-wsdl mode the uri option must be specified
-$options=array('uri'=>'http://localhost/');
-//create a new SOAP server
-$server = new SoapServer(NULL,$options);
-//attach the API class to the SOAP Server
-$server->setClass('ASRService');
-//start the SOAP requests handler
-$server->handle();
+*/
+// //when in non-wsdl mode the uri option must be specified
+// $options=array('uri'=>'http://localhost/');
+// //create a new SOAP server
+// $server = new SoapServer(NULL,$options);
+// //attach the API class to the SOAP Server
+// $server->setClass('ASRService');
+// //start the SOAP requests handler
+// $server->handle();
 ?>

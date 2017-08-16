@@ -1,70 +1,49 @@
 <?php
-// ASPire
-class ASRService 
+
+// Functions to used to retrieve the points from the DB for the boat
+function checkIfNewWaypoints() 
 {
-    private $db;
-
-    function __construct() 
-    {
-        require_once('../../globalsettings.php');
-
-        $servername = $GLOBALS['hostname'];
-        $username   = $GLOBALS['username'];
-        $password   = $GLOBALS['password'];
-        $dbname     = $GLOBALS['database_ASPire'];
-
-        $this->db = new mysqli($servername, $username, $password, $dbname);
-    }
     
-    function __destruct() 
-    {
-        $this->db->close();
-    }
+    $db = $GLOBALS['db_connection'];
 
-    // function checkIfNewWaypoints() 
-    // {
-    //     $sql = "SELECT waypoints_updated FROM config_updated";
-    //     $preResult = $this->db->query($sql);
-    //     if (!$preResult) {
-    //         throw new Exception("Database Error [{$this->database->errno}] {$this->database->error}");
-    //     }
-    //     $result = $preResult->fetch_assoc();
-    //     return $result['waypoints_updated'];
-    // }
+    $req = $db->prepare("SELECT route_updated FROM config_httpsync");
+    $exec = $req->execute();
     
-    // function setWaypointsUpdated() 
-    // {
-    //     $sql = "UPDATE config_updated SET waypoints_updated = 0 where id=1";
-    //     $result = $this->db->query($sql);
-    // }
-    
-    function getWaypoints() 
+    if (!$exec) 
     {
-        $this->setWaypointsUpdated();
-        $preResult = $this->db->query("SELECT * FROM currentMission");
-        if (!$preResult) 
-        {
-            throw new Exception("Database Error [{$this->database->errno}] {$this->database->error}");
-        }
-
-        $result = [];
-        while ($row = $preResult->fetch_row()) 
-        {
-            $result[] = $row;
-        }
-        $array = array("waypoints" => 0);
-        $array["waypoints"] = $result;
-        
-        return json_encode($array);
+        throw new Exception("Database Error {$req->error}");
     }
+    $result = $req->fetchAll(PDO::FETCH_ASSOC);
+    $req->closeCursor();
+
+    return $result[0]['route_updated'];
 }
 
-//when in non-wsdl mode the uri option must be specified
-$options=array('uri'=>'http://localhost/');
-//create a new SOAP server
-$server = new SoapServer(NULL,$options);
-//attach the API class to the SOAP Server
-$server->setClass('ASRService');
-//start the SOAP requests handler
-$server->handle();
-?>
+function setWaypointsUpdated() 
+{
+    $db = $GLOBALS['db_connection'];
+    $req = $db->prepare("UPDATE config_httpsync SET route_updated = 0 where id=1");
+    $result = $req->execute();
+}
+
+function getWaypoints() 
+{
+    setWaypointsUpdated();
+    
+    $db = $GLOBALS['db_connection'];
+    $req = $db->prepare("SELECT * FROM currentMission");
+    $preResult = $req->execute();    
+    if (!$preResult) 
+    {
+        throw new Exception("Database Error [{$db->errno}] {$req->error}");
+    }
+
+    $result = $req->fetchAll(PDO::FETCH_ASSOC); 
+
+    $array = Array();
+    $array["waypoints"] = $result;
+    // print_r($array);
+    
+    return json_encode($array);
+}
+

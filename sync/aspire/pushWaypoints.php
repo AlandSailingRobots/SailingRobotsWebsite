@@ -1,5 +1,47 @@
 <?php
+
+function pushWaypoint($data)
+{
+    $result = $data;
+    $data = json_decode($data,true);
+    $size = count($data);
+
+
+    $db = $GLOBALS['db_connection'];
+
+    $req = $db->prepare("DELETE FROM currentMission");
+    $req->execute();
+    
+    $req = $db->prepare("ALTER TABLE currentMission AUTO_INCREMENT = 0;");
+    $req->execute();
+    
+    $req = $db->prepare("INSERT INTO currentMission VALUES(?,?,?,?,?,?,?,?,?,?,?);");
+    for($i=1; $i <= $size; $i++) 
+    {
+        $waypoints = "waypoint_".$i;
+        foreach($data[$waypoints] as $row) 
+        {
+            $waypoint->execute(array($row['id'],
+                                    $row['id_mission'],
+                                    $row['rankInMission'],
+                                    $row['is_checkpoint'],
+                                    $row['name'],
+                                    $row['latitude'],
+                                    $row['longitude'],
+                                    $row['declination'],
+                                    $row['radius'],
+                                    $row['stay_time'],
+                                    $row['harvested']
+                                ));
+        }
+    }
+    $req->closeCursor();
+
+    return $result;
+}
+
 // ASPire
+/*
 class ASRService 
 {
     private $db;
@@ -60,13 +102,14 @@ class ASRService
         return $result;
     }
 }
+*/
 
-//when in non-wsdl mode the uri option must be specified
-$options=array('uri'=>'http://localhost/');
-//create a new SOAP server
-$server = new SoapServer(NULL,$options);
-//attach the API class to the SOAP Server
-$server->setClass('ASRService');
-//start the SOAP requests handler
-$server->handle();
+// //when in non-wsdl mode the uri option must be specified
+// $options=array('uri'=>'http://localhost/');
+// //create a new SOAP server
+// $server = new SoapServer(NULL,$options);
+// //attach the API class to the SOAP Server
+// $server->setClass('ASRService');
+// //start the SOAP requests handler
+// $server->handle();
 ?>
