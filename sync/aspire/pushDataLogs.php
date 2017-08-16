@@ -20,11 +20,15 @@ class ASRService
     {
         $this->db->close();
     }
+    function helloWorld()
+    {
+    	echo "Hello World !";
+    }
     
     function pushAllLogs($boat, $data) 
     {
         $data                   = json_decode($data,true);
-        
+        echo ' pouet pouet ';
         $actuatorFeedbackStmt   = $this->db->stmt_init();
         $compassStmt            = $this->db->stmt_init();
         $courseCalculationStmt  = $this->db->stmt_init();
@@ -201,10 +205,12 @@ class ASRService
             $windSensorStmt->execute();
         }
         $windSensorStmt->close();
-
-        //return json_encode($result);
+	
+	$result = array('result' => 1);
+        return json_encode($result);
     }
 }
+echo 'nouveau test ';
 //when in non-wsdl mode the uri option must be specified
 $options=array('uri'=>'http://localhost/');
 //create a new SOAP server

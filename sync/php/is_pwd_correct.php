@@ -1,7 +1,7 @@
 <?php
 
 // Check in the DB if the password exists
-function is_pwd_correct($password)
+function is_pwd_correct($passwordToCheck)
 {
 	$hostname   = $GLOBALS['hostname'];
 	$username   = $GLOBALS['username'];
@@ -20,10 +20,11 @@ function is_pwd_correct($password)
 	{
 	    die('Error : '.$e->getMessage());
 	}
-	$password = hash('sha256', $password);
+	
+	$passwordToCheck = hash('sha256', $passwordToCheck);
 
 	$req = $db->prepare('SELECT * FROM httpsync WHERE password = ? ;');
-	$result = $req->execute(array($password));
+	$result = $req->execute(array($passwordToCheck));
 
 	// If the execution failed
 	if ($result == false)
