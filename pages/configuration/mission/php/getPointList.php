@@ -57,4 +57,3 @@ if (is_ajax())
         getPointList($_POST['id_mission']);
     }
 }
-
