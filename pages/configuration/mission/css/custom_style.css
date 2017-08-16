@@ -19,7 +19,6 @@
 
 .myfooter
 {
-	/*display: inline-block;*/
 	vertical-align: bottom;
 	margin-bottom: 0;
 }
@@ -80,13 +79,10 @@ textarea
 }
 .customDelete
 {
-	/*position: absolute;*/
 	background-color: rgba(30, 30, 30, 0.3);
 	font-size: 0.8em;
 	vertical-align: bottom;
 	align-content: right;
-	/*margin-bottom: 0;*/
-	/*margin-right: 0;*/
 	bottom: -8px;
 }
 
