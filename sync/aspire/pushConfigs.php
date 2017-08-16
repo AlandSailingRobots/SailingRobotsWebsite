@@ -26,6 +26,63 @@ class ASRService
         $data = json_decode($data,true);
         $id = 1;
 
+    /*  TO BE TESTED !
+        // Shorter version, PDO style
+        foreach ($data as $table_name => $table) 
+        {
+            $size = count($table);
+
+            // Generate the parameter string like: ?, ?, ?
+            $param_stmt = '?';
+            for ($i = 0, $i<$size, $i++)
+            {
+                $param_stmt = $param_stmt . '?, ';
+            }
+            $param_stmt = substr($param_stmt, -1);
+
+            // Prepare the SQL Query
+            $query = $bd->prepare('UPDATE '.$table_name . 'SET ' . $param_stmt  .';');
+            
+            // Generate the array to be bind with the prepared SQL query
+            $param_array = array_fill(0, size, NULL);
+            $i = 0;
+            foreach ($table as $column_name => $value) 
+            {
+                if ($column_name != 'id')   // Leave the first field NULL to get the auto_increment from the DB
+                {
+                    $param_array[$i] = $value;
+                }
+                $i++;
+            }
+            $query->execute($param_array);
+            // $query->close()
+        }
+    */
+    /*  TO BE TESTED ! VERSION 2 
+        // Shorter version, PDO style
+        foreach ($data as $table_name => $table) 
+        {
+            $param_stmt = "";
+            // Generate the array to be bind with the prepared SQL query
+            $param_array = array();
+            foreach ($table as $column_name => $value) 
+            {
+                if ($column_name != 'id')   // Leave the first field NULL to get the auto_increment from the DB
+                {
+                    $param_array[$column_name] = $value;
+                }
+                $param_stmt = $param_stmt . ' ' . $column_name . '= :'.$column_name . ',';
+            }
+            // Remove the extra comma
+            $param_stmt = substr($para, 0, -1);
+
+            // Prepare the SQL Query
+            $query = $bd->prepare('UPDATE '.$table_name . 'SET ' . $param_stmt  .';');
+            $query->execute($param_array);
+            // $query->close()
+        } 
+        */
+    
         $aisStmt = $this->db->stmt_init();
         $aisStmt->prepare("UPDATE config_ais SET id=?, loop_time=?;");
         $aisStmt->bind_param(NULL, $data["config_ais"]["loopt_time"]);
