@@ -26,13 +26,17 @@ foreach ($_POST as $key => $value)
     {
         if($value == "aspire")
         {
-            $name      = "aspire";
-            $dbname    = $GLOBALS['database_ASPire'];
+            $name       = "aspire";
+            $dbname     = $GLOBALS['database_ASPire'];
+            $table_name = "config_httpsync";
+            $colum_name = "configs_updated"     ; 
         }
         elseif($value == "janet")
         {
-            $name      = "janet";
-            $dbname    = $GLOBALS['database_name_testdata'];
+            $name       = "janet";
+            $dbname     = $GLOBALS['database_name_testdata'];
+            $table_name = "config_updated";
+            $colum_name = "updated";
         }
 
         $i--;
@@ -52,6 +56,10 @@ foreach ($_POST as $key => $value)
         {
             die('Error : '.$e->getMessage());
         }
+
+        $req = $db->prepare('UPDATE ' . $table_name . ' SET ' . $colum_name . ' = 1 WHERE id = 1;');
+        $req->execute();
+        //$req->closeCursor();
     }
 
     header('Location: index.php?boat=' . $name);

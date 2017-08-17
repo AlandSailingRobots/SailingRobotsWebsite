@@ -54,7 +54,7 @@
             success: function(data) {
                 displayMissionList(data, id);},
             error: function() {
-                alert('Fail !'); }
+                alert('Fail to get mission list!'); }
         }); 
     }
 
@@ -179,7 +179,7 @@
                 cleanMissionInfo();
                 displayMissionInfo(); },
             error: function() {
-                alert('Fail to get mission info !'); }
+                alert('Fail to get mission info!'); }
         });
     }
 
@@ -268,7 +268,7 @@
                 getMissionListFromDB(0);
                 },
             error: function() {
-                alert('Fail !'); }
+                alert('Fail!'); }
         });
 
         $('#deleteConfirmationModal').modal('hide');
@@ -308,7 +308,7 @@
                 getMissionListFromDB(0);
                  },
             error: function() {
-                alert('Fail creating mission !'); }
+                alert('Fail creating mission!'); }
         });
 
         $('#createMissionModal').modal('hide');
@@ -348,7 +348,7 @@
                 $('#editMissionModal').modal('hide');
             },
             error: function() {
-                alert('Fail !'); }
+                alert('Fail!'); }
         });
     });
 
@@ -454,7 +454,7 @@
             success: function(data) {
                 alert(data); },
             error: function() {
-                alert('Fail !'); }
+                alert('Fail to load mission on the ASPire DB!'); }
         });
     }
 

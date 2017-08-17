@@ -36,6 +36,11 @@ function loadMissionToBoat($id_mission)
     {
         die('Error : '.$e->getMessage());
     }
+
+    // Write in the DB the fact that we loaded a new mission
+    $req = $db_boat->prepare('UPDATE config_httpsync SET route_updated = 1 WHERE id = 1;');
+    $req->execute();
+
     // We update the last_use value of the DB
     $query1 = $db->prepare('UPDATE mission SET last_use = CURDATE() WHERE id = ?');
     $exec1 = $query1->execute(array($id_mission));
@@ -94,7 +99,7 @@ function loadMissionToBoat($id_mission)
 
     if( $exec1 === true && $exec2 === true && $exec3 === true && $exec4 === true )
     {
-        $msg = sprintf("Success !");
+        $msg = sprintf("Mission successfully loaded on ASPire remote DB!");
     } 
     else if ($exec1 === false)
     {

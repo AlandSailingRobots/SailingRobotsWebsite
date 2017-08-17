@@ -81,7 +81,7 @@ function insertPointIntoDB($params)
     } 
     else 
     {
-        $msg = sprintf("Success !");
+        $msg = sprintf("Mission successfully saved online!");
     }
 
     echo $msg;
