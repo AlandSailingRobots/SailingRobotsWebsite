@@ -259,6 +259,7 @@
         newPoint.setAttribute("class", "point list-group-item");
         newPoint.appendChild(document.createTextNode(arrayOfPoints[index].print()));
         
+        addEditSymbol(newPoint, index);
         addDeleteSymbol(newPoint);
 
         // Which is inserted at the the right place
@@ -409,6 +410,7 @@
 
         // Add an item to the HTML list
         newPoint.appendChild(document.createTextNode(point.print()));
+        addEditSymbol(newPoint, point.rankInMission);
         addDeleteSymbol(newPoint);
         listOfPoints.appendChild(newPoint);
         
@@ -590,42 +592,55 @@
     //*****************************************************************************
     
     var editedMarkerIndex; // To keep the index of the marker we clicked on
-
+        
     // The HTML we put in bindPopup doesn't exist yet, so we can't just say
     // $('#mybutton'). Instead, we listen for click events on the map element which
     // will bubble up from the tooltip, once it's created and someone clicks on it.
-    $('#map').on('click', '.editPointButton', function() {
-            // Adapt the modal to the point properties we clicked on
-            if ($(this).hasClass('Checkpoint'))
-            {
-                var text        = 'checkpoint';
-                var classText   = 'isCheckpoint';
-                // $('#isCheckpointButton').addClass('active');
-            }
-            else
-            {
-                var text        = 'waypoint';
-                var classText   = 'isWaypoint';
-                // $('#isWaypointButton').addClass('active');
-            }
-            editModalToPoint(classText, text);
+    $('#listOfPoints').on('click', '.customEdit', function()
+        {
+            var id_marker       = $(this).parent().attr('id');
+            editedMarkerIndex   = $(this).attr('id').split(':')[1];
 
-            // Fill the form with the properties of the marker we selected
-            var id_element      = $(this).attr('id');
-            editedMarkerIndex   = id_element.split('|')[0].split(':')[1]; // It's ugly right ? :p
-            var id_marker       = id_element.split('|')[1].split(':')[1];
-            var point           = arrayOfPoints[editedMarkerIndex];
-
-            $('#editPointName').val(point.name);
-            $('#editPointLatitude').val(point.latitude);
-            $('#editPointLongitude').val(point.longitude);
-            $('#editPointRadius').val(point.radius);
-            $('#editPointStay_time').val(parseInt(point.stay_time)/60);
-            $('#editPointDeclination').val(point.declination);
-            
-            // Show the modal
-            $('#editPointModal').modal('show');
+            editMarker(id_marker);
         });
+    
+    $('#map').on('click', '.editPointButton', function()
+        {
+            var id_element      = $(this).attr('id');
+            var id_marker       = id_element.split('|')[1].split(':')[1];
+            editedMarkerIndex   = id_element.split('|')[0].split(':')[1]; // It's ugly right ? :p
+
+            editMarker(id_marker);
+        });
+
+    function editMarker(id_marker)
+    {
+        // Adapt the modal to the point properties we clicked on
+        if ($('#'+id_marker).hasClass('Checkpoint') || $('#'+id_marker).hasClass('isCheckpoint')) //TODO change Checkpoint to isCheckpoit in the code
+        {
+            var text        = 'checkpoint';
+            var classText   = 'isCheckpoint';
+        }
+        else
+        {
+            var text        = 'waypoint';
+            var classText   = 'isWaypoint';
+        }
+        editModalToPoint(classText, text);
+
+        // Fill the form with the properties of the marker we selected
+        var point           = arrayOfPoints[editedMarkerIndex];
+
+        $('#editPointName').val(point.name);
+        $('#editPointLatitude').val(point.latitude);
+        $('#editPointLongitude').val(point.longitude);
+        $('#editPointRadius').val(point.radius);
+        $('#editPointStay_time').val(parseInt(point.stay_time)/60);
+        $('#editPointDeclination').val(point.declination);
+        
+        // Show the modal
+        $('#editPointModal').modal('show');
+    }
 
     // This works because the modal are already in the HTML document
     $('#cancelEditPointButton').on('click', function() {
@@ -683,6 +698,19 @@
                                         id: marker.options.id
                                     }).update();
         });
+
+
+    // Add a edit span to the given node.
+    function addEditSymbol(newNode, rankInMission)
+    {
+        var newEdit    = document.createElement('span');
+        
+        newEdit.setAttribute("class", "label label-default pull-right customEdit");
+        newEdit.setAttribute("id", "rankInMission:"+rankInMission);
+        newEdit.appendChild(document.createTextNode('Edit'));
+        newNode.appendChild(newEdit);        
+    }
+
 
 
     //*****************************************************************************

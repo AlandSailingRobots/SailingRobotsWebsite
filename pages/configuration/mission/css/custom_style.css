@@ -35,7 +35,7 @@ textarea
 
 #map
 { 
-	height: 400px;
+	height: 600px;
 	border: 1px solid #AAA;
 }
 
@@ -89,6 +89,22 @@ textarea
 .customDelete:hover
 {
 	background-color: rgba(30, 30, 30, 0.8);
+	cursor: pointer;
+
+}
+.customEdit
+{
+	background-color: rgba(30, 30, 200, 0.3);
+	font-size: 0.8em;
+	vertical-align: bottom;
+	align-content: right;
+	bottom: -8px;
+	margin-left:3px;
+}
+
+.customEdit:hover
+{
+	background-color: rgba(30, 30, 200, 0.8);
 	cursor: pointer;
 
 }
