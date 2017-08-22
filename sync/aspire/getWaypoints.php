@@ -42,7 +42,6 @@ function getWaypoints()
 
     $array = Array();
     $array["waypoints"] = $result;
-    // print_r($array);
     
     return json_encode($array);
 }
