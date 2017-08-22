@@ -14,9 +14,9 @@ foreach ($_POST as $key => $value)
         $exploded_key = explode('|', $key);
         if ($value)
         {
-
-        $query = $db->prepare("UPDATE $exploded_key[0] SET $exploded_key[1] = ? ;");
-        $query->execute(array(htmlspecialchars($value)));
+            $query = $db->prepare("UPDATE $exploded_key[0] SET $exploded_key[1] = ? ;");
+            $query->execute(array(htmlspecialchars($value)));
+            $query->closeCursor();
         }
     }
 
@@ -64,4 +64,4 @@ foreach ($_POST as $key => $value)
 
     header('Location: index.php?boat=' . $name);
 }
-?>
+

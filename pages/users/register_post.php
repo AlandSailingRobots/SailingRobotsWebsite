@@ -101,7 +101,7 @@ else
         $req = $bdd->prepare('INSERT INTO users_rights(id_user) VALUES (:id_user)');
         $req->execute(array(
             'id_user' => $_SESSION['id']));
-        // $req->closeCursor();
+        $req->closeCursor();
 
         $_SESSION['right'] = 'user';
         $_SESSION['username'] = $username;

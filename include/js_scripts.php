@@ -1,3 +1,7 @@
+<?php This file contains the import of the JS libs that were used on the front page of the template. 
+    They are not included/enabled in the other HTML document.
+    ?>
+
     <!-- jQuery -->
     <script src="assets/vendors/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap -->

@@ -1,5 +1,13 @@
 <?php
 session_start();
+
+ /* This file contains function used to access to database. They have been written
+  * by the first developer of this website. As I don't understand everything, I
+  * didn't rewrite everything. I don't know the purpose of this file.
+  * 
+  * Antoine - 2017
+  */
+
 require('dbconnection.php');
 
 if (isset($_SESSION['id']) && isset($_SESSION['name']) && isset($_SESSION['table']) && isset($_SESSION['number']))
@@ -54,4 +62,3 @@ switch ($_REQUEST['action'])
         echo "!!! CONNY W T F !!!";
         break;
 }
-?>

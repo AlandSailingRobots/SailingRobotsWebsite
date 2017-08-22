@@ -44,7 +44,7 @@ function updateMissionInfo($id_mission, $name, $description = "")
     }
 
     echo $msg;
-
+    $query->closeCursor();
 }
 
 if(is_ajax())

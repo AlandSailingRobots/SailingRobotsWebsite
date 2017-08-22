@@ -12,3 +12,7 @@ That has been done in order to avoid using AJAX queries on every table because,
 I as a beginner developper in web development, I was not comfortable enough with
 Javascript at the moment I wrote this page.
 
+
+# Update of the DB
+The body file must be adapted and the file php/getConfigData.php as well on 
+each update made on the structure of the DB.

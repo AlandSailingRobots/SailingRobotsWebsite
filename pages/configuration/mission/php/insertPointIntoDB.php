@@ -85,6 +85,7 @@ function insertPointIntoDB($params)
     }
 
     echo $msg;
+    $query->closeCursor();
 }
 
 

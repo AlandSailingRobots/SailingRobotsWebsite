@@ -42,6 +42,8 @@ function insertMissionIntoDB($name, $description = "")
         $msg = 'Success !';
     }
     echo $msg;
+    
+    $query->closeCursor();
 
 }
 
