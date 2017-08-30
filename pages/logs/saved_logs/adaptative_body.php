@@ -9,7 +9,9 @@ require('include/dbconnection.php');
 $data = $_GET['data']; // If that page is called, that variable has been set & checked
 
 if ($boatName == 'janet')
-{
+{   
+    // List_column is used to only select some column of the db and not all.
+    // That choice has not been made for aspire logs.
     if ($data === 'gps')
     {
         $list_columns = array('id_gps', 

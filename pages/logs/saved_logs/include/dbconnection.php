@@ -140,6 +140,7 @@ function getDataFromDB($table, $pages, $dbName)
     return $result;
 }
 
+// I think this is used for the 'more_info' page for janet db - Antoine 2017
 function getAll($id, $name, $table)
 {
     $conn = dbConn();
