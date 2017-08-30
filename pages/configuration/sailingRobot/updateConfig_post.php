@@ -57,9 +57,10 @@ foreach ($_POST as $key => $value)
             die('Error : '.$e->getMessage());
         }
 
-        $req = $db->prepare('UPDATE ' . $table_name . ' SET ' . $colum_name . ' = 1 WHERE id = 1;');
+        // Write in the DB the fact that we saved a new config
+        $req = $db->prepare("UPDATE $table_name SET $colum_name = 1 WHERE id = 1;");
         $req->execute();
-        //$req->closeCursor();
+        $req->closeCursor();
     }
 
     header('Location: index.php?boat=' . $name);
