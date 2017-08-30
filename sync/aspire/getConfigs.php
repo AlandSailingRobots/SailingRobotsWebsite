@@ -47,7 +47,6 @@ function getAllConfigs($boat)
             getConfig($boat, "config_wind_sensor"),
             getConfig($boat, "config_xbee")
         );
-    print_r($allData);
     return json_encode($allData);
 }
 
