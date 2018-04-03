@@ -36,7 +36,14 @@
     # ! LIMIT 10 FOR NOW
     public function getSensorLogData() {
       $pdo = new PDO($this->dsn, $this->usr, $this->pwd, $this->opt);
-      $stmt = $pdo->prepare("SELECT * FROM dataLogs_marine_sensors LIMIT 10");
+      $query = '';
+      $query .= 'SELECT ithaax_ASPire_config.dataLogs_marine_sensors.*, latitude, longitude ';
+      $query .= 'FROM ithaax_ASPire_config.dataLogs_marine_sensors ';
+      $query .= 'RIGHT JOIN ithaax_ASPire_config.dataLogs_gps ';
+      $query .= 'ON dataLogs_marine_sensors.id = dataLogs_gps.id ';
+      $query .= 'LIMIT 50;';
+      #$stmt = $pdo->prepare("SELECT * FROM dataLogs_marine_sensors");
+      $stmt = $pdo->prepare($query);
       $stmt->execute();
       $allRows = $stmt->fetchAll();
 
@@ -62,6 +69,8 @@
       $someHTMLString .= '<th>conductivity</th>';
       $someHTMLString .= '<th>temperature</th>';
       $someHTMLString .= '<th>t_timestamp</th>';
+      $someHTMLString .= '<th>longitude</th>';
+      $someHTMLString .= '<th>latitude</th>';
       $someHTMLString .= '</tr>';
 
 
@@ -74,6 +83,8 @@
         $someHTMLString .= '<td>'.$key['conductivity'].'</td>';
         $someHTMLString .= '<td>'.$key['temperature'].'</td>';
         $someHTMLString .= '<td>'.$key['t_timestamp'].'</td>';
+        $someHTMLString .= '<td>'.$key['longitude'].'</td>';
+        $someHTMLString .= '<td>'.$key['latitude'].'</td>';
         $someHTMLString .= '</tr>';
 
         #DEBUG
