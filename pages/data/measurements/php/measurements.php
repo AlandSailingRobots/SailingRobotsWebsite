@@ -59,9 +59,11 @@
     }
 
     public function __toString() {
+
       $someHTMLString = null;
       #$someHTMLString .= 'LIMIT = 10 for now';
       $allRows = $this->getSensorLogData();
+      #$index =  count($allRows);
 
       $someHTMLString .= '<tr>';
       $someHTMLString .= '<th>Mission ID</th>';
@@ -73,9 +75,20 @@
       $someHTMLString .= '<th>latitude</th>';
       $someHTMLString .= '</tr>';
 
+      foreach ($allRows as $key) {
+          $index = count($key);
+
+          for ($x = 0; $x < $index; $x++) {
+            echo $key[$x];
+            #print_r($key);
+          }
+      }
+
+
 
       foreach ($allRows as $key) {
         #$key = (int) $key;
+
 
         $someHTMLString .= '<tr>';
         $someHTMLString .= '<td>'.$key['id'].'</td>';
