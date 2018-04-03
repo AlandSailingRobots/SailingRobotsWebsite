@@ -53,13 +53,31 @@
 
     public function __toString() {
       $someHTMLString = null;
-      $someHTMLString .= 'LIMIT = 10 for now';
+      #$someHTMLString .= 'LIMIT = 10 for now';
       $allRows = $this->getSensorLogData();
+
+      $someHTMLString .= '<tr>';
+      $someHTMLString .= '<th>Mission ID</th>';
+      $someHTMLString .= '<th>ph</th>';
+      $someHTMLString .= '<th>conductivity</th>';
+      $someHTMLString .= '<th>temperature</th>';
+      $someHTMLString .= '<th>t_timestamp</th>';
+      $someHTMLString .= '</tr>';
+
+
       foreach ($allRows as $key) {
         #$key = (int) $key;
 
+        $someHTMLString .= '<tr>';
+        $someHTMLString .= '<td>'.$key['id'].'</td>';
+        $someHTMLString .= '<td>'.$key['ph'].'</td>';
+        $someHTMLString .= '<td>'.$key['conductivity'].'</td>';
+        $someHTMLString .= '<td>'.$key['temperature'].'</td>';
+        $someHTMLString .= '<td>'.$key['t_timestamp'].'</td>';
+        $someHTMLString .= '</tr>';
+
         #DEBUG
-        echo '<pre>',print_r($key),'</pre>';
+        #echo '<pre>',print_r($key),'</pre>';
       }
       //generate table data as html for template
       return $someHTMLString;
