@@ -33,6 +33,46 @@
       $this->dsn = "mysql:host=$this->host;dbname=$this->db;charset=$this->charset";
     }
 
+    function getPages($table)
+    {
+      $pdo = new PDO($this->dsn, $this->usr, $this->pwd, $this->opt);
+
+      $total = $pdo->query("SELECT COUNT(*) as rows FROM $table") ->fetch(PDO::FETCH_OBJ);
+      $perpage = 50;#getPerPage();
+      $posts   = $total->rows;
+      $pages   = ceil($posts / $perpage);
+
+      return $pages;
+    }
+
+    public function getColumnNames($sqlResult) {
+      $someHTMLString = '';
+
+      if (!empty($sqlResult)) {
+        $firstRow = $sqlResult[0];
+
+        foreach (array_keys($firstRow) as $keyName) {
+          $someHTMLString .= '<th>'.$keyName.'</th>';
+        }
+      }
+      return $someHTMLString;
+    }
+
+    public function getColumnData($sqlResult) {
+      $someHTMLString = '';
+
+      foreach ($sqlResult as $key => $dataArray) {
+        $someHTMLString .= '<tr>';
+
+        foreach ($dataArray as $sensorValue) {
+            $someHTMLString .= '<td>'.$sensorValue.'</td>';
+        }
+
+        $someHTMLString .= '</tr>';
+      }
+      return $someHTMLString;
+    }
+
     # ! LIMIT 10 FOR NOW
     public function getSensorLogData() {
       $pdo = new PDO($this->dsn, $this->usr, $this->pwd, $this->opt);
@@ -45,9 +85,9 @@
       #$stmt = $pdo->prepare("SELECT * FROM dataLogs_marine_sensors");
       $stmt = $pdo->prepare($query);
       $stmt->execute();
-      $allRows = $stmt->fetchAll();
-
-      return $allRows;
+      $sqlResult = $stmt->fetchAll();
+      
+      return $sqlResult;
     }
 
     public function __set($name, $value) {
@@ -59,57 +99,12 @@
     }
 
     public function __toString() {
-
+      echo $this->getPages('ithaax_ASPire_config.dataLogs_marine_sensors');
       $someHTMLString = null;
-      #$someHTMLString .= 'LIMIT = 10 for now';
-      $allRows = $this->getSensorLogData();
-      #$index =  count($allRows);
+      $sqlResult = $this->getSensorLogData();
+      $someHTMLString .= $this->getColumnNames($sqlResult);
+      $someHTMLString .= $this->getColumnData($sqlResult);
 
-      $someHTMLString .= '<tr>';
-/**
-      $someHTMLString .= '<th>Mission ID</th>';
-      $someHTMLString .= '<th>ph</th>';
-      $someHTMLString .= '<th>conductivity</th>';
-      $someHTMLString .= '<th>temperature</th>';
-      $someHTMLString .= '<th>t_timestamp</th>';
-      $someHTMLString .= '<th>longitude</th>';
-      $someHTMLString .= '<th>latitude</th>';
-**/
-      $someHTMLString .= '</tr>';
-
-      $firstRow = $allRows[0];
-
-      foreach (array_keys($firstRow) as $keyName) {
-        $someHTMLString .= '<th>'.$keyName.'</th>';
-      }
-
-      foreach ($allRows as $key => $dataArray) {
-        $someHTMLString .= '<tr>';
-
-        foreach ($dataArray as $sensorValue) {
-            $someHTMLString .= '<td>'.$sensorValue.'</td>';
-        }
-
-        $someHTMLString .= '</tr>';
-      }
-
-
-/**
-      foreach ($allRows as $key) {
-        #$key = (int) $key;
-        $someHTMLString .= '<tr>';
-        $someHTMLString .= '<td>'.$key['id'].'</td>';
-        $someHTMLString .= '<td>'.$key['ph'].'</td>';
-        $someHTMLString .= '<td>'.$key['conductivity'].'</td>';
-        $someHTMLString .= '<td>'.$key['temperature'].'</td>';
-        $someHTMLString .= '<td>'.$key['t_timestamp'].'</td>';
-        $someHTMLString .= '<td>'.$key['longitude'].'</td>';
-        $someHTMLString .= '<td>'.$key['latitude'].'</td>';
-        $someHTMLString .= '</tr>';
-        #DEBUG
-        #echo '<pre>',print_r($key),'</pre>';
-      }
-**/
       //generate table data as html for template
       return $someHTMLString;
     }
