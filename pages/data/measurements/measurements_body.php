@@ -6,6 +6,12 @@ $measurements = New Measurements();
 
 $measurements->__set('boatName', 'aspire');
 $measurements->prepare();
+$limit = 50;
+$offset = ($_GET['page'] -1) * $limit;
+$measurements->__set('offset', $offset);
+$measurements->__set('limit', $limit);
+
+
 $measurementsData = $measurements->__toString();
 
 $pager = New Pager($measurements->getPages('ithaax_ASPire_config.dataLogs_marine_sensors'));

@@ -74,16 +74,20 @@
     }
 
     # ! LIMIT 10 FOR NOW
-    public function getSensorLogData() {
+    public function getSensorLogData($offset, $limit) {
       $pdo = new PDO($this->dsn, $this->usr, $this->pwd, $this->opt);
+      $pdo->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
       $query = '';
       $query .= 'SELECT ithaax_ASPire_config.dataLogs_marine_sensors.*, latitude, longitude ';
       $query .= 'FROM ithaax_ASPire_config.dataLogs_marine_sensors ';
       $query .= 'RIGHT JOIN ithaax_ASPire_config.dataLogs_gps ';
       $query .= 'ON dataLogs_marine_sensors.id = dataLogs_gps.id ';
-      $query .= 'LIMIT 50;';
+      $query .= 'LIMIT ?, ?;';
       #$stmt = $pdo->prepare("SELECT * FROM dataLogs_marine_sensors");
       $stmt = $pdo->prepare($query);
+      $stmt->bindParam(1, $offset,PDO::PARAM_INT);
+      $stmt->bindParam(2, $limit,PDO::PARAM_INT);
+
       $stmt->execute();
       $sqlResult = $stmt->fetchAll();
 
@@ -100,7 +104,7 @@
 
     public function __toString() {
       $someHTMLString = null;
-      $sqlResult = $this->getSensorLogData();
+      $sqlResult = $this->getSensorLogData($this->offset, $this->limit);
       $someHTMLString .= $this->getColumnNames($sqlResult);
       $someHTMLString .= $this->getColumnData($sqlResult);
 
@@ -131,7 +135,7 @@
 
       #check previous
       if($this->currentPage == 1) {
-        $pagerLinks .= '<a href="#"><<</a>';
+        $pagerLinks .= '<a href="#"></a>';
       } else {
         $prevPage = $this->currentPage -1;
         $pagerLinks .= '<a href="index.php?page='.$prevPage.'"><<</a>';
@@ -141,7 +145,7 @@
 
       #check next
       if($this->currentPage == $this->pages) {
-        $pagerLinks .= '<a href="#"><<</a>';
+        $pagerLinks .= '<a href="#"></a>';
       } else {
         $nextPage = $this->currentPage +1;
         $pagerLinks .= '<a href="index.php?page='.$nextPage.'">>></a>';
