@@ -23,7 +23,9 @@
 </pre>
 </div>
 <div>
+  <div class="pagination"><?php echo $pagination ?></div>
   <table class="measurementsTbl">
+
     <?php echo $measurementsData ?>
 </table>
 </div>

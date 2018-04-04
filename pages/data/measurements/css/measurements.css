@@ -3,5 +3,9 @@
 }
 
 .measurementsTbl th, td {
-  padding-left: 30px;  
+  padding-left: 30px;
+}
+
+.pagination a {
+  padding-left: 30px;
 }

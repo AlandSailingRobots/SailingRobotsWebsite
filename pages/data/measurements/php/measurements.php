@@ -86,7 +86,7 @@
       $stmt = $pdo->prepare($query);
       $stmt->execute();
       $sqlResult = $stmt->fetchAll();
-      
+
       return $sqlResult;
     }
 
@@ -99,7 +99,6 @@
     }
 
     public function __toString() {
-      echo $this->getPages('ithaax_ASPire_config.dataLogs_marine_sensors');
       $someHTMLString = null;
       $sqlResult = $this->getSensorLogData();
       $someHTMLString .= $this->getColumnNames($sqlResult);
@@ -107,6 +106,48 @@
 
       //generate table data as html for template
       return $someHTMLString;
+    }
+  }
+
+  Class Pager {
+
+    public function __construct($numPages) {
+      $this->pages = $numPages;
+    }
+
+    public function __set($name, $value) {
+      $this->$name = $value;
+    }
+
+    public function __get($name) {
+      return $this->$name;
+    }
+
+    public function __toString() {
+
+      $pagerLinks = null;
+
+      #$currentPage = null;
+
+      #check previous
+      if($this->currentPage == 1) {
+        $pagerLinks .= '<a href="#"><<</a>';
+      } else {
+        $prevPage = $this->currentPage -1;
+        $pagerLinks .= '<a href="index.php?page='.$prevPage.'"><<</a>';
+      }
+
+      #pages
+
+      #check next
+      if($this->currentPage == $this->pages) {
+        $pagerLinks .= '<a href="#"><<</a>';
+      } else {
+        $nextPage = $this->currentPage +1;
+        $pagerLinks .= '<a href="index.php?page='.$nextPage.'">>></a>';
+      }
+
+      return $pagerLinks;
     }
   }
 ?>
