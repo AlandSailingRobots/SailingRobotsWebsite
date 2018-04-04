@@ -128,28 +128,67 @@
     }
 
     public function __toString() {
+      $firstPage = 1;
+      $midRange = 5;
+      $lastPage = $this->pages;
 
       $pagerLinks = null;
-
+      $pagerLinks .= '<ul class="pagination">';
       #$currentPage = null;
 
       #check previous
       if($this->currentPage == 1) {
-        $pagerLinks .= '<a href="#"></a>';
+        $pagerLinks .= '<li class="disabled"><a href="#"><<</a></li>';
+        $pagerLinks .= '<li class="disabled"><a href="#"><</a></li>';
       } else {
         $prevPage = $this->currentPage -1;
-        $pagerLinks .= '<a href="index.php?page='.$prevPage.'"><<</a>';
+        $pagerLinks .= '<li><a href="index.php?page='.$firstPage.'"><<</a></li>';
+        $pagerLinks .= '<li><a href="index.php?page='.$prevPage.'"><</a></li>';
       }
 
+      $startRange;
+      $stopRange;
+      if($this->currentPage < $midRange) {
+        $startRange = 1;
+        $stopRange = 10;
+      }
+      if($this->currentPage >= $midRange) {
+        $startRange = $this->currentPage - $midRange;
+        $stopRange = $this->pages;
+      }
+      if($this->currentPage > ($this->pages - $midRange)) {
+        $startRange = $this->pages - 9;
+        $stopRange = $this->pages;
+      }
       #pages
+      #$pagerLinks .= '<ul class="pagination">';
+
+      for ($x = 0; $x < $this->pagesToShow; $x++) {
+        #$pageNum = $x + $this->currentPage;
+        $pageNum = $x + $startRange;
+
+        if($this->currentPage < $midRange) {
+
+        }
+        if ($pageNum == $this->currentPage) {
+            $pagerLinks .= '<li class="active"><a href=#">'.$pageNum.'</a></li>';
+        } else {
+          $pagerLinks .= '<li><a href="index.php?page='.$pageNum.'">'.$pageNum.'</a></li>';
+        }
+      }
+
+
 
       #check next
       if($this->currentPage == $this->pages) {
-        $pagerLinks .= '<a href="#"></a>';
+        $pagerLinks .= '<li class="disabled"><a href="#">></a></li>';
+        $pagerLinks .= '<li class="disabled"><a href="#">>></a></li>';
       } else {
         $nextPage = $this->currentPage +1;
-        $pagerLinks .= '<a href="index.php?page='.$nextPage.'">>></a>';
+        $pagerLinks .= '<li><a href="index.php?page='.$nextPage.'">></a></li>';
+        $pagerLinks .= '<li><a href="index.php?page='.$lastPage.'">>></a></li>';
       }
+      $pagerLinks .= '</ul>';
 
       return $pagerLinks;
     }
