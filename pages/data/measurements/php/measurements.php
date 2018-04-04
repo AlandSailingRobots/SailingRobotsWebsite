@@ -160,16 +160,11 @@
         $startRange = $this->pages - 9;
         $stopRange = $this->pages;
       }
+      
       #pages
-      #$pagerLinks .= '<ul class="pagination">';
-
       for ($x = 0; $x < $this->pagesToShow; $x++) {
-        #$pageNum = $x + $this->currentPage;
+
         $pageNum = $x + $startRange;
-
-        if($this->currentPage < $midRange) {
-
-        }
         if ($pageNum == $this->currentPage) {
             $pagerLinks .= '<li class="active"><a href=#">'.$pageNum.'</a></li>';
         } else {

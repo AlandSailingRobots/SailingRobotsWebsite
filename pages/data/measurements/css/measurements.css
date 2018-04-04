@@ -9,3 +9,7 @@
 .pagination a {
   padding-left: 30px;
 }
+
+.pagination > li a {
+  font-size: smaller;
+}
