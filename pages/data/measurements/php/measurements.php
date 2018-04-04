@@ -66,6 +66,7 @@
       #$index =  count($allRows);
 
       $someHTMLString .= '<tr>';
+/**
       $someHTMLString .= '<th>Mission ID</th>';
       $someHTMLString .= '<th>ph</th>';
       $someHTMLString .= '<th>conductivity</th>';
@@ -73,23 +74,29 @@
       $someHTMLString .= '<th>t_timestamp</th>';
       $someHTMLString .= '<th>longitude</th>';
       $someHTMLString .= '<th>latitude</th>';
+**/
       $someHTMLString .= '</tr>';
 
-      foreach ($allRows as $key) {
-          $index = count($key);
+      $firstRow = $allRows[0];
 
-          for ($x = 0; $x < $index; $x++) {
-            echo $key[$x];
-            #print_r($key);
-          }
+      foreach (array_keys($firstRow) as $keyName) {
+        $someHTMLString .= '<th>'.$keyName.'</th>';
+      }
+
+      foreach ($allRows as $key => $dataArray) {
+        $someHTMLString .= '<tr>';
+
+        foreach ($dataArray as $sensorValue) {
+            $someHTMLString .= '<td>'.$sensorValue.'</td>';
+        }
+
+        $someHTMLString .= '</tr>';
       }
 
 
-
+/**
       foreach ($allRows as $key) {
         #$key = (int) $key;
-
-
         $someHTMLString .= '<tr>';
         $someHTMLString .= '<td>'.$key['id'].'</td>';
         $someHTMLString .= '<td>'.$key['ph'].'</td>';
@@ -99,10 +106,10 @@
         $someHTMLString .= '<td>'.$key['longitude'].'</td>';
         $someHTMLString .= '<td>'.$key['latitude'].'</td>';
         $someHTMLString .= '</tr>';
-
         #DEBUG
         #echo '<pre>',print_r($key),'</pre>';
       }
+**/
       //generate table data as html for template
       return $someHTMLString;
     }
