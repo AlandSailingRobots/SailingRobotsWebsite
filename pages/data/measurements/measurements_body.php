@@ -12,6 +12,7 @@ if(isset($_GET['page'])) {
   $currentPage = $_GET['page'];
 } else {
   $currentPage = 1;
+  $_GET['page'] = 1;
 }
 
 
@@ -36,5 +37,7 @@ $pager->__set('pagesToShow', $pagesToShow);
 #echo $pager->__get('pages');
 $pagination = $pager->__toString();
 
+#include 'php/search.php';
 include 'tpl/measurements_body.tpl';
+
 ?>

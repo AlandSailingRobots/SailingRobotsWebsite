@@ -1,15 +1,26 @@
-.measurementsTbl {
+.measurements-container {
+  padding-left: 30px;
+}
+
+.measurements {
 
 }
 
-.measurementsTbl th, td {
-  padding-left: 30px;
+
+.measurements th, td {
+  padding-right: 30px;
+}
+
+.pagination {
+
 }
 
 .pagination a {
-  padding-left: 30px;
+
+  min-width: 50px;
 }
 
 .pagination > li a {
   font-size: smaller;
+  text-align: center;
 }

@@ -160,7 +160,7 @@
         $startRange = $this->pages - 9;
         $stopRange = $this->pages;
       }
-      
+
       #pages
       for ($x = 0; $x < $this->pagesToShow; $x++) {
 

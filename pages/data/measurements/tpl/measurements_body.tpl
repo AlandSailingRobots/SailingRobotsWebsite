@@ -4,9 +4,9 @@
   <p>On this page you can see measurements data for Aland Sailing Robots.</p>
 
 </div>
-<div>
+<div class="measurements-container">
   <div class="pagination"><?php echo $pagination ?></div>
-  <table class="measurementsTbl">
+  <table class="measurements">
 
     <?php echo $measurementsData ?>
 </table>
