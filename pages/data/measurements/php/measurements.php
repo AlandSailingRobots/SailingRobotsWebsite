@@ -153,7 +153,7 @@
         $stopRange = 10;
       }
       if($this->currentPage >= $midRange) {
-        $startRange = $this->currentPage - $midRange;
+        $startRange = $this->currentPage - $midRange+1;
         $stopRange = $this->pages;
       }
       if($this->currentPage > ($this->pages - $midRange)) {
