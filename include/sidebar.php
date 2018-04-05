@@ -51,7 +51,7 @@
 
                 <!-- First Menu -->
                 <li>
-                  <a><i class="fa fa-bar-chart-o"></i>Data Presentation<span class="fa fa-chevron-down"></span><span class="label label-danger pull-right">Soon</span></a>
+                  <a><i class="fa fa-bar-chart-o"></i>Data Presentation<span class="fa fa-chevron-down"></span><span class="label label-info pull-right">WIP</span></a>
                   <ul class="nav child_menu">
                     <li><a href=<?php echo $relative_path . "pages/data/measurements/index.php"?>>Measurements</a></li>
                   </ul>
