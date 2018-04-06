@@ -39,7 +39,7 @@
       $pdo = new PDO($this->dsn, $this->usr, $this->pwd, $this->opt);
 
       $total = $pdo->query("SELECT COUNT(*) as rows FROM $table") ->fetch(PDO::FETCH_OBJ);
-      $perpage = 50;#getPerPage();
+      $perpage = $this->limit;
       $posts   = $total->rows;
       $pages   = ceil($posts / $perpage);
 
