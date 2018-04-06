@@ -33,6 +33,7 @@
       $this->dsn = "mysql:host=$this->host;dbname=$this->db;charset=$this->charset";
     }
 
+    # Counts nr of pages 
     function getPages($table)
     {
       $pdo = new PDO($this->dsn, $this->usr, $this->pwd, $this->opt);
@@ -45,6 +46,7 @@
       return $pages;
     }
 
+    # Writes the colum name from DB
     public function getColumnNames($sqlResult) {
       $someHTMLString = '';
 
@@ -58,6 +60,7 @@
       return $someHTMLString;
     }
 
+    # Writes the colum data
     public function getColumnData($sqlResult) {
       $someHTMLString = '';
 
@@ -73,7 +76,7 @@
       return $someHTMLString;
     }
 
-    # ! LIMIT 10 FOR NOW
+    # building the SQL query
     public function getSensorLogData($offset, $limit) {
       $pdo = new PDO($this->dsn, $this->usr, $this->pwd, $this->opt);
       $pdo->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
@@ -83,7 +86,6 @@
       $query .= 'RIGHT JOIN ithaax_ASPire_config.dataLogs_gps ';
       $query .= 'ON dataLogs_marine_sensors.id = dataLogs_gps.id ';
       $query .= 'LIMIT ?, ?;';
-      #$stmt = $pdo->prepare("SELECT * FROM dataLogs_marine_sensors");
       $stmt = $pdo->prepare($query);
       $stmt->bindParam(1, $offset,PDO::PARAM_INT);
       $stmt->bindParam(2, $limit,PDO::PARAM_INT);
@@ -102,13 +104,13 @@
       return $this->$name;
     }
 
+    # Generate table data as html for template
     public function __toString() {
       $someHTMLString = null;
       $sqlResult = $this->getSensorLogData($this->offset, $this->limit);
       $someHTMLString .= $this->getColumnNames($sqlResult);
       $someHTMLString .= $this->getColumnData($sqlResult);
 
-      //generate table data as html for template
       return $someHTMLString;
     }
   }
@@ -127,6 +129,7 @@
       return $this->$name;
     }
 
+    
     public function __toString() {
       $firstPage = 1;
       $midRange = 5;
@@ -134,7 +137,6 @@
 
       $pagerLinks = null;
       $pagerLinks .= '<ul class="pagination">';
-      #$currentPage = null;
 
       #check previous
       if($this->currentPage == 1) {
@@ -171,8 +173,6 @@
           $pagerLinks .= '<li><a href="index.php?page='.$pageNum.'">'.$pageNum.'</a></li>';
         }
       }
-
-
 
       #check next
       if($this->currentPage == $this->pages) {
