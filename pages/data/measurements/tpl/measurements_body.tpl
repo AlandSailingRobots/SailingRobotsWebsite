@@ -4,10 +4,14 @@
   <p>On this page you can see measurements data for Aland Sailing Robots.</p>
 
 </div>
+
+<?php echo '<a href="php/download.php?type=xlsx"><button type="button" class="btn btn-default">Download XLSX</button></a>' ?>
+<?php echo '<a href="php/download.php?type=csv"><button type="button" class="btn btn-default">Download CSV</button></a>' ?>
 <div class="measurements-container">
+
   <div class="pagination"><?php echo $pagination ?></div>
   <table class="measurements">
-    <?php echo '<a href="php/download.php">download</a>' ?>
+
     <?php echo $measurementsData ?>
 </table>
 </div>
