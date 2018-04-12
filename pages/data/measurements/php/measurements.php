@@ -33,7 +33,7 @@
       $this->dsn = "mysql:host=$this->host;dbname=$this->db;charset=$this->charset";
     }
 
-    # Counts nr of pages 
+    # Counts nr of pages
     function getPages($table)
     {
       $pdo = new PDO($this->dsn, $this->usr, $this->pwd, $this->opt);
@@ -81,11 +81,19 @@
       $pdo = new PDO($this->dsn, $this->usr, $this->pwd, $this->opt);
       $pdo->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
       $query = '';
-      $query .= 'SELECT ithaax_ASPire_config.dataLogs_marine_sensors.*, latitude, longitude ';
-      $query .= 'FROM ithaax_ASPire_config.dataLogs_marine_sensors ';
-      $query .= 'RIGHT JOIN ithaax_ASPire_config.dataLogs_gps ';
-      $query .= 'ON dataLogs_marine_sensors.id = dataLogs_gps.id ';
+      $query .= 'SELECT ithaax_mission.mission.id AS mission_id,';
+      $query .= 'ithaax_mission.mission.name AS mission_name,';
+      $query .= 'ithaax_ASPire_config.dataLogs_marine_sensors.*,';
+      $query .= 'ithaax_ASPire_config.dataLogs_gps.latitude,';
+      $query .= 'ithaax_ASPire_config.dataLogs_gps.longitude';
+      $query .= 'FROM(((ithaax_ASPire_config.dataLogs_system AS sys';
+      $query .= 'RIGHT JOIN ithaax_ASPire_config.dataLogs_marine_sensors ON';
+      $query .= 'sys.marine_sensors_id = ithaax_ASPire_config.dataLogs_marine_sensors.id)';
+      $query .= 'JOIN ithaax_ASPire_config.dataLogs_gps ON sys.gps_id = ithaax_ASPire_config.dataLogs_gps.id)';
+      $query .= 'JOIN ithaax_mission.mission ON sys.current_mission_id = ithaax_mission.mission.id)';
       $query .= 'LIMIT ?, ?;';
+
+
       $stmt = $pdo->prepare($query);
       $stmt->bindParam(1, $offset,PDO::PARAM_INT);
       $stmt->bindParam(2, $limit,PDO::PARAM_INT);
@@ -129,7 +137,7 @@
       return $this->$name;
     }
 
-    
+
     public function __toString() {
       $firstPage = 1;
       $midRange = 5;
