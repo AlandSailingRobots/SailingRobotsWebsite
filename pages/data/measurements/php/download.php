@@ -13,7 +13,10 @@ $measurements->prepare();
 
 $sqlResult = $measurements->getSensorLogData(0, 10);
 $spreadsheet = new Spreadsheet();
-$spreadsheet->getActiveSheet()->fromArray($sqlResult, NULL, 'A1');
+$spreadsheet->getActiveSheet()->fromArray(array_keys($sqlResult[0]), NULL, 'A1');
+$spreadsheet->getActiveSheet()->fromArray($sqlResult, NULL, 'A2');
+#$test = array_keys($sqlResult[0];
+#print_r($test);
 
 $writer = new Xlsx($spreadsheet);
 $writer->save('php://output');
