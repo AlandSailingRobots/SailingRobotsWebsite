@@ -7,7 +7,7 @@ require '../vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
-ini_set('memory_limit', '-1');
+ini_set('memory_limit', '-1'); #fulhack
 
 Class ExportSpreadsheet {
 
@@ -19,16 +19,38 @@ Class ExportSpreadsheet {
   }
 
   public function init() {
+    #SETUP
     $xlsxMaxRows = 1048576;
     $sqlResult = $this->measurements->getSensorLogData(0, $xlsxMaxRows);
     $this->fileName = $this->measurements->__get('boatName');
 
+    #CREATE SPREADSHEET
     $this->spreadsheet = new Spreadsheet();
+
+    #ADD COLUMN HEADERS
     $this->spreadsheet->getActiveSheet()->fromArray(array_keys($sqlResult[0]), NULL, 'A1');
+
+    #SET WIDTH FROM COLUMNS
+
+
+    #FILL CELLS
     $this->spreadsheet->getActiveSheet()->fromArray($sqlResult, NULL, 'A2');
+
+    #STYLING
+    /** bold headers **/
+    $this->spreadsheet->getActiveSheet()->getStyle('1:1')->getFont()->setBold(true);
+
+    /** column width **/
+    $highestColumn = $this->spreadsheet->getActiveSheet()->getHighestColumn(); // e.g 'F'
+    $highestColumnIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestColumn); // e.g. 5
+
+    for ($col = 1; $col <= $highestColumnIndex; ++$col) {
+      $colName = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($col);
+      $this->spreadsheet->getActiveSheet()->getColumnDimension($colName)->setAutoSize(true);
+    }
+
   }
 
-  /** TODO set column width and meta data **/
   public function outputXLSX() {
     $fileName = $this->fileName;
     $fileName .= '.xlsx';
