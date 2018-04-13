@@ -20,12 +20,15 @@ Class ExportSpreadsheet {
 
   public function init() {
     #SETUP
-    $xlsxMaxRows = 1048576;
+    #$xlsxMaxRows = 1048576;
+    $xlsxMaxRows = 10;
     $sqlResult = $this->measurements->getSensorLogData(0, $xlsxMaxRows);
     $this->fileName = $this->measurements->__get('boatName');
 
     #CREATE SPREADSHEET
     $this->spreadsheet = new Spreadsheet();
+    $this->spreadsheet->getActiveSheet()->setTitle('SensorLogData');
+    $this->authorProperties();
 
     #ADD COLUMN HEADERS
     $this->spreadsheet->getActiveSheet()->fromArray(array_keys($sqlResult[0]), NULL, 'A1');
@@ -49,6 +52,19 @@ Class ExportSpreadsheet {
       $this->spreadsheet->getActiveSheet()->getColumnDimension($colName)->setAutoSize(true);
     }
 
+  }
+
+  public function authorProperties() {
+    $boatName = $this->measurements->__get('boatName');
+
+    $this->spreadsheet->getProperties()
+    ->setCreator("Åland Sailing Robots")
+    ->setLastModifiedBy("Åland Sailing Robots")
+    ->setTitle("$boatName Sensor Log Data")
+    ->setSubject("Sensor Log Data")
+    ->setDescription("Sensor Log Data document for $boatName by Åland Sailing Robots, generated using PhpSpreadsheet.")
+    ->setKeywords("sailing robot")
+    ->setCategory("sensor log data");
   }
 
   public function outputXLSX() {
