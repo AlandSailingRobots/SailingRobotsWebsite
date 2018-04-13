@@ -21,8 +21,7 @@ Class ExportSpreadsheet {
 
   public function init() {
     #SETUP
-    #$xlsxMaxRows = 1048576;
-    $xlsxMaxRows = 10;
+    $xlsxMaxRows = 1048576;
     $sqlResult = $this->measurements->getSensorLogData(0, $xlsxMaxRows);
     $this->fileName = $this->measurements->__get('boatName');
 
