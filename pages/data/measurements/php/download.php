@@ -6,6 +6,7 @@ require_once('measurements.php');
 require '../vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Writer\Ods;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
 ini_set('memory_limit', '-1'); #fulhack
 
@@ -32,9 +33,6 @@ Class ExportSpreadsheet {
 
     #ADD COLUMN HEADERS
     $this->spreadsheet->getActiveSheet()->fromArray(array_keys($sqlResult[0]), NULL, 'A1');
-
-    #SET WIDTH FROM COLUMNS
-
 
     #FILL CELLS
     $this->spreadsheet->getActiveSheet()->fromArray($sqlResult, NULL, 'A2');
@@ -76,6 +74,15 @@ Class ExportSpreadsheet {
     $writer->save('php://output');
   }
 
+  public function outputODS() {
+    $fileName = $this->fileName;
+    $fileName .= '.ods';
+    header('Content-Disposition: attachment; filename="'.$fileName.'"');
+    $writer = new Ods($this->spreadsheet);
+
+    $writer->save('php://output');
+  }
+
   public function outputCSV() {
     $fileName = $this->fileName;
     $fileName .= '.csv';
@@ -94,6 +101,10 @@ Class ExportSpreadsheet {
           break;
         case "csv":
           $this->outputCSV();
+          break;
+
+        case "ods":
+          $this->outputODS();
           break;
 
         default:
