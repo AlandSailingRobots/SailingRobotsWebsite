@@ -26,7 +26,7 @@ $measurements->__set('offset', $offset);
 
 $measurementsData = $measurements->__toString();
 
-$pager = New Pager($measurements->getPages());
+$pager = New Pager($measurements->getPages($measurements->fetch_table));
 
 $pager->__set('currentPage', $currentPage);
 $pagesToShow = 10;

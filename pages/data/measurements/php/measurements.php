@@ -44,11 +44,11 @@ Class Measurements {
     }
 
     # Counts nr of pages
-    function getPages()
+    function getPages($table)
     {
         $pdo = new PDO($this->dsn, $this->usr, $this->pwd, $this->opt);
 
-        $total = $pdo->query("SELECT COUNT(*) as rows FROM $this->fetch_table") ->fetch(PDO::FETCH_OBJ);
+        $total = $pdo->query("SELECT COUNT(*) as rows FROM $table") ->fetch(PDO::FETCH_OBJ);
         $perpage = $this->limit;
         $posts   = $total->rows;
         $pages   = ceil($posts / $perpage);
@@ -93,9 +93,8 @@ Class Measurements {
 
         $query = '';
         $query .= 'SELECT ithaax_mission.mission.name AS mission_name, ithaax_mission.mission.id AS mission_id, ';
-        $query .= 'dataLogs_marine_sensors.ph, dataLogs_marine_sensors.conductivity, ';
-        $query .= 'dataLogs_marine_sensors.temperature, dataLogs_marine_sensors.t_timestamp, ';
-        $query .= 'dataLogs_marine_sensors.salinity, dataLogs_gps.latitude, dataLogs_gps.longitude ';
+        $query .= 'dataLogs_marine_sensors.*, ';
+        $query .= 'dataLogs_gps.latitude, dataLogs_gps.longitude ';
         $query .= 'FROM ';
         $query .= $this->fetch_table;
 
