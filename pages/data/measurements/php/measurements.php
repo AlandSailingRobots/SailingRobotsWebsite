@@ -80,7 +80,7 @@ Class Measurements {
     public function getSensorLogData($offset, $limit) {
         $pdo = new PDO($this->dsn, $this->usr, $this->pwd, $this->opt);
         $pdo->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
-        $query = '';
+
         $query = '';
         $query .= 'SELECT ithaax_mission.mission.name, ithaax_mission.mission.id, ';
         $query .= 'dataLogs_marine_sensors.ph, dataLogs_marine_sensors.conductivity, ';
@@ -95,9 +95,9 @@ Class Measurements {
         $query .= 'JOIN ithaax_ASPire_config.currentMission ';
         $query .= 'ON mission_dataLogs.current_mission_id = currentMission.id ';
         $query .= 'JOIN ithaax_mission.mission ';
-        $query .= 'ON ithaax_ASPire_config.currentMission.id_mission = mission.id;'
+        $query .= 'ON ithaax_ASPire_config.currentMission.id_mission = mission.id;';
 
-        //$query = 'SELECT dataLogs_system.gps_id FROM ithaax_ASPire_config.dataLogs_system';
+        //$query = 'SELECT dataLogs_system.gps_id FROM ithaax_ASPire_config.dataLogs_system LIMIT 100;';
 
 
         $stmt = $pdo->prepare($query);
