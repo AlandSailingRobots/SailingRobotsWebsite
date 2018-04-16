@@ -40,7 +40,7 @@ Class Measurements {
         $this->fetch_table .='JOIN ithaax_ASPire_config.currentMission ';
         $this->fetch_table .='ON mission_dataLogs.current_mission_id = currentMission.id ';
         $this->fetch_table .='JOIN ithaax_mission.mission ';
-        $this->fetch_table .='ON ithaax_ASPire_config.currentMission.id_mission = mission.id LIMIT 1000;';
+        $this->fetch_table .='ON ithaax_ASPire_config.currentMission.id_mission = mission.id ';
     }
 
     # Counts nr of pages
@@ -48,7 +48,7 @@ Class Measurements {
     {
         $pdo = new PDO($this->dsn, $this->usr, $this->pwd, $this->opt);
 
-        $total = $pdo->query("SELECT COUNT(*) as rows FROM $table") ->fetch(PDO::FETCH_OBJ);
+        $total = $pdo->query("SELECT COUNT(*) as rows FROM $table ;") ->fetch(PDO::FETCH_OBJ);
         $perpage = $this->limit;
         $posts   = $total->rows;
         $pages   = ceil($posts / $perpage);
@@ -97,6 +97,7 @@ Class Measurements {
         $query .= 'dataLogs_gps.latitude, dataLogs_gps.longitude ';
         $query .= 'FROM ';
         $query .= $this->fetch_table;
+        $query .= 'LIMIT :offset, :limit;';
 
 
         $stmt = $pdo->prepare($query);

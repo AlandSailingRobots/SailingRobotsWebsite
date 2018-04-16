@@ -3,7 +3,9 @@
 }
 
 .measurements {
-
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
 }
 
 .btn {
@@ -19,7 +21,6 @@
 }
 
 .pagination a,  {
-
   min-width: 50px;
 }
 
