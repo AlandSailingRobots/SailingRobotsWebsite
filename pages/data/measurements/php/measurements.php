@@ -81,17 +81,20 @@
       $pdo = new PDO($this->dsn, $this->usr, $this->pwd, $this->opt);
       $pdo->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
       $query = '';
-      $query .= 'SELECT ithaax_mission.mission.id AS mission_id, ';
-      $query .= 'ithaax_mission.mission.name AS mission_name,';
-      $query .= 'ithaax_ASPire_config.dataLogs_marine_sensors.*, ';
-      $query .= 'ithaax_ASPire_config.dataLogs_gps.latitude, ';
-      $query .= 'ithaax_ASPire_config.dataLogs_gps.longitude ';
-      $query .= 'FROM(((ithaax_ASPire_config.dataLogs_system AS sys ';
-      $query .= 'RIGHT JOIN ithaax_ASPire_config.dataLogs_marine_sensors ON ';
-      $query .= 'sys.marine_sensors_id = ithaax_ASPire_config.dataLogs_marine_sensors.id) ';
-      $query .= 'JOIN ithaax_ASPire_config.dataLogs_gps ON sys.gps_id = ithaax_ASPire_config.dataLogs_gps.id) ';
-      $query .= 'JOIN ithaax_mission.mission ON sys.current_mission_id = ithaax_mission.mission.id) ';
-      $query .= 'LIMIT ?, ?;';
+      $query .= 'SELECT ithaax_mission.mission.name, ithaax_mission.mission.id, ';
+	  $query .= 'dataLogs_marine_sensors.ph, dataLogs_marine_sensors.conductivity, ';
+      $query .= 'dataLogs_marine_sensors.temperature, dataLogs_marine_sensors.t_timestamp, ';
+      $query .= 'dataLogs_marine_sensors.salinity, dataLogs_gps.latitude, dataLogs_gps.longitude ';
+      $query .= 'FROM ';
+	  $query .= '(SELECT * FROM ithaax_ASPire_config.dataLogs_system LIMIT ?, ?) AS mission_dataLogs ';
+	  $query .= 'JOIN ithaax_ASPire_config.dataLogs_marine_sensors ';
+	  $query .= 'ON mission_dataLogs.marine_sensors_id = dataLogs_marine_sensors.id ';
+	  $query .= 'JOIN ithaax_ASPire_config.dataLogs_gps ';
+      $query .= 'ON mission_dataLogs.gps_id = dataLogs_gps.id ';
+	  $query .= 'JOIN ithaax_ASPire_config.currentMission ';
+	  $query .= 'ON mission_dataLogs.current_mission_id = currentMission.id ';
+	  $query .= 'JOIN ithaax_mission.mission ';
+	  $query .= 'ON ithaax_ASPire_config.currentMission.id_mission = mission.id;';
 
 
       $stmt = $pdo->prepare($query);
