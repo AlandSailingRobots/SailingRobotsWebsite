@@ -6,6 +6,9 @@
 
 }
 
+.btn {
+  margin-left: 30px;
+}
 
 .measurements th, td {
   padding-right: 30px;
@@ -15,7 +18,7 @@
 
 }
 
-.pagination a {
+.pagination a,  {
 
   min-width: 50px;
 }
