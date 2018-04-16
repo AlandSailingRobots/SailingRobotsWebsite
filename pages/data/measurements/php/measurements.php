@@ -82,12 +82,12 @@ Class Measurements {
         $pdo->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
 
         $query = '';
-        $query .= 'SELECT ithaax_mission.mission.name, ithaax_mission.mission.id, ';
+        $query .= 'SELECT ithaax_mission.mission.name AS mission_name, ithaax_mission.mission.id AS mission_id, ';
         $query .= 'dataLogs_marine_sensors.ph, dataLogs_marine_sensors.conductivity, ';
         $query .= 'dataLogs_marine_sensors.temperature, dataLogs_marine_sensors.t_timestamp, ';
         $query .= 'dataLogs_marine_sensors.salinity, dataLogs_gps.latitude, dataLogs_gps.longitude ';
         $query .= 'FROM ';
-        $query .= '(SELECT * FROM ithaax_ASPire_config.dataLogs_system LIMIT ?, ?) AS mission_dataLogs ';
+        $query .= '(SELECT * FROM ithaax_ASPire_config.dataLogs_system) AS mission_dataLogs ';
         $query .= 'JOIN ithaax_ASPire_config.dataLogs_marine_sensors ';
         $query .= 'ON mission_dataLogs.marine_sensors_id = dataLogs_marine_sensors.id ';
         $query .= 'JOIN ithaax_ASPire_config.dataLogs_gps ';
@@ -95,14 +95,12 @@ Class Measurements {
         $query .= 'JOIN ithaax_ASPire_config.currentMission ';
         $query .= 'ON mission_dataLogs.current_mission_id = currentMission.id ';
         $query .= 'JOIN ithaax_mission.mission ';
-        $query .= 'ON ithaax_ASPire_config.currentMission.id_mission = mission.id;';
-
-        //$query = 'SELECT dataLogs_system.gps_id FROM ithaax_ASPire_config.dataLogs_system LIMIT 100;';
+        $query .= 'ON ithaax_ASPire_config.currentMission.id_mission = mission.id LIMIT :offset, :limit;';
 
 
         $stmt = $pdo->prepare($query);
-        $stmt->bindParam(1, $offset,PDO::PARAM_INT);
-        $stmt->bindParam(2, $limit,PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset,PDO::PARAM_INT);
+        $stmt->bindParam(':limit', $limit,PDO::PARAM_INT);
 
         $stmt->execute();
         $sqlResult = $stmt->fetchAll();
