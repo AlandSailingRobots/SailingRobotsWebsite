@@ -31,14 +31,24 @@ Class Measurements {
         ];
 
         $this->dsn = "mysql:host=$this->host;dbname=$this->db;charset=$this->charset";
+
+        $this->fetch_table = ' (SELECT * FROM ithaax_ASPire_config.dataLogs_system) AS mission_dataLogs ';
+        $this->fetch_table .='JOIN ithaax_ASPire_config.dataLogs_marine_sensors ';
+        $this->fetch_table .='ON mission_dataLogs.marine_sensors_id = dataLogs_marine_sensors.id ';
+        $this->fetch_table .='JOIN ithaax_ASPire_config.dataLogs_gps ';
+        $this->fetch_table .='ON mission_dataLogs.gps_id = dataLogs_gps.id ';
+        $this->fetch_table .='JOIN ithaax_ASPire_config.currentMission ';
+        $this->fetch_table .='ON mission_dataLogs.current_mission_id = currentMission.id ';
+        $this->fetch_table .='JOIN ithaax_mission.mission ';
+        $this->fetch_table .='ON ithaax_ASPire_config.currentMission.id_mission = mission.id LIMIT 1000;';
     }
 
     # Counts nr of pages
-    function getPages($table)
+    function getPages()
     {
         $pdo = new PDO($this->dsn, $this->usr, $this->pwd, $this->opt);
 
-        $total = $pdo->query("SELECT COUNT(*) as rows FROM $table") ->fetch(PDO::FETCH_OBJ);
+        $total = $pdo->query("SELECT COUNT(*) as rows FROM $this->fetch_table") ->fetch(PDO::FETCH_OBJ);
         $perpage = $this->limit;
         $posts   = $total->rows;
         $pages   = ceil($posts / $perpage);
@@ -87,15 +97,7 @@ Class Measurements {
         $query .= 'dataLogs_marine_sensors.temperature, dataLogs_marine_sensors.t_timestamp, ';
         $query .= 'dataLogs_marine_sensors.salinity, dataLogs_gps.latitude, dataLogs_gps.longitude ';
         $query .= 'FROM ';
-        $query .= '(SELECT * FROM ithaax_ASPire_config.dataLogs_system) AS mission_dataLogs ';
-        $query .= 'JOIN ithaax_ASPire_config.dataLogs_marine_sensors ';
-        $query .= 'ON mission_dataLogs.marine_sensors_id = dataLogs_marine_sensors.id ';
-        $query .= 'JOIN ithaax_ASPire_config.dataLogs_gps ';
-        $query .= 'ON mission_dataLogs.gps_id = dataLogs_gps.id ';
-        $query .= 'JOIN ithaax_ASPire_config.currentMission ';
-        $query .= 'ON mission_dataLogs.current_mission_id = currentMission.id ';
-        $query .= 'JOIN ithaax_mission.mission ';
-        $query .= 'ON ithaax_ASPire_config.currentMission.id_mission = mission.id LIMIT :offset, :limit;';
+        $query .= $this->fetch_table;
 
 
         $stmt = $pdo->prepare($query);

@@ -26,7 +26,7 @@ $measurements->__set('offset', $offset);
 
 $measurementsData = $measurements->__toString();
 
-$pager = New Pager($measurements->getPages('ithaax_ASPire_config.dataLogs_marine_sensors'));
+$pager = New Pager($measurements->getPages());
 
 $pager->__set('currentPage', $currentPage);
 $pagesToShow = 10;
