@@ -92,12 +92,12 @@ Class Measurements {
         $pdo->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
 
         $query = '';
-        $query .= 'SELECT dataLogs_gps.time AS timestamp, ';
-        $query .= 'ithaax_mission.mission.name AS mission_name, ithaax_mission.mission.id AS mission_id, ';
+        $query .= 'SELECT ithaax_mission.mission.name AS mission_name, ithaax_mission.mission.id AS mission_id, ';
         $query .= 'dataLogs_marine_sensors.*, ';
         $query .= 'dataLogs_gps.latitude, dataLogs_gps.longitude ';
         $query .= 'FROM ';
         $query .= $this->fetch_table;
+        $query .= 'ORDER BY t_timestamp DESC ';
         $query .= 'LIMIT :offset, :limit;';
 
 
