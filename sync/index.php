@@ -4,16 +4,17 @@ require_once '../globalsettings.php';
 require_once 'php/is_pwd_correct.php';
 
 /*
- *  This folder is used for the httpsync and it has no "interface" so you cant go to url/sync.
- *  The location's that have something like http://localhost/ is used to test the sync locally and the
- *  location's that have something like http://www.sailingrobots.com/ is used to test the sync on the website.
+ *  This folder is used for the httpsync and it has no "interface" so you cant go to
+ *  url/sync. The location's that have something like http://localhost/ is used to
+ *  test the sync locally and the location's that have something like
+ *  http://www.sailingrobots.com/ is used to test the sync on the website.
  */
 
 if (!empty($_POST)) {
     $connected = false;
     //echo 'POST array: '."\n";
     //print_r($_POST);
-    echo "\n";
+    //echo "\n";
 
     if (isset($_POST['gen']) && $_POST['gen'] == 'aspire') {
         // ASPire connection to the website
@@ -78,14 +79,14 @@ if (!empty($_POST)) {
                     );
                 }
 
-                //$connected = true;
+                // $connected = true;
             } else {
-                //echo "ERROR: Wrong Password ! \n";
+                // echo "ERROR: Wrong Password ! \n";
                 header("HTTP/1.1 401 Unauthorized");
                 exit;
             }
         } else {
-            //echo 'ERROR: Missing fild : "id" and/or "pwd"';
+            // echo 'ERROR: Missing fild : "id" and/or "pwd"';
             header("HTTP/1.1 400 Bad Request");
             exit;
         }
@@ -93,11 +94,21 @@ if (!empty($_POST)) {
         // Janet connection
         // Much less secure
         if (isset($_POST['id']) && isset($_POST['pwd'])) {
-            $optionsPushlogs      = array('location' => $GLOBALS['server'].'sync/janet/pushDatalogs.php',  'uri' => 'http://localhost/');
-            $optionsGetConfigs    = array('location' => $GLOBALS['server'].'sync/janet/getConfigs.php',    'uri' => 'http://localhost/');
-            $optionsPushConfigs   = array('location' => $GLOBALS['server'].'sync/janet/pushConfigs.php',   'uri' => 'http://localhost/');
-            $optionsPushwaypoints = array('location' => $GLOBALS['server'].'sync/janet/pushWaypoints.php', 'uri' => 'http://localhost/');
-            $optionsGetWaypoints  = array('location' => $GLOBALS['server'].'sync/janet/getWaypoints.php',  'uri' => 'http://localhost/');
+            $optionsPushlogs      = array(
+                'location' => $GLOBALS['server'].'sync/janet/pushDatalogs.php',
+                'uri' => 'http://localhost/');
+            $optionsGetConfigs    = array(
+                'location' => $GLOBALS['server'].'sync/janet/getConfigs.php',
+                'uri' => 'http://localhost/');
+            $optionsPushConfigs   = array(
+                'location' => $GLOBALS['server'].'sync/janet/pushConfigs.php',
+                'uri' => 'http://localhost/');
+            $optionsPushwaypoints = array(
+                'location' => $GLOBALS['server'].'sync/janet/pushWaypoints.php',
+                'uri' => 'http://localhost/');
+            $optionsGetWaypoints  = array(
+                'location' => $GLOBALS['server'].'sync/janet/getWaypoints.php',
+                'uri' => 'http://localhost/');
 
             $connected = true;
         } else {
@@ -151,7 +162,9 @@ if (!empty($_POST)) {
                     break;
                 }
             } catch (Exception $e) {
-                print_r("ERROR: (exception thrown in sync/index.php): ".$e->getMessage());
+                print_r(
+                    "ERROR: (exception thrown in sync/index.php): ".$e->getMessage()
+                );
             }
         } else {
             echo 'ERROR: "serv" field is empty';
