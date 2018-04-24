@@ -88,12 +88,15 @@
                 }
                 else
                 {
-                    echo "ERROR: Wrong Password ! \n";
+                    //echo "ERROR: Wrong Password ! \n";
+                    header("HTTP/1.1 401 Unauthorized");
+                    exit;
                 }
             }
             else
             {
-                echo 'ERROR: Missing fild : "id" and/or "pwd"';
+                //echo 'ERROR: Missing fild : "id" and/or "pwd"';
+                header("HTTP/1.1 400 Bad Request");
             }
 
         }
