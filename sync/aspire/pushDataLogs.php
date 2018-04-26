@@ -51,10 +51,7 @@ function pushAllLogs($boat, $data)
                 if (strpos($table_name, $tableNamePrefix) !== false) {
                     $trueTableNameStart = substr($table_name, strlen($tableNamePrefix));
 
-                    $sql= "SELECT MAX(id) FROM $table_name";
-                    $result = $db->query($sql);
-
-                    $idMap[$trueTableNameStart] = $result->fetch()['MAX(id)'];
+                    $idMap[$trueTableNameStart] = $db->lastInsertId();
                 }
             }
         }
