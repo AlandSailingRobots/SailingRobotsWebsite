@@ -104,14 +104,12 @@ Class Measurements
         $pdo = new PDO($this->dsn, $this->usr, $this->pwd, $this->opt);
         $pdo->setAttribute( PDO::ATTR_EMULATE_PREPARES, false );
 
-        $query = '';
-        $query .= 'SELECT ithaax_mission.mission.name AS mission_name, ithaax_mission.mission.id AS mission_id, ';
-        $query .= 'dataLogs_marine_sensors.*, ';
-        $query .= 'dataLogs_gps.latitude, dataLogs_gps.longitude ';
-        $query .= 'FROM ';
-        $query .= $this->fetch_table;
-        $query .= 'ORDER BY t_timestamp DESC ';
-        $query .= 'LIMIT :offset, :limit;';
+        $query = 'SELECT ithaax_mission.mission.name AS mission_name, ithaax_mission.mission.id AS mission_id, '
+            .'dataLogs_marine_sensors.*,dataLogs_gps.latitude, dataLogs_gps.longitude'
+            .' FROM '
+            .$this->fetch_table
+            .' ORDER BY t_timestamp DESC '
+            .' LIMIT :offset, :limit;';
 
 
         $stmt = $pdo->prepare($query);
@@ -145,74 +143,74 @@ Class Measurements
 
 Class Pager {
 
-    public function __construct($numPages) {
-        $this->pages = $numPages;
+public function __construct($numPages) {
+    $this->pages = $numPages;
+}
+
+public function __set($name, $value) {
+    $this->$name = $value;
+}
+
+public function __get($name) {
+    return $this->$name;
+}
+
+public function __toString() {
+    $firstPage = 1;
+    $midRange = 5;
+    $lastPage = $this->pages;
+
+    $pagerLinks = null;
+    $pagerLinks .= '<ul class="pagination">';
+
+    // check previous
+    if($this->currentPage == 1) {
+        $pagerLinks .= '<li class="disabled"><a href="#"><<</a></li>';
+        $pagerLinks .= '<li class="disabled"><a href="#"><</a></li>';
+    } else {
+        $prevPage = $this->currentPage -1;
+        $pagerLinks .= '<li><a href="index.php?page='.$firstPage.'"><<</a></li>';
+        $pagerLinks .= '<li><a href="index.php?page='.$prevPage.'"><</a></li>';
     }
-    
-    public function __set($name, $value) {
-        $this->$name = $value;
+
+    $startRange;
+    $stopRange;
+    if($this->currentPage < $midRange) {
+        $startRange = 1;
+        $stopRange = 10;
     }
-    
-    public function __get($name) {
-        return $this->$name;
+    if($this->currentPage >= $midRange) {
+        $startRange = $this->currentPage - $midRange+1;
+        $stopRange = $this->pages;
     }
-    
-    public function __toString() {
-        $firstPage = 1;
-        $midRange = 5;
-        $lastPage = $this->pages;
-    
-        $pagerLinks = null;
-        $pagerLinks .= '<ul class="pagination">';
-    
-        // check previous
-        if($this->currentPage == 1) {
-            $pagerLinks .= '<li class="disabled"><a href="#"><<</a></li>';
-            $pagerLinks .= '<li class="disabled"><a href="#"><</a></li>';
+    if($this->currentPage > ($this->pages - $midRange)) {
+        $startRange = $this->pages - 9;
+        $stopRange = $this->pages;
+    }
+
+    // pages
+    for ($x = 0; $x < $this->pagesToShow; $x++) {
+
+        $pageNum = $x + $startRange;
+        if ($pageNum == $this->currentPage) {
+            $pagerLinks .= '<li class="active"><a href=#">'.$pageNum.'</a></li>';
         } else {
-            $prevPage = $this->currentPage -1;
-            $pagerLinks .= '<li><a href="index.php?page='.$firstPage.'"><<</a></li>';
-            $pagerLinks .= '<li><a href="index.php?page='.$prevPage.'"><</a></li>';
+            $pagerLinks .= '<li><a href="index.php?page='.$pageNum.'">'.$pageNum.'</a></li>';
         }
-    
-        $startRange;
-        $stopRange;
-        if($this->currentPage < $midRange) {
-            $startRange = 1;
-            $stopRange = 10;
-        }
-        if($this->currentPage >= $midRange) {
-            $startRange = $this->currentPage - $midRange+1;
-            $stopRange = $this->pages;
-        }
-        if($this->currentPage > ($this->pages - $midRange)) {
-            $startRange = $this->pages - 9;
-            $stopRange = $this->pages;
-        }
-    
-        // pages
-        for ($x = 0; $x < $this->pagesToShow; $x++) {
-    
-            $pageNum = $x + $startRange;
-            if ($pageNum == $this->currentPage) {
-                $pagerLinks .= '<li class="active"><a href=#">'.$pageNum.'</a></li>';
-            } else {
-                $pagerLinks .= '<li><a href="index.php?page='.$pageNum.'">'.$pageNum.'</a></li>';
-            }
-        }
-    
-        // check next
-        if($this->currentPage == $this->pages) {
-            $pagerLinks .= '<li class="disabled"><a href="#">></a></li>';
-            $pagerLinks .= '<li class="disabled"><a href="#">>></a></li>';
-        } else {
-            $nextPage = $this->currentPage +1;
-            $pagerLinks .= '<li><a href="index.php?page='.$nextPage.'">></a></li>';
-            $pagerLinks .= '<li><a href="index.php?page='.$lastPage.'">>></a></li>';
-        }
-        $pagerLinks .= '</ul>';
-    
-        return $pagerLinks;
     }
+
+    // check next
+    if($this->currentPage == $this->pages) {
+        $pagerLinks .= '<li class="disabled"><a href="#">></a></li>';
+        $pagerLinks .= '<li class="disabled"><a href="#">>></a></li>';
+    } else {
+        $nextPage = $this->currentPage +1;
+        $pagerLinks .= '<li><a href="index.php?page='.$nextPage.'">></a></li>';
+        $pagerLinks .= '<li><a href="index.php?page='.$lastPage.'">>></a></li>';
+    }
+    $pagerLinks .= '</ul>';
+
+    return $pagerLinks;
+}
 }
 ?>
