@@ -32,7 +32,11 @@ if (!empty($_POST)) {
                         array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
                     );
                 } catch (Exception $e) {
-                    header("HTTP/1.1 500 Internal Server Error");
+                    header(
+                        $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+                        true,
+                        500
+                    );
                     die('Error : '.$e->getMessage());
                 }
                 $GLOBALS['db_connection'] = $db;
@@ -42,6 +46,7 @@ if (!empty($_POST)) {
                 include_once 'aspire/pushConfigs.php';
                 include_once 'aspire/pushWaypoints.php';
                 include_once 'aspire/getWaypoints.php';
+
 
                 try {
                     switch ($_POST["serv"]) {
@@ -73,6 +78,11 @@ if (!empty($_POST)) {
                         break;
                     }
                 } catch (Exception $e) {
+                    header(
+                        $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+                        true,
+                        500
+                    );
                     print_r(
                         "ERROR: (exception thrown in sync/index.php): "
                         .$e->getMessage()
@@ -82,12 +92,20 @@ if (!empty($_POST)) {
                 // $connected = true;
             } else {
                 // echo "ERROR: Wrong Password ! \n";
-                header("HTTP/1.1 401 Unauthorized");
+                header(
+                    $_SERVER['SERVER_PROTOCOL'].' 401 Unauthorized',
+                    true,
+                    401
+                );
                 exit;
             }
         } else {
             // echo 'ERROR: Missing fild : "id" and/or "pwd"';
-            header("HTTP/1.1 400 Bad Request");
+            header(
+                $_SERVER['SERVER_PROTOCOL'].' 400 Bad Request',
+                true,
+                400
+            );
             exit;
         }
     } elseif (isset($_POST['gen']) && $_POST['gen'] == 'janet') {
@@ -112,9 +130,19 @@ if (!empty($_POST)) {
 
             $connected = true;
         } else {
+            header(
+                $_SERVER['SERVER_PROTOCOL'].' 401 Unauthorized',
+                true,
+                401
+            );
             echo ' ERROR: Missing fild : "id" and/or "pwd"';
         }
     } else {
+        header(
+            $_SERVER['SERVER_PROTOCOL'].' 400 Bad Request',
+            true,
+            400
+        );
         echo ' ERROR: "gen" field "aspire" or "janet" missing !';
     }
 
@@ -126,8 +154,6 @@ if (!empty($_POST)) {
         $pushConfigsService  = new SoapClient(null, $optionsPushConfigs);
         $pushPushWaypoints   = new SoapClient(null, $optionsPushwaypoints);
         $getWaypointsService = new SoapClient(null, $optionsGetWaypoints);
-
-
 
         if (isset($_POST["serv"])) {
             try {
@@ -162,6 +188,11 @@ if (!empty($_POST)) {
                     break;
                 }
             } catch (Exception $e) {
+                header(
+                    $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+                    true,
+                    500
+                );
                 print_r(
                     "ERROR: (exception thrown in sync/index.php): ".$e->getMessage()
                 );
