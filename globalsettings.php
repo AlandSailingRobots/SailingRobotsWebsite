@@ -1,12 +1,20 @@
 <?php
+/**
+ * File: globalsettings.php
+ *
+ * Global Settings
+ *
+ * @see https://github.com/AlandSailingRobots/SailingRobotsWebsite
+ */
 
 //***************************************************************************************
 //
 // Purpose:
-//     Provides global server settings (and potentially other things in the future).
-//    Make sure you include it in all pages that might need it (e.g. database handlers).
-//    The commented lines are for hostǵator so if you make any changes that you have to push
-//    up there, make sure you reverse the commenting.
+//    Provides global server settings (and potentially other things in the future).
+//    Make sure you include it in all pages that might need it (e.g. database
+//    handlers).
+//    The commented lines are for hostǵator so if you make any changes that you
+//    have to push up there, make sure you reverse the commenting.
 //
 // Developer Notes:
 //
