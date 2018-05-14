@@ -1,6 +1,13 @@
-<?php This file contains the import of the JS libs that were used on the front page of the template. 
-    They are not included/enabled in the other HTML document.
-    ?>
+<?php
+/**
+ * File: js_scripts.php
+ *
+ * This file contains the import of the JS libs that were used on the front page of the template.
+ * They are not included/enabled in the other HTML document.
+ *
+ * @see https://github.com/AlandSailingRobots/SailingRobotsWebsite
+ */
+?>
 
     <!-- jQuery -->
     <script src="assets/vendors/jquery/dist/jquery.min.js"></script>
