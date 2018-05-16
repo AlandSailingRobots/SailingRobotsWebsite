@@ -12,28 +12,32 @@ function loadMissionToBoat($id_mission)
     $dbname     = $GLOBALS['database_mission'];
     $dbname_ASP = $GLOBALS['database_ASPire'];
 
-    try
-    {
+    try {
         $db = new PDO("mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
                         $username,
                         $password,
                         array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
                     );
-    }
-    catch(Exception $e)
-    {
+    } catch(Exception $e) {
+	    header(
+		    $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+		    true,
+		    500
+	    );
         die('Error : '.$e->getMessage());
     }
-    try
-    {
+    try {
         $db_boat = new PDO("mysql:host=$hostname;dbname=$dbname_ASP;charset=utf8;port=3306",
                         $username,
                         $password,
                         array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
                     );
-    }
-    catch(Exception $e)
-    {
+    } catch(Exception $e) {
+	    header(
+		    $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+		    true,
+		    500
+	    );
         die('Error : '.$e->getMessage());
     }
 

@@ -15,16 +15,17 @@ function getPointList($id_mission)
     $username  = $GLOBALS['username'];
     $password  = $GLOBALS['password'];
     $dbname    = $GLOBALS['database_mission'];
-    try
-    {
-        $db = new PDO("mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
+    try { $db = new PDO("mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
                         $username,
                         $password,
                         array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
                     );
-    }
-    catch(Exception $e)
-    {
+    } catch(Exception $e) {
+	    header(
+		    $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+		    true,
+		    500
+	    );
         die('Error : '.$e->getMessage());
     }
     
@@ -39,8 +40,12 @@ function getPointList($id_mission)
         // print_r($resultJSON);
         echo $resultJSON;
     }
-    catch(Exception $e)
-    {
+    catch(Exception $e) {
+	    header(
+		    $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+		    true,
+		    500
+	    );
         die('Error : '.$e->getMessage());
         echo "";
     }

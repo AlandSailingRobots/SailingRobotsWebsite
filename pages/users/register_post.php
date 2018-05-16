@@ -8,16 +8,18 @@ $hostname  = $GLOBALS['hostname'];
 $username  = $GLOBALS['username'];
 $password  = $GLOBALS['password'];
 $dbname    = $GLOBALS['database_name'];
-try
-{
+try {
     $bdd = new PDO("mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
                     $username,
                     $password,
                     array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
                 );
-}
-catch(Exception $e)
-{
+} catch(Exception $e) {
+    header(
+        $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+        true,
+        500
+    );
     die('Error : '.$e->getMessage());
 }
 

@@ -28,18 +28,20 @@ class DBConnection
 
 	public function getLatestID() 
 	{
-		try 
-		{
+		try {
 			$sql = "SELECT id_system
 					FROM system_dataLogs
 					ORDER BY id_system
 					DESC LIMIT 1;"
 					;
 			$result = $this->query($sql);
-		}
-		catch (PDOException $e) 
-		{
-			die("Woah, you wrote some crappy sql statement - lol. This went wrong: " . $e->getMessage());
+		} catch (PDOException $e) {
+            header(
+                $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+                true,
+                500
+            );
+			die("SQL Error: " . $e->getMessage());
 		}
 		return $result;
 	}
@@ -56,22 +58,29 @@ class DBConnection
 		}
 		catch (PDOException $e) 
 		{
-			die("Woah, you wrote some crappy sql statement - lol. This went wrong: " . $e->getMessage());
+            header(
+                $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+                true,
+                500
+            );
+			die("SQL Error: " . $e->getMessage());
 		}
 		return $result;
 	}
 
 	public function getWaypoints() 
 	{
-		try 
-		{
+		try {
 			$sql = "SELECT *
 			FROM waypoints;";
 			$result = $this->queryAll($sql);
-		} 
-		catch (PDOException $e) 
-		{
-			die("Woah, you wrote some crappy sql statement - lol. This went wrong: " . $e->getMessage());
+		} catch (PDOException $e) {
+            header(
+                $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+                true,
+                500
+            );
+			die("SQL Error: " . $e->getMessage());
 		}
 		return $result;
 	}

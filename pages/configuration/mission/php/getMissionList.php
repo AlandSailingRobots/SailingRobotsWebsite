@@ -11,16 +11,18 @@ function getMissionList()
     $username  = $GLOBALS['username'];
     $password  = $GLOBALS['password'];
     $dbname    = $GLOBALS['database_mission'];
-    try
-    {
+    try {
         $db = new PDO("mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
                         $username,
                         $password,
                         array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
                     );
-    }
-    catch(Exception $e)
-    {
+    } catch(Exception $e) {
+        header(
+            $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+            true,
+            500
+        );
         die('Error : '.$e->getMessage());
     }
     
@@ -34,8 +36,7 @@ function getMissionList()
     return $result;
 }
 
-if (is_ajax()) 
-{
+if (is_ajax()) {
     define('__ROOT__', dirname(dirname(dirname(dirname(dirname(__FILE__))))));
     require_once(__ROOT__.'/globalsettings.php');
     session_start();

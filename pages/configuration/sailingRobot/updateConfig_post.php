@@ -1,20 +1,26 @@
 <?php 
+/**
+ * File: updateConfig_post.php
+ *
+ * Update configuration
+ *
+ * @see https://github.com/AlandSailingRobots/SailingRobotsWebsite
+ */
 define('__ROOT__', dirname(dirname(dirname(dirname(__FILE__)))));
-require_once(__ROOT__.'/globalsettings.php');
+require_once __ROOT__.'/globalsettings.php';
 session_start();
 
 $i = 1; 
 
 // This is not very secure.
-foreach ($_POST as $key => $value) 
-{
+foreach ($_POST as $key => $value) {
     // Update the DB
-    if (!is_null($value) && !$i)
-    {
+    if (!is_null($value) && !$i) {
         $exploded_key = explode('|', $key);
-        if ($value)
-        {
-            $query = $db->prepare("UPDATE $exploded_key[0] SET $exploded_key[1] = ? ;");
+        if ($value) {
+            $query = $db->prepare(
+                "UPDATE $exploded_key[0] SET $exploded_key[1] = ? ;"
+            );
             $query->execute(array(htmlspecialchars($value)));
             $query->closeCursor();
         }
@@ -22,17 +28,13 @@ foreach ($_POST as $key => $value)
 
     // Just for the first loop, in order to get the name of the DB to update
     // Connection to the right DB
-    if ($i)
-    {
-        if($value == "aspire")
-        {
+    if ($i) {
+        if ($value == "aspire") {
             $name       = "aspire";
             $dbname     = $GLOBALS['database_ASPire'];
             $table_name = "config_httpsync";
             $colum_name = "configs_updated"     ; 
-        }
-        elseif($value == "janet")
-        {
+        } elseif ($value == "janet") {
             $name       = "janet";
             $dbname     = $GLOBALS['database_name_testdata'];
             $table_name = "config_updated";
@@ -46,14 +48,20 @@ foreach ($_POST as $key => $value)
         $password  = $GLOBALS['password'];
         try
         {
-            $db = new PDO("mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
-                            $username,
-                            $password,
-                            array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
-                        );
+            $db = new PDO(
+                "mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
+                $username,
+                $password,
+                array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+            );
         }
         catch(Exception $e)
         {
+            header(
+                $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+                true,
+                500
+            );
             die('Error : '.$e->getMessage());
         }
 
@@ -63,6 +71,6 @@ foreach ($_POST as $key => $value)
         $req->closeCursor();
     }
 
-    header('Location: index.php?boat=' . $name);
+    header('Location: index.php?boat='.$name);
 }
 

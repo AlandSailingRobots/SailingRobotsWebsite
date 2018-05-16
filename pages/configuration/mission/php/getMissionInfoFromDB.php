@@ -15,29 +15,33 @@ function getMissionInfoFromDB($id_mission)
     $username  = $GLOBALS['username'];
     $password  = $GLOBALS['password'];
     $dbname    = $GLOBALS['database_mission'];
-    try
-    {
+    try {
         $db = new PDO("mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
                         $username,
                         $password,
                         array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
                     );
-    }
-    catch(Exception $e)
-    {
+    } catch(Exception $e) {
+	    header(
+		    $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+		    true,
+		    500
+	    );
         die('Error : '.$e->getMessage());
     }
     
     $query = $db->prepare('SELECT * FROM mission WHERE id = ? ;');
     $query->execute(array($id_mission));
 
-    try
-    {
-        $resultJSON = json_encode($query->fetchAll(PDO::FETCH_ASSOC));
+    try { $resultJSON = json_encode($query->fetchAll(PDO::FETCH_ASSOC));
         echo $resultJSON;
     }
-    catch(Exception $e)
-    {
+    catch(Exception $e) {
+	    header(
+		    $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+		    true,
+		    500
+	    );
         die('Error : '.$e->getMessage());
         echo "";
     }
@@ -46,11 +50,9 @@ function getMissionInfoFromDB($id_mission)
 }
 
 
-if (is_ajax()) 
-{
+if (is_ajax()) {
     // Get param & return JSON string
-    if (isset($_POST['id_mission']) && $_SESSION['right'] == 'admin')
-    {
+    if (isset($_POST['id_mission']) && $_SESSION['right'] == 'admin') {
         getMissionInfoFromDB($_POST['id_mission']);
     }
 }

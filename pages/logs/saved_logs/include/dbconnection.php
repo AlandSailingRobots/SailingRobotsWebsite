@@ -12,17 +12,19 @@ function dbConn()
     $password       = $GLOBALS['password'];
     $hostname       = $GLOBALS['hostname'];
     $database_name  = $GLOBALS['database_name_testdata'];
-    try
-    {
+    try {
         $conn = new PDO("mysql:host=$hostname;
                         dbname=$database_name;
                         charset=utf8;port=3306", 
                         $user, 
                         $password, 
                         array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
-    }
-    catch(Exception $e)
-    {
+    } catch(Exception $e) {
+	    header(
+		    $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+		    true,
+		    500
+	    );
         die('Connection failed : '.$e->getMessage());
     }
     return $conn;
@@ -46,6 +48,11 @@ function dbConnASPire()
     }
     catch(Exception $e)
     {
+	    header(
+		    $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+		    true,
+		    500
+	    );
         die('Connection failed : '.$e->getMessage());
     }
     return $conn;
