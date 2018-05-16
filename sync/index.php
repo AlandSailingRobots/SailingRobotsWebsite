@@ -1,14 +1,16 @@
 <?php
-
-require_once '../globalsettings.php';
-require_once 'php/is_pwd_correct.php';
-
-/*
+/**
+ * File: index.php
+ *
  *  This folder is used for the httpsync and it has no "interface" so you cant go to
  *  url/sync. The location's that have something like http://localhost/ is used to
  *  test the sync locally and the location's that have something like
  *  http://www.sailingrobots.com/ is used to test the sync on the website.
+ *
+ * @see https://github.com/AlandSailingRobots/SailingRobotsWebsite
  */
+require_once '../globalsettings.php';
+require_once 'php/is_pwd_correct.php';
 
 if (!empty($_POST)) {
     $connected = false;

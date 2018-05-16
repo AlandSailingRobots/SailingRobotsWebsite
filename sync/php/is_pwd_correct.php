@@ -1,4 +1,9 @@
 <?php
+/**
+ * File: is_pwd_correct.php
+ *
+ * @see https://github.com/AlandSailingRobots/SailingRobotsWebsite
+ */
 
 /**
  * Check in the DB if the password exists
