@@ -6,7 +6,7 @@
  */
 
 /**
- * ASRService 
+ * ASRService
  */
 class ASRService
 {
@@ -17,7 +17,7 @@ class ASRService
      *
      * @return void
      */
-    function __construct() 
+    function __construct()
     {
         include_once '../../globalsettings.php';
 
@@ -26,7 +26,6 @@ class ASRService
         $password = $GLOBALS['password'];
         $dbname = "ithaax_testdata";
         $this->_db = new mysqli($servername, $username, $password, $dbname);
-
     }
     
     /**
@@ -34,7 +33,7 @@ class ASRService
      *
      * @return void
      */
-    function __destruct() 
+    function __destruct()
     {
         $this->_db->close();
     }
@@ -44,7 +43,7 @@ class ASRService
      *
      * @return mixed[] Column
      */
-    function checkIfNewWaypoints() 
+    function checkIfNewWaypoints()
     {
         $sql = "SELECT waypoints_updated FROM config_updated";
         $preResult = $this->_db->query($sql);
@@ -62,7 +61,7 @@ class ASRService
      *
      * @return void
      */
-    function setWaypointsUpdated() 
+    function setWaypointsUpdated()
     {
         $sql = "UPDATE config_updated SET waypoints_updated = 0 where id = 1";
         $this->_db->query($sql);
@@ -73,7 +72,7 @@ class ASRService
      *
      * @return string JSON-encoded array
      */
-    function getWaypoints() 
+    function getWaypoints()
     {
         $this->setWaypointsUpdated();
         $preResult = $this->_db->query("SELECT * FROM waypoints");
@@ -106,4 +105,3 @@ $server->setClass('ASRService');
 
 //start the SOAP requests handler
 $server->handle();
-?>

@@ -6,53 +6,54 @@
   */
 
 // Connect to Janet DB
-function dbConn() 
+function dbConn()
 {
     $user           = $GLOBALS['username'];
     $password       = $GLOBALS['password'];
     $hostname       = $GLOBALS['hostname'];
     $database_name  = $GLOBALS['database_name_testdata'];
     try {
-        $conn = new PDO("mysql:host=$hostname;
+        $conn = new PDO(
+            "mysql:host=$hostname;
                         dbname=$database_name;
-                        charset=utf8;port=3306", 
-                        $user, 
-                        $password, 
-                        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
-    } catch(Exception $e) {
-	    header(
-		    $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
-		    true,
-		    500
-	    );
+                        charset=utf8;port=3306",
+            $user,
+            $password,
+            array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+        );
+    } catch (Exception $e) {
+        header(
+            $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+            true,
+            500
+        );
         die('Connection failed : '.$e->getMessage());
     }
     return $conn;
 }
 
 // Connection to ASPire DB
-function dbConnASPire() 
+function dbConnASPire()
 {
     $user           = $GLOBALS['username'];
     $password       = $GLOBALS['password'];
     $hostname       = $GLOBALS['hostname'];
     $database_name  = $GLOBALS['database_ASPire'];
-    try
-    {
-        $conn = new PDO("mysql:host=$hostname;
+    try {
+        $conn = new PDO(
+            "mysql:host=$hostname;
                         dbname=$database_name;
-                        charset=utf8;port=3306", 
-                        $user, 
-                        $password, 
-                        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
-    }
-    catch(Exception $e)
-    {
-	    header(
-		    $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
-		    true,
-		    500
-	    );
+                        charset=utf8;port=3306",
+            $user,
+            $password,
+            array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+        );
+    } catch (Exception $e) {
+        header(
+            $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+            true,
+            500
+        );
         die('Connection failed : '.$e->getMessage());
     }
     return $conn;
@@ -67,14 +68,11 @@ function getPerPage()
 }
 
 // Gives the total number of pages
-function getPages($table, $dbName) 
+function getPages($table, $dbName)
 {
-    if ($dbName == 'janet')
-    {
+    if ($dbName == 'janet') {
         $conn    = dbConn();
-    }
-    elseif ($dbName == 'aspire')
-    {
+    } elseif ($dbName == 'aspire') {
         $conn = dbConnASPire();
     }
     $total   = $conn->query("SELECT COUNT(*) as rows FROM $table") ->fetch(PDO::FETCH_OBJ);
@@ -87,14 +85,11 @@ function getPages($table, $dbName)
 }
 
 // Return the total number of lines in the given table of the given DB
-function getNumberOfEntries($table, $dbName) 
+function getNumberOfEntries($table, $dbName)
 {
-    if ($dbName == 'janet')
-    {
+    if ($dbName == 'janet') {
         $conn    = dbConn();
-    }
-    elseif ($dbName == 'aspire')
-    {
+    } elseif ($dbName == 'aspire') {
         $conn = dbConnASPire();
     }
     $total   = $conn->query("SELECT COUNT(*) as rows FROM $table") ->fetch(PDO::FETCH_OBJ);
@@ -108,12 +103,9 @@ function getNumberOfEntries($table, $dbName)
 // Get the data from the DB
 function getDataFromDB($table, $pages, $dbName)
 {
-    if ($dbName == 'janet')
-    {
+    if ($dbName == 'janet') {
         $conn    = dbConn();
-    }
-    elseif ($dbName == 'aspire')
-    {
+    } elseif ($dbName == 'aspire') {
         $conn = dbConnASPire();
     }
     
@@ -130,17 +122,14 @@ function getDataFromDB($table, $pages, $dbName)
     $limit_min = $limit_min < 0 ? 0 : $limit_min;
     $range = $limit_min;
 
-    try
-    {
-        $stmt    = $conn->prepare("SELECT * FROM $table  LIMIT :limit_min, :perpage ;"); 
-        $stmt->bindParam(':limit_min', $range,   PDO::PARAM_INT);
-        $stmt->bindParam(':perpage',   $perPage, PDO::PARAM_INT);
+    try {
+        $stmt    = $conn->prepare("SELECT * FROM $table  LIMIT :limit_min, :perpage ;");
+        $stmt->bindParam(':limit_min', $range, PDO::PARAM_INT);
+        $stmt->bindParam(':perpage', $perPage, PDO::PARAM_INT);
         $stmt->execute();
 
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-    catch(PDOException $e) 
-    {
+    } catch (PDOException $e) {
         $error = $e->getMessage();
         $result = array();
     }
@@ -151,8 +140,7 @@ function getDataFromDB($table, $pages, $dbName)
 function getAll($id, $name, $table)
 {
     $conn = dbConn();
-    try 
-    {
+    try {
         $stmt = $conn->prepare("SELECT * FROM system_dataLogs
             RIGHT JOIN gps_dataLogs
             ON system_dataLogs.id_system=gps_dataLogs.id_gps
@@ -177,10 +165,7 @@ function getAll($id, $name, $table)
         $stmt->execute();
 
         $result = $stmt->fetchAll();
-
-    }
-    catch(PDOException $e) 
-    {
+    } catch (PDOException $e) {
         $error = $e->getMessage();
     }
 
@@ -191,13 +176,13 @@ function getAll($id, $name, $table)
 // function getAllRoutes()
 // {
 //     $conn = dbConn();
-//     try 
+//     try
 //     {
 //         $stmt = $conn->prepare("SELECT latitude, longitude, route_started, id_gps FROM gps_dataLogs");
 //         $stmt->execute();
 //         $result = $stmt->fetchAll();
 //     }
-//     catch(PDOException $e) 
+//     catch(PDOException $e)
 //     {
 //         $error = $e->getMessage();
 //     }
@@ -207,16 +192,15 @@ function getAll($id, $name, $table)
 // function getRoute($id)
 // {
 //     $conn = dbConn();
-//     try 
+//     try
 //     {
 //         $stmt = $conn->prepare("SELECT latitude, longitude, route_started, id_gps FROM gps_dataLogs WHERE id_gps <= $id");
 //         $stmt->execute();
 //         $result = $stmt->fetchAll();
 //     }
-//     catch(PDOException $e) 
+//     catch(PDOException $e)
 //     {
 //         $error = $e->getMessage();
 //     }
 //     return $result;
 // }
-?>

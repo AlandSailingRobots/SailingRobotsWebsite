@@ -10,27 +10,24 @@
           <!-- menu profile quick info -->
           <div class="profile">
             <div class="profile_pic">
-              <?php
-              $face_pic = 'resources/users/default.png';
+                <?php
+                $face_pic = 'resources/users/default.png';
               //echo '####### ' . __ROOT__ . $face_pic;
-              if (file_exists(__ROOT__ . '/resources/users/' . $_SESSION['username'] . '/user.jpg'))
-              {
-                $face_pic = 'resources/users/' . $_SESSION['username'] . '/user.jpg';
-              }
-              elseif (file_exists(__ROOT__ . '/resources/users/' . $_SESSION['username'] . '/user.png'))
-              {
-                $face_pic = 'resources/users/' . $_SESSION['username'] . '/user.png';
-              }
+                if (file_exists(__ROOT__ . '/resources/users/' . $_SESSION['username'] . '/user.jpg')) {
+                    $face_pic = 'resources/users/' . $_SESSION['username'] . '/user.jpg';
+                } elseif (file_exists(__ROOT__ . '/resources/users/' . $_SESSION['username'] . '/user.png')) {
+                    $face_pic = 'resources/users/' . $_SESSION['username'] . '/user.png';
+                }
 
               // $_SESSION['face_pic'] = realpath($face_pic);
-              $_SESSION['face_pic'] = $face_pic;
-              echo '<img src="' . $relative_path . $_SESSION['face_pic'] . '" alt="Face Picture" class="img-circle profile_img">';
-              ?>
+                $_SESSION['face_pic'] = $face_pic;
+                echo '<img src="' . $relative_path . $_SESSION['face_pic'] . '" alt="Face Picture" class="img-circle profile_img">';
+                ?>
 
             </div>
             <div class="profile_info">
               <span>Welcome,</span>
-              <?php echo '<h2>' . $_SESSION['username'] . '</h2>'?>
+                <?php echo '<h2>' . $_SESSION['username'] . '</h2>'?>
 
             </div>
           </div>

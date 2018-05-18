@@ -2,17 +2,17 @@
 require_once('php/measurements.php');
 
 
-$measurements = New Measurements();
+$measurements = new Measurements();
 
 $measurements->__set('boatName', 'aspire');
 $measurements->prepare();
 
 $currentPage = null;
-if(isset($_GET['page'])) {
-  $currentPage = $_GET['page'];
+if (isset($_GET['page'])) {
+    $currentPage = $_GET['page'];
 } else {
-  $currentPage = 1;
-  $_GET['page'] = 1;
+    $currentPage = 1;
+    $_GET['page'] = 1;
 }
 
 
@@ -26,7 +26,7 @@ $measurements->__set('offset', $offset);
 
 $measurementsData = $measurements->__toString();
 
-$pager = New Pager($measurements->getPages($measurements->fetch_table));
+$pager = new Pager($measurements->getPages($measurements->fetch_table));
 
 $pager->__set('currentPage', $currentPage);
 $pagesToShow = 10;
@@ -34,5 +34,3 @@ $pager->__set('pagesToShow', $pagesToShow);
 $pagination = $pager->__toString();
 
 include 'tpl/measurements_body.tpl';
-
-?>

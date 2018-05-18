@@ -44,7 +44,6 @@ if (isset($_GET['boat']) && $_GET['boat'] == "janet") {
         $valueArray = getConfigData($value, "janet");
         printTables($valueArray, $value);
     }
-
 } elseif (isset($_GET['boat']) && $_GET['boat'] == "aspire") {
     $allowed_query = array (0 => 'config_buffer',
          1 => 'config_course_regulator',
@@ -72,7 +71,6 @@ if (isset($_GET['boat']) && $_GET['boat'] == "janet") {
         $valueArray = getConfigData($value, "aspire");
         printTables($valueArray, $value);
     }
-
 }
 ?>
             </div>

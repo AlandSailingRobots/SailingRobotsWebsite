@@ -7,9 +7,8 @@
           <ul class="nav navbar-nav navbar-right">
             <?php
 
-            if (isset($_SESSION['id']) AND isset($_SESSION['username']))
-            {
-              echo '<li class="">';
+            if (isset($_SESSION['id']) and isset($_SESSION['username'])) {
+                echo '<li class="">';
             ?>
                 
                 <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -45,10 +44,8 @@
                     </li>
                   </ul> -->
             <?php
-            }
-            else
-            {
-              echo '<li class="">';
+            } else {
+                echo '<li class="">';
             ?>
 
                 <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">

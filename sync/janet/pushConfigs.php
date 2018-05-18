@@ -6,12 +6,12 @@
  */
 
 /**
- * ASRService 
+ * ASRService
  */
 class ASRService
 {
     private $_db;
-    function __construct() 
+    function __construct()
     {
         include_once '../../globalsettings.php';
 
@@ -32,7 +32,7 @@ class ASRService
      *
      * @return void
      */
-    function __destruct() 
+    function __destruct()
     {
         $this->_db->close();
     }
@@ -44,7 +44,7 @@ class ASRService
      *
      * @return string Windspeed and other data
      */
-    function pushConfigs($data) 
+    function pushConfigs($data)
     {
         $data = json_decode($data, true);
         $id = 1;
@@ -63,8 +63,6 @@ class ASRService
         $HttpsyncStmt           = $this->_db->stmt_init();
         $BufferStmt             = $this->_db->stmt_init();
 
-        // TODO: KÅRE CONTINUE HERE
-        //
         $course_calculationStmt->prepare("UPDATE course_calculation_config SET sector_angle=?,tack_angle=?,tack_max_angle=?,tack_min_speed=? WHERE id=$id;");
         $maestro_controllerStmt->prepare("UPDATE  maestro_controller_config SET port=? WHERE id=$id;");
         $rudder_commandStmt->prepare("UPDATE rudder_command_config SET extreme_command=?,midship_command=? WHERE id=$id;");
@@ -80,7 +78,8 @@ class ASRService
         $BufferStmt->prepare("UPDATE buffer_config SET compass=?, true_wind=?, windsensor=? WHERE id=$id;");
 
         $course_calculationStmt->bind_param(
-            "dddd", $data["course_calculation_config"]["sector_angle"],
+            "dddd",
+            $data["course_calculation_config"]["sector_angle"],
             $data["course_calculation_config"]["tack_angle"],
             $data["course_calculation_config"]["tack_max_angle"],
             $data["course_calculation_config"]["tack_min_speed"]
@@ -91,20 +90,23 @@ class ASRService
         $maestro_controllerStmt->execute();
 
         $rudder_commandStmt->bind_param(
-            "ii", $data["rudder_command_config"]["extreme_command"],
+            "ii",
+            $data["rudder_command_config"]["extreme_command"],
             $data["rudder_command_config"]["midship_command"]
         );
         $rudder_commandStmt->execute();
 
         $rudder_servoStmt->bind_param(
-            "iii", $data["rudder_servo_config"]["acceleration"],
+            "iii",
+            $data["rudder_servo_config"]["acceleration"],
             $data["rudder_servo_config"]["channel"],
             $data["rudder_servo_config"]["speed"]
         );
         $rudder_servoStmt->execute();
 
         $sailing_robotStmt->bind_param(
-            "idiii", $data["sailing_robot_config"]["flag_heading_compass"],
+            "idiii",
+            $data["sailing_robot_config"]["flag_heading_compass"],
             $data["sailing_robot_config"]["loop_time"],
             $data["sailing_robot_config"]["scanning"],
             $data["sailing_robot_config"]["line_follow"],
@@ -113,20 +115,23 @@ class ASRService
         $sailing_robotStmt->execute();
 
         $sail_commandStmt->bind_param(
-            "ii", $data["sail_command_config"]["close_reach_command"],
+            "ii",
+            $data["sail_command_config"]["close_reach_command"],
             $data["sail_command_config"]["run_command"]
         );
         $sail_commandStmt->execute();
 
         $sail_servoStmt->bind_param(
-            "iii", $data["sail_servo_config"]["acceleration"],
+            "iii",
+            $data["sail_servo_config"]["acceleration"],
             $data["sail_servo_config"]["channel"],
             $data["sail_servo_config"]["speed"]
         );
         $sail_servoStmt->execute();
 
         $waypoint_routingStmt->bind_param(
-            "ddddd", $data["waypoint_routing_config"]["adjust_degree_limit"],
+            "ddddd",
+            $data["waypoint_routing_config"]["adjust_degree_limit"],
             $data["waypoint_routing_config"]["max_command_angle"],
             $data["waypoint_routing_config"]["radius_ratio"],
             $data["waypoint_routing_config"]["rudder_speed_min"],
@@ -135,20 +140,23 @@ class ASRService
         $waypoint_routingStmt->execute();
 
         $windsensorStmt->bind_param(
-            "is", $data["windsensor_config"]["baud_rate"],
+            "is",
+            $data["windsensor_config"]["baud_rate"],
             $data["windsensor_config"]["port"]
         );
         $windsensorStmt->execute();
 
         $wind_vaneStmt->bind_param(
-            "iid", $data["wind_vane_config"]["use_self_steering"],
+            "iid",
+            $data["wind_vane_config"]["use_self_steering"],
             $data["wind_vane_config"]["wind_sensor_self_steering"],
             $data["wind_vane_config"]["self_steering_interval"]
         );
         $wind_vaneStmt->execute();
 
         $XbeeStmt->bind_param(
-            "iiii", $data["xbee_config"]["send"],
+            "iiii",
+            $data["xbee_config"]["send"],
             $data["xbee_config"]["recieve"],
             $data["xbee_config"]["send_logs"],
             $data["xbee_config"]["delay"]
@@ -159,7 +167,8 @@ class ASRService
         $HttpsyncStmt->execute();
 
                 $BufferStmt->bind_param(
-                    "iii", $data["buffer_config"]["compass"],
+                    "iii",
+                    $data["buffer_config"]["compass"],
                     $data["buffer_config"]["true_wind"],
                     $data["buffer_config"]["windsensor"]
                 );
@@ -191,4 +200,3 @@ $server = new SoapServer(null, $options);
 $server->setClass('ASRService');
 //start the SOAP requests handler
 $server->handle();
-?>

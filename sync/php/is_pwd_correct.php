@@ -26,7 +26,7 @@ function is_pwd_correct($passwordToCheck)
             $password,
             array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
         );
-    } catch(Exception $e) {
+    } catch (Exception $e) {
         header(
             $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
             true,

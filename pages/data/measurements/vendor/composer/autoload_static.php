@@ -7,7 +7,7 @@ namespace Composer\Autoload;
 class ComposerStaticInit607429df104fe4737ffaf95dd0b84852
 {
     public static $prefixLengthsPsr4 = array (
-        'P' => 
+        'P' =>
         array (
             'Psr\\SimpleCache\\' => 16,
             'PhpOffice\\PhpSpreadsheet\\' => 25,
@@ -15,11 +15,11 @@ class ComposerStaticInit607429df104fe4737ffaf95dd0b84852
     );
 
     public static $prefixDirsPsr4 = array (
-        'Psr\\SimpleCache\\' => 
+        'Psr\\SimpleCache\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/simple-cache/src',
         ),
-        'PhpOffice\\PhpSpreadsheet\\' => 
+        'PhpOffice\\PhpSpreadsheet\\' =>
         array (
             0 => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet',
         ),
@@ -30,7 +30,6 @@ class ComposerStaticInit607429df104fe4737ffaf95dd0b84852
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit607429df104fe4737ffaf95dd0b84852::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit607429df104fe4737ffaf95dd0b84852::$prefixDirsPsr4;
-
         }, null, ClassLoader::class);
     }
 }

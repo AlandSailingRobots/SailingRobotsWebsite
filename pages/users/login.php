@@ -6,7 +6,7 @@
 <html lang="en">
 <head>
 <?php // Head of the HTML document
-    include $relative_path . 'include/head.php'; 
+    include $relative_path . 'include/head.php';
 ?>
 </head>
 
@@ -20,12 +20,11 @@
           <section class="login_content">
             <form action="login_post.php" method="post">
               <h1>Login Form</h1>
-              <?php
-                if (isset($_GET['message']))
-                {
-                  echo '<h3>' . $_GET['message'] . '</h3>';
+                <?php
+                if (isset($_GET['message'])) {
+                    echo '<h3>' . $_GET['message'] . '</h3>';
                 }
-              ?>
+                ?>
               <div>
                 <input type="text" class="form-control" placeholder="Username" name="username" required="" autofocus />
               </div>

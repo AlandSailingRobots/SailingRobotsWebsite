@@ -3,7 +3,7 @@
 function pushWaypoint($data)
 {
     $result = $data;
-    $data = json_decode($data,true);
+    $data = json_decode($data, true);
     $size = count($data);
 
 
@@ -16,11 +16,9 @@ function pushWaypoint($data)
     $req->execute();
     
     $req = $db->prepare("INSERT INTO currentMission VALUES(?,?,?,?,?,?,?,?,?,?,?);");
-    for($i=1; $i <= $size; $i++) 
-    {
+    for ($i=1; $i <= $size; $i++) {
         $waypoints = "waypoint_".$i;
-        foreach($data[$waypoints] as $row) 
-        {
+        foreach ($data[$waypoints] as $row) {
             $waypoint->execute(array($row['id'],
                                     $row['id_mission'],
                                     $row['rankInMission'],

@@ -9,12 +9,13 @@ $username  = $GLOBALS['username'];
 $password  = $GLOBALS['password'];
 $dbname    = $GLOBALS['database_name'];
 try {
-    $bdd = new PDO("mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
-                    $username,
-                    $password,
-                    array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
-                );
-} catch(Exception $e) {
+    $bdd = new PDO(
+        "mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
+        $username,
+        $password,
+        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+    );
+} catch (Exception $e) {
     header(
         $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
         true,
@@ -30,12 +31,9 @@ function checkNicknameInDB($nickname)
     $req->execute(array($nickname));
 
     $membre = $req->fetch();
-    if (empty($membre))
-    {
+    if (empty($membre)) {
         $bool = 0;
-    }
-    else
-    {
+    } else {
         $bool = 1;
     }
     $req->closeCursor();
@@ -48,13 +46,10 @@ if (!(isset($_POST['username']) and
         isset($_POST['password']) and
         isset($_POST['password_confirmed']) and
         isset($_POST['email']))
-    )
-{
+    ) {
     echo '<p> valeurs : ' . $username . ' | ' . $email . ' | ' . $password . '</p>';
     header('Location: register.php?message="Please fullfill the form"');
-}
-else
-{
+} else {
     $username = htmlspecialchars($_POST['username']);
     $email = htmlspecialchars($_POST['email']);
     $pwd = htmlspecialchars($_POST['password']);
@@ -62,26 +57,19 @@ else
 
     // echo '<p> valeurs : ' . $username . ' | ' . $email . ' | ' . $pwd . ' | ' . $pwd_c . '</p>';
     // Checking username
-    if (checkNicknameInDB($username) == 1)
-    {
+    if (checkNicknameInDB($username) == 1) {
         header('Location: register.php?message=Username not available !');
-    }
-    // Checking password
-    elseif (strcmp($pwd, $pwd_c) != 0)
-    {
+    } // Checking password
+    elseif (strcmp($pwd, $pwd_c) != 0) {
         // Password are not identical
         header('Location: register.php?message=Passwords are not identical !');
-    }
-    // Checking email
-    elseif (!(preg_match("#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#", $email)))
-    {
+    } // Checking email
+    elseif (!(preg_match("#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#", $email))) {
         header('Location: register.php?message=Incorrect e-mail address');
-    }
-    else
-    {
+    } else {
         // We can add the user
         // Hashing password
-        $pass_hache = hash('sha256',$_POST['password']);
+        $pass_hache = hash('sha256', $_POST['password']);
 
         // Insertion
         $req = $bdd->prepare('INSERT INTO users(username, email, password, registration_date) VALUES(:username, :email, :pass, NOW())');

@@ -5,13 +5,10 @@ require_once(__ROOT__.'/globalsettings.php');
 $relative_path = './../../../';
 
 //  If we are connected
-if (isset($_SESSION['id']) AND isset($_SESSION['username']))
-{
+if (isset($_SESSION['id']) and isset($_SESSION['username'])) {
     // TODO
     $connected = true;
-}
-else
-{
+} else {
     $connected = false;
 }
 
@@ -21,7 +18,7 @@ require_once('include/dbconnection.php');
 <!DOCTYPE html>
 <html lang="en">
 <?php // Head of the HTML document
-        include $relative_path . 'include/head.php'; 
+        include $relative_path . 'include/head.php';
 ?>
 
 <body class="nav-md">
@@ -37,22 +34,17 @@ require_once('include/dbconnection.php');
         <!-- page content -->
         <div class="right_col" role="main">
             <?php
-                if ($connected and $_SESSION['right'] == 'admin')
-                {
-                    // echo '<p> You are an ' . $_SESSION['right'] . '! ';
-                    echo '<a id="go_back" href="#">GO BACK</a><br/>';
-                    echo "<a href=\"javascript:history.go(-1)\">GO BACK BAD</a>";
-                    echo '<div class="row"></div>';
-                    include('more_info_body.php');
-                }
-                elseif ($connected)
-                {
-                    echo '<p> You don\'t have the right to view this webpage </p>';
-                }
-                else
-                {
-                    echo '<p> Vous must log-in to view this page. Click <strong><a href=' . $relative_path . 'pages/users/login.php">here</a></strong> to log-in. </p>';
-                }
+            if ($connected and $_SESSION['right'] == 'admin') {
+                // echo '<p> You are an ' . $_SESSION['right'] . '! ';
+                echo '<a id="go_back" href="#">GO BACK</a><br/>';
+                echo "<a href=\"javascript:history.go(-1)\">GO BACK BAD</a>";
+                echo '<div class="row"></div>';
+                include('more_info_body.php');
+            } elseif ($connected) {
+                echo '<p> You don\'t have the right to view this webpage </p>';
+            } else {
+                echo '<p> Vous must log-in to view this page. Click <strong><a href=' . $relative_path . 'pages/users/login.php">here</a></strong> to log-in. </p>';
+            }
             ?>
         </div>
         <!-- /page content -->

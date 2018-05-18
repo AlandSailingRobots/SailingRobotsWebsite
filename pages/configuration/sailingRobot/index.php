@@ -1,8 +1,8 @@
 <?php
 /**
- * File: 
+ * File:
  *
- * Pages index 
+ * Pages index
  *
  * @see https://github.com/AlandSailingRobots/SailingRobotsWebsite
  */
@@ -12,7 +12,7 @@ require_once __ROOT__.'/globalsettings.php';
 $relative_path = './../../../';
 
 //  If we are connected
-if (isset($_SESSION['id']) AND isset($_SESSION['username'])) {
+if (isset($_SESSION['id']) and isset($_SESSION['username'])) {
     // TODO
     $connected = true;
     $name = $_SESSION['username'];
@@ -28,7 +28,7 @@ if (isset($_SESSION['id']) AND isset($_SESSION['username'])) {
 <html lang="en">
 <head>
 <?php // Head of the HTML document
-require $relative_path.'include/head.php'; 
+require $relative_path.'include/head.php';
 ?>
 </head>
 

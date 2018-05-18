@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * File: updateConfig_post.php
  *
@@ -10,7 +10,7 @@ define('__ROOT__', dirname(dirname(dirname(dirname(__FILE__)))));
 require_once __ROOT__.'/globalsettings.php';
 session_start();
 
-$i = 1; 
+$i = 1;
 
 // This is not very secure.
 foreach ($_POST as $key => $value) {
@@ -33,7 +33,7 @@ foreach ($_POST as $key => $value) {
             $name       = "aspire";
             $dbname     = $GLOBALS['database_ASPire'];
             $table_name = "config_httpsync";
-            $colum_name = "configs_updated"     ; 
+            $colum_name = "configs_updated"     ;
         } elseif ($value == "janet") {
             $name       = "janet";
             $dbname     = $GLOBALS['database_name_testdata'];
@@ -46,17 +46,14 @@ foreach ($_POST as $key => $value) {
         $hostname  = $GLOBALS['hostname'];
         $username  = $GLOBALS['username'];
         $password  = $GLOBALS['password'];
-        try
-        {
+        try {
             $db = new PDO(
                 "mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
                 $username,
                 $password,
                 array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
             );
-        }
-        catch(Exception $e)
-        {
+        } catch (Exception $e) {
             header(
                 $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
                 true,
@@ -73,4 +70,3 @@ foreach ($_POST as $key => $value) {
 
     header('Location: index.php?boat='.$name);
 }
-

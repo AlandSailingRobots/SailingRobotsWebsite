@@ -8,7 +8,7 @@
 <html lang="en">
 <head>
 <?php // Head of the HTML document
-    include $relative_path . 'include/head.php'; 
+    include $relative_path . 'include/head.php';
 ?>
 </head>
 
@@ -33,9 +33,9 @@
   </div>
 
   <!-- ##########################    JAVASCRIPT     ########################## -->
-  <?php // Not very clean, but the default configs includes too many JS for a beginner
+    <?php // Not very clean, but the default configs includes too many JS for a beginner
         // That way, main file is 'clean' ?>
-  <?php //include '../../include/js_scripts.php'; ?>
+    <?php //include '../../include/js_scripts.php'; ?>
 
     <!-- jQuery -->
     <script src="../../assets/vendors/jquery/dist/jquery.min.js"></script>

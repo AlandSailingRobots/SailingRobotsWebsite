@@ -33,14 +33,14 @@ function populateDatabase($db, $table_name, $entries)
     );
     try {
         $query->execute($param_array);
-    } catch(PDOException $e) { 
+    } catch (PDOException $e) {
         header(
             $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
             true,
             500
         );
         die($e->getMessage());
-    } 
+    }
 }
 
 /**
@@ -72,10 +72,8 @@ function pushAllLogs($boat, $data)
         unset($data['dataLogs_system']);
 
         foreach ($data as $table_name => $table) {
-
             // Generate the array to be bind with the prepared SQL query
             foreach ($table as $id_log => $log) {
-
                 populateDatabase($db, $table_name, $log);
 
                 $tableNamePrefix = "dataLogs_";

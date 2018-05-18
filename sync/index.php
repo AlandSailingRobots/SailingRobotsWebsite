@@ -52,32 +52,32 @@ if (!empty($_POST)) {
 
                 try {
                     switch ($_POST["serv"]) {
-                    case "checkIfNewConfigs":
-                        echo checkIfNewConfigs();
-                        break;
-                    case "checkIfNewWaypoints":
-                        echo checkIfNewWaypoints();
-                        break;
-                    case "setConfigsUpdated":
-                        print_r(setConfigsUpdated());
-                        break;
-                    case "getAllConfigs":
-                        print_r(getAllConfigs($_POST["id"]));
-                        break;
-                    case "getWaypoints":
-                        print_r(getWaypoints());
-                        break;
-                    case "pushConfigs":
-                        print_r(pushConfigs($_POST["data"]));
-                        break;
-                    case "pushWaypoints":
-                        print_r(pushWaypoint($_POST["data"]));
-                        break;
-                    case "pushAllLogs":
-                        print_r(pushAllLogs($_POST["id"], $_POST["data"]));
-                        break;
-                    default:
-                        break;
+                        case "checkIfNewConfigs":
+                            echo checkIfNewConfigs();
+                            break;
+                        case "checkIfNewWaypoints":
+                            echo checkIfNewWaypoints();
+                            break;
+                        case "setConfigsUpdated":
+                            print_r(setConfigsUpdated());
+                            break;
+                        case "getAllConfigs":
+                            print_r(getAllConfigs($_POST["id"]));
+                            break;
+                        case "getWaypoints":
+                            print_r(getWaypoints());
+                            break;
+                        case "pushConfigs":
+                            print_r(pushConfigs($_POST["data"]));
+                            break;
+                        case "pushWaypoints":
+                            print_r(pushWaypoint($_POST["data"]));
+                            break;
+                        case "pushAllLogs":
+                            print_r(pushAllLogs($_POST["id"], $_POST["data"]));
+                            break;
+                        default:
+                            break;
                     }
                 } catch (Exception $e) {
                     header(
@@ -160,34 +160,34 @@ if (!empty($_POST)) {
         if (isset($_POST["serv"])) {
             try {
                 switch ($_POST["serv"]) {
-                case "_checkIfNewConfigs":
-                    echo $getConfigsService->checkIfNewConfigs();
-                    break;
-                case "_checkIfNewWaypoints":
-                    echo $getWaypointsService->checkIfNewWaypoints();
-                    break;
-                case "setConfigsUpdated":
-                    print_r($getConfigsService->setConfigsUpdated());
-                    break;
-                case "getAllConfigs":
-                    print_r($getConfigsService->getAllConfigs($_POST["id"]));
-                    break;
-                case "getWaypoints":
-                    print_r($getWaypointsService->getWaypoints());
-                    break;
-                case "pushConfigs":
-                    print_r($pushConfigsService->pushConfigs($_POST["data"]));
-                    break;
-                case "pushWaypoints":
-                    print_r($pushPushWaypoints->pushWaypoint($_POST["data"]));
-                    break;
-                case "pushAllLogs":
-                    //print_r($pushLogsService);
-                    //print_r($pushLogsService->helloWorld());
-                    print_r(pushAllLogs($_POST["id"], $_POST["data"]));
-                    break;
-                default:
-                    break;
+                    case "_checkIfNewConfigs":
+                        echo $getConfigsService->checkIfNewConfigs();
+                        break;
+                    case "_checkIfNewWaypoints":
+                        echo $getWaypointsService->checkIfNewWaypoints();
+                        break;
+                    case "setConfigsUpdated":
+                        print_r($getConfigsService->setConfigsUpdated());
+                        break;
+                    case "getAllConfigs":
+                        print_r($getConfigsService->getAllConfigs($_POST["id"]));
+                        break;
+                    case "getWaypoints":
+                        print_r($getWaypointsService->getWaypoints());
+                        break;
+                    case "pushConfigs":
+                        print_r($pushConfigsService->pushConfigs($_POST["data"]));
+                        break;
+                    case "pushWaypoints":
+                        print_r($pushPushWaypoints->pushWaypoint($_POST["data"]));
+                        break;
+                    case "pushAllLogs":
+                        //print_r($pushLogsService);
+                        //print_r($pushLogsService->helloWorld());
+                        print_r(pushAllLogs($_POST["id"], $_POST["data"]));
+                        break;
+                    default:
+                        break;
                 }
             } catch (Exception $e) {
                 header(

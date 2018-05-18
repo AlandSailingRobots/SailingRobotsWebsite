@@ -2,7 +2,7 @@
 require_once('is_ajax.php');
 function loadMissionToBoat($id_mission)
 {
-    /* 
+    /*
      * This function retrieves the selected mission from one DB and load it into the other
      */
 
@@ -13,31 +13,33 @@ function loadMissionToBoat($id_mission)
     $dbname_ASP = $GLOBALS['database_ASPire'];
 
     try {
-        $db = new PDO("mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
-                        $username,
-                        $password,
-                        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
-                    );
-    } catch(Exception $e) {
-	    header(
-		    $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
-		    true,
-		    500
-	    );
+        $db = new PDO(
+            "mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
+            $username,
+            $password,
+            array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+        );
+    } catch (Exception $e) {
+        header(
+            $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+            true,
+            500
+        );
         die('Error : '.$e->getMessage());
     }
     try {
-        $db_boat = new PDO("mysql:host=$hostname;dbname=$dbname_ASP;charset=utf8;port=3306",
-                        $username,
-                        $password,
-                        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
-                    );
-    } catch(Exception $e) {
-	    header(
-		    $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
-		    true,
-		    500
-	    );
+        $db_boat = new PDO(
+            "mysql:host=$hostname;dbname=$dbname_ASP;charset=utf8;port=3306",
+            $username,
+            $password,
+            array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+        );
+    } catch (Exception $e) {
+        header(
+            $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+            true,
+            500
+        );
         die('Error : '.$e->getMessage());
     }
 
@@ -58,22 +60,20 @@ function loadMissionToBoat($id_mission)
     $exec3 = $query3->execute(array($id_mission));
     $results = $query3->fetchAll(PDO::FETCH_ASSOC);
 
-    if (!empty($results))
-    {
+    if (!empty($results)) {
         // We insert the pointList in the configuration DB of the boat
         // Let's find a way to generate $arrayOfPoints :p
         // It should look like (id, id_mission, ...), (id, id_mission, ...), ...
         $emptyArray = "";
         $arrayOfPoints = array();
         $emptyParam = "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        foreach ($results as $key => $value) 
-        {
-            $emptyArray = $emptyArray . ', ' . $emptyParam; 
+        foreach ($results as $key => $value) {
+            $emptyArray = $emptyArray . ', ' . $emptyParam;
             $arrayOfPoints = array_merge($arrayOfPoints, array_values($value));
         }
         $emptyArray = substr($emptyArray, 1);
 
-        // Now we insert every waypoints / checkpoint into the DB 
+        // Now we insert every waypoints / checkpoint into the DB
         $query4 = $db_boat->prepare('INSERT INTO currentMission (  id, 
                                                         id_mission, 
                                                         rankInMission,
@@ -88,52 +88,38 @@ function loadMissionToBoat($id_mission)
                                                     ) VALUES '. $emptyArray .' ;');
         // print_r($results);
         $exec4 = $query4->execute($arrayOfPoints);
-        if ($exec4 === false)
-        {
+        if ($exec4 === false) {
             $msg = sprintf("Error while inserting pointList into DB (ASPire_config) because execute() failed: %s\n<br />", htmlspecialchars($query4->error));
         }
         $query4->closeCursor();
-
-    }
-    else
-    {
+    } else {
         $msg = "Empty array ! Are you sure this mission has points to be loaded ?";
         $exec4 = false;
     }
 
-    if( $exec1 === true && $exec2 === true && $exec3 === true && $exec4 === true )
-    {
+    if ($exec1 === true && $exec2 === true && $exec3 === true && $exec4 === true) {
         $msg = sprintf("Mission successfully loaded on ASPire remote DB!");
-    } 
-    else if ($exec1 === false)
-    {
+    } elseif ($exec1 === false) {
         $msg = sprintf("Error while updating 'last_use' into DB (website) because execute() failed: %s\n<br />", htmlspecialchars($query1->error));
-    }
-    else if ($exec2 === false)
-    {
+    } elseif ($exec2 === false) {
         $msg = sprintf("Error while deleting old pointList into DB (ASPire_config) because execute() failed: %s\n<br />", htmlspecialchars($query2->error));
-    }
-     else if ($exec3 === false)
-    {
+    } elseif ($exec3 === false) {
         $msg = sprintf("Error while getting pointList from DB (website) because execute() failed: %s\n<br />", htmlspecialchars($query3->error));
-    }   
+    }
     echo $msg;
 
     $query1->closeCursor();
     $query2->closeCursor();
     $query3->closeCursor();
-
 }
 
-if (is_ajax()) 
-{
+if (is_ajax()) {
     define('__ROOT__', dirname(dirname(dirname(dirname(dirname(__FILE__))))));
     require_once(__ROOT__.'/globalsettings.php');
     session_start();
     
     // Get param & return JSON string
-    if ($_SESSION['right'] == 'admin')
-    {
+    if ($_SESSION['right'] == 'admin') {
         loadMissionToBoat($_POST['id_mission']);
     }
 }

@@ -32,12 +32,12 @@ function getConfigData($table, $boatName)
         $db = new PDO(
             "mysql:host=$hostname;"
             ."dbname=$database_name;"
-            ."charset=utf8;port=3306", 
-            $user, 
-            $password, 
+            ."charset=utf8;port=3306",
+            $user,
+            $password,
             array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
         );
-    } catch(Exception $e) {
+    } catch (Exception $e) {
         header(
             $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
             true,
@@ -54,4 +54,3 @@ function getConfigData($table, $boatName)
     
     return ($result);
 }
-?>

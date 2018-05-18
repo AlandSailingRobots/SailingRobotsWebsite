@@ -1,57 +1,57 @@
 #map{
-	position: absolute;
-	width: 550px;
-	height: 550px;
-	top: 120px;
-	right: 180px;
+    position: absolute;
+    width: 550px;
+    height: 550px;
+    top: 120px;
+    right: 180px;
 }
 
 #boatCanvas{
-	position: absolute;
+    position: absolute;
 }
 
 #pingCanvas {
-	position: absolute;
-	left: 0;
-	top: 0;
-	z-index:11;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index:11;
 }
 
 #layerCanvas {
-	position: absolute;
-	left: 0;
-	top: 0;
-	z-index:12;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index:12;
 }
 #layerHeading {
-	position: absolute;
-	left: 0;
-	top: 0;
-	z-index:12;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index:12;
 }
 #layerTWD {
-	position: absolute;
-	left: 0;
-	top: 0;
-	z-index:12;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index:12;
 }
 #layerWaypoint {
-	position: absolute;
-	left: 0;
-	top: 0;
-	z-index:12;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index:12;
 }
 
 #layerCompasHeading {
-	position: absolute;
-	left: 0;
-	top: 0;
-	z-index:12;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index:12;
 }
 
 #layerBoatHeading {
-	position: absolute;
-	left: 0;
-	top: 0;
-	z-index:12;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index:12;
 }

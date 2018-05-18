@@ -23,7 +23,7 @@ session_start();
  */
 function insertPointIntoDB($params)
 {
-    /* 
+    /*
      */
 
     $hostname  = $GLOBALS['hostname'];
@@ -57,7 +57,7 @@ function insertPointIntoDB($params)
     $arrayOfPoints = array();
     $emptyParam = "( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     foreach ($params as $key => $value) {
-        $emptyArray = $emptyArray . ', ' . $emptyParam; 
+        $emptyArray = $emptyArray . ', ' . $emptyParam;
         $arrayOfPoints = array_merge($arrayOfPoints, array_values($value));
     }
     $emptyArray = substr($emptyArray, 1);
@@ -65,7 +65,7 @@ function insertPointIntoDB($params)
         $arrayOfPoints = array(null, null, null, null, null, null, null, null, null, null, null);
     }
 
-    // Now we insert every waypoints / checkpoint into the DB 
+    // Now we insert every waypoints / checkpoint into the DB
     $query = $db->prepare(
         'INSERT INTO pointList (id,'
         .'id_mission,'

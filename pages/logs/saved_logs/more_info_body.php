@@ -2,44 +2,36 @@
     <table class="table table-striped">
     <tbody>
     <?php
-        if(isset($_GET["id"]) && isset($_GET["name"]) && isset($_GET["table"]) && $_GET["number"])
-        {
-            $id = $_GET["id"];
-            $name = $_GET["name"];
-            $table = $_GET["table"];
-            $number = $_GET["number"];
-            $result = getAll($id, $name, $table);
-            if (!empty($result))
-            {
-                foreach ($result[0] as $key => $value) 
-                {
-                    if (is_string($key))
-                    {
-                        echo '<tr>';
-                            echo '<th>' . $key . '</th>';
-                            echo '<td>' .  $value . '</td>';
-                        echo '</tr>';
-                    }
+    if (isset($_GET["id"]) && isset($_GET["name"]) && isset($_GET["table"]) && $_GET["number"]) {
+        $id = $_GET["id"];
+        $name = $_GET["name"];
+        $table = $_GET["table"];
+        $number = $_GET["number"];
+        $result = getAll($id, $name, $table);
+        if (!empty($result)) {
+            foreach ($result[0] as $key => $value) {
+                if (is_string($key)) {
+                    echo '<tr>';
+                        echo '<th>' . $key . '</th>';
+                        echo '<td>' .  $value . '</td>';
+                    echo '</tr>';
                 }
             }
-            else
-            {
+        } else {
             ?>  
-                <tr>
-                    <td>ERROR:</td>
-                    <td>Table empty; gps_datalogs id does not have a corresponding system_dataLogs entry</td>
-                </tr>
-            <?php
-            }
-        }
-        else 
-        {
-        ?>
             <tr>
-                <td>ID | TABLE | NAME | NUMBER has not been set</td>
+                <td>ERROR:</td>
+                <td>Table empty; gps_datalogs id does not have a corresponding system_dataLogs entry</td>
             </tr>
-        <?php
+            <?php
         }
+    } else {
+        ?>
+        <tr>
+            <td>ID | TABLE | NAME | NUMBER has not been set</td>
+        </tr>
+        <?php
+    }
     ?>
 
     </tbody>

@@ -5,7 +5,7 @@
 <html lang="en">
 <head>
 <?php // Head of the HTML document
-    include $relative_path . 'include/head.php'; 
+    include $relative_path . 'include/head.php';
 ?>
 
 <style type="text/css">
@@ -34,12 +34,11 @@
           <section class="login_content">
             <form action="register_post.php" method="post">
               <h1>Create Account</h1>
-              <?php 
-                if (isset($_GET['message']))
-                {
-                  echo '<h3>' . $_GET['message'] . '</h3>';
+                <?php
+                if (isset($_GET['message'])) {
+                    echo '<h3>' . $_GET['message'] . '</h3>';
                 }
-              ?>
+                ?>
               <div>
                 <input type="text" name="username" class="form-control" placeholder="Username" autofocus required="" />
               </div>

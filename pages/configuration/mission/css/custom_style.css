@@ -1,58 +1,58 @@
-.myrow 
+.myrow
 {
     font-size: 0;
 }
-.myrow > * 
+.myrow > *
 {
     float: none;
     display: inline-block;
     font-size: 14px; /* if using LESS it's quicker to just use @font-size-base */
 }
-.myrow > *:last-child 
+.myrow > *:last-child
 {
     vertical-align: bottom;
 }
-.myrow p:last-child 
+.myrow p:last-child
 {
     margin-bottom: 0; /* optional */
 }
 
 .myfooter
 {
-	vertical-align: bottom;
-	margin-bottom: 0;
+    vertical-align: bottom;
+    margin-bottom: 0;
 }
 
-textarea 
-{ 
-	resize: vertical; 
+textarea
+{
+    resize: vertical;
 }
 
 .top15
 {
-	margin-top: 15px;
+    margin-top: 15px;
 }
 
 #map
-{ 
-	height: 600px;
-	border: 1px solid #AAA;
+{
+    height: 600px;
+    border: 1px solid #AAA;
 }
 
 #buttonContainerMap
 {
-	position: relative;
-	margin-top: 2px;
+    position: relative;
+    margin-top: 2px;
 }
 #newCheckpoint
 {
-	position: absolute;
-	right: 1px;
+    position: absolute;
+    right: 1px;
 }
 
 #ul
 {
-	padding-top: 10px;
+    padding-top: 10px;
 }
 
 @media (min-width: 991px)
@@ -66,45 +66,45 @@ textarea
 
 #missionPresentation
 {
-	text-align: center;
+    text-align: center;
 }
 
 #descriptionNode
 {
-	font-size: 1.5em;
+    font-size: 1.5em;
 }
 .list-group-item
 {
-	position: relative;
+    position: relative;
 }
 .customDelete
 {
-	background-color: rgba(30, 30, 30, 0.3);
-	font-size: 0.8em;
-	vertical-align: bottom;
-	align-content: right;
-	bottom: -8px;
+    background-color: rgba(30, 30, 30, 0.3);
+    font-size: 0.8em;
+    vertical-align: bottom;
+    align-content: right;
+    bottom: -8px;
 }
 
 .customDelete:hover
 {
-	background-color: rgba(30, 30, 30, 0.8);
-	cursor: pointer;
+    background-color: rgba(30, 30, 30, 0.8);
+    cursor: pointer;
 
 }
 .customEdit
 {
-	background-color: rgba(30, 30, 200, 0.3);
-	font-size: 0.8em;
-	vertical-align: bottom;
-	align-content: right;
-	bottom: -8px;
-	margin-left:3px;
+    background-color: rgba(30, 30, 200, 0.3);
+    font-size: 0.8em;
+    vertical-align: bottom;
+    align-content: right;
+    bottom: -8px;
+    margin-left:3px;
 }
 
 .customEdit:hover
 {
-	background-color: rgba(30, 30, 200, 0.8);
-	cursor: pointer;
+    background-color: rgba(30, 30, 200, 0.8);
+    cursor: pointer;
 
 }

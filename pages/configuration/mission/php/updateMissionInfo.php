@@ -18,11 +18,11 @@ session_start();
  * @param string $name
  * @param string $description
  *
- * @return 
+ * @return
  */
 function updateMissionInfo($id_mission, $name, $description = "")
 {
-    /* 
+    /*
      * This function update an entry of the DB.
      */
 
@@ -31,17 +31,18 @@ function updateMissionInfo($id_mission, $name, $description = "")
     $password  = $GLOBALS['password'];
     $dbname    = $GLOBALS['database_mission'];
     try {
-        $db = new PDO("mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
-                        $username,
-                        $password,
-                        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
-                    );
-    } catch(Exception $e) {
-	    header(
-		    $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
-		    true,
-		    500
-	    );
+        $db = new PDO(
+            "mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
+            $username,
+            $password,
+            array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+        );
+    } catch (Exception $e) {
+        header(
+            $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+            true,
+            500
+        );
         die('Error : '.$e->getMessage());
     }
 
@@ -49,15 +50,11 @@ function updateMissionInfo($id_mission, $name, $description = "")
     $exec = $query->execute(array(
                 'name' => htmlspecialchars($name),
                 'description' => htmlspecialchars($description),
-                'id' => htmlspecialchars($id_mission))
-            );
+                'id' => htmlspecialchars($id_mission)));
 
-    if( false === $exec )
-    {
+    if (false === $exec) {
         $msg = sprintf("Error while updating mission info into DB because execute() failed: %s\n<br />", htmlspecialchars($query->error));
-    } 
-    else 
-    {
+    } else {
         $msg = sprintf("Success !");
     }
 
@@ -65,15 +62,10 @@ function updateMissionInfo($id_mission, $name, $description = "")
     $query->closeCursor();
 }
 
-if(is_ajax())
-{
-    if (isset($_POST['id_mission']) && isset($_POST['name']) && isset($_POST['description']) && $_SESSION['right'] == 'admin')
-    {
+if (is_ajax()) {
+    if (isset($_POST['id_mission']) && isset($_POST['name']) && isset($_POST['description']) && $_SESSION['right'] == 'admin') {
         updateMissionInfo($_POST['id_mission'], $_POST['name'], $_POST['description']);
-    }
-    elseif (isset($_POST['id_mission']) && isset($_POST['name']) && $_SESSION['right'] == 'admin')
-    {
+    } elseif (isset($_POST['id_mission']) && isset($_POST['name']) && $_SESSION['right'] == 'admin') {
         updateMissionInfo($_POST['id_mission'], $_POST['name']);
     }
 }
-

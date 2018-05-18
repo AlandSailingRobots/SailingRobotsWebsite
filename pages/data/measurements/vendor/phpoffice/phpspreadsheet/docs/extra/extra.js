@@ -12,7 +12,8 @@ var nodemcu = nodemcu || {};
      * to react to changes to the search form (triggered by RTD on doc ready). It then reverts everything
      * the RTD JS code modified.
      */
-    function fixSearch() {
+    function fixSearch()
+    {
         var target = document.getElementById('rtd-search-form');
         var config = {attributes: true, childList: true};
 
@@ -41,7 +42,8 @@ var nodemcu = nodemcu || {};
      *
      * @returns GitHub branch name
      */
-    function determineSelectedBranch() {
+    function determineSelectedBranch()
+    {
         var branch = 'dev', path = window.location.pathname;
         if (window.location.origin.indexOf('readthedocs') > -1) {
             // path is like /en/<branch>/<lang>/build/ -> extract 'lang'

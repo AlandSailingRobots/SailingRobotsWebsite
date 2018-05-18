@@ -3,7 +3,7 @@ require_once('is_ajax.php');
 
 function getMissionList()
 {
-    /* 
+    /*
      * This function retrieves the different missions from the database
      */
 
@@ -12,12 +12,13 @@ function getMissionList()
     $password  = $GLOBALS['password'];
     $dbname    = $GLOBALS['database_mission'];
     try {
-        $db = new PDO("mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
-                        $username,
-                        $password,
-                        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
-                    );
-    } catch(Exception $e) {
+        $db = new PDO(
+            "mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
+            $username,
+            $password,
+            array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+        );
+    } catch (Exception $e) {
         header(
             $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
             true,
@@ -42,8 +43,7 @@ if (is_ajax()) {
     session_start();
     
     // Get param & return JSON string
-    if ($_SESSION['right'] == 'admin')
-    {
+    if ($_SESSION['right'] == 'admin') {
         $resultJSON = json_encode(getMissionList());
         print_r($resultJSON);
     }

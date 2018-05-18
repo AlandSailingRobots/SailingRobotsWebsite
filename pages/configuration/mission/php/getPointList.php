@@ -6,7 +6,7 @@ session_start();
 
 function getPointList($id_mission)
 {
-    /* 
+    /*
      * This function handles a connection to the database to retrieve the waypoints
      * and checkpoints associated to a specific mission.
      */
@@ -15,37 +15,37 @@ function getPointList($id_mission)
     $username  = $GLOBALS['username'];
     $password  = $GLOBALS['password'];
     $dbname    = $GLOBALS['database_mission'];
-    try { $db = new PDO("mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
-                        $username,
-                        $password,
-                        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
-                    );
-    } catch(Exception $e) {
-	    header(
-		    $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
-		    true,
-		    500
-	    );
+    try {
+        $db = new PDO(
+            "mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
+            $username,
+            $password,
+            array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+        );
+    } catch (Exception $e) {
+        header(
+            $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+            true,
+            500
+        );
         die('Error : '.$e->getMessage());
     }
     
     $query = $db->prepare('SELECT * FROM pointList WHERE id_mission = ? ;');
     $query->execute(array($id_mission));
 
-    try
-    {
+    try {
         $result = $query->fetchAll(PDO::FETCH_ASSOC);
         // print_r($result);
         $resultJSON = json_encode($result);
         // print_r($resultJSON);
         echo $resultJSON;
-    }
-    catch(Exception $e) {
-	    header(
-		    $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
-		    true,
-		    500
-	    );
+    } catch (Exception $e) {
+        header(
+            $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+            true,
+            500
+        );
         die('Error : '.$e->getMessage());
         echo "";
     }
@@ -54,11 +54,9 @@ function getPointList($id_mission)
 }
 
 
-if (is_ajax()) 
-{
+if (is_ajax()) {
     // Get param & return JSON string
-    if (isset($_POST['id_mission']) && $_SESSION['right'] == 'admin')
-    {
+    if (isset($_POST['id_mission']) && $_SESSION['right'] == 'admin') {
         getPointList($_POST['id_mission']);
     }
 }

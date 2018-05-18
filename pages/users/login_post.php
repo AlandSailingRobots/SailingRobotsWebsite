@@ -1,35 +1,33 @@
 <?php
 require_once('./../../globalsettings.php');
 // Vérification du remplissage de tous les champs
-if ( !(isset($_POST['username']) and isset($_POST['password'])) )
-{
+if (!(isset($_POST['username']) and isset($_POST['password']))) {
     header('Location: connexion.php?message="Please fullfill the form"');
-}
-else
-{
+} else {
     $hostname  = $GLOBALS['hostname'];
     $username  = $GLOBALS['username'];
     $password  = $GLOBALS['password'];
     $dbname    = $GLOBALS['database_name'];
     try {
-        $bdd = new PDO("mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
-                        $username,
-                        $password,
-                        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
-                    );
-    } catch(Exception $e) {
-	    header(
-		    $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
-		    true,
-		    500
-	    );
+        $bdd = new PDO(
+            "mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
+            $username,
+            $password,
+            array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+        );
+    } catch (Exception $e) {
+        header(
+            $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+            true,
+            500
+        );
         die('Error : '.$e->getMessage());
     }
 
     $username = htmlspecialchars($_POST['username']);
 
     // Hashing password
-    $pass_hache = hash('sha256',$_POST['password']);
+    $pass_hache = hash('sha256', $_POST['password']);
 
     // Checking credentials
     $req = $bdd->prepare('SELECT id FROM users WHERE username = :username AND password = :pass');
@@ -39,12 +37,9 @@ else
 
     $resultat = $req->fetch();
     // echo 'pass : ' . $_POST['password'] . ' / ' . $pass_hache . ' / ';
-    if (!$resultat)
-    {
+    if (!$resultat) {
         header('Location: login.php?message=Wrong credentials');
-    }
-    else
-    {
+    } else {
         session_start();
         $_SESSION['id'] = $resultat['id'];
         $_SESSION['username'] = $username;
@@ -64,4 +59,3 @@ else
         header('Location: ../../index.php?message=You are now logged-in !');
     }
 }
-
