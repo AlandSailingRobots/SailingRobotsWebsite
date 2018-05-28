@@ -1,9 +1,14 @@
 <?php
 
 // Functions to used to retrieve the points from the DB for the boat
+
+/**
+ * Returns value of a flag in the DB
+ *
+ * @return string JSON
+ */
 function checkIfNewWaypoints()
 {
-    
     $db = $GLOBALS['db_connection'];
 
     $req = $db->prepare("SELECT route_updated FROM config_httpsync");
@@ -15,7 +20,8 @@ function checkIfNewWaypoints()
     $result = $req->fetchAll(PDO::FETCH_ASSOC);
     $req->closeCursor();
 
-    return $result[0]['route_updated'];
+    return json_encode($result[0]);
+    // return json_encode($result[0]['route_updated']);
 }
 
 function setWaypointsUpdated()

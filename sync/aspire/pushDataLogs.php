@@ -34,6 +34,7 @@ function populateDatabase($db, $table_name, $entries)
     try {
         $query->execute($param_array);
     } catch (PDOException $e) {
+        // DEBUG: Mon May 28 11:11:46 EEST 2018
         header(
             $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
             true,
@@ -56,9 +57,9 @@ function pushAllLogs($boat, $data)
     $db = $GLOBALS['db_connection'];
     if (!isset($db)) {
         header(
-            $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+            $_SERVER['SERVER_PROTOCOL'].' 503 Service Unavailable',
             true,
-            500
+            503
         );
         die('Error: No db handle!');
     }
