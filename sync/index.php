@@ -53,10 +53,10 @@ if (!empty($_POST)) {
                 try {
                     switch ($_POST["serv"]) {
                         case "checkIfNewConfigs":
-                            echo checkIfNewConfigs();
+                            print_r(checkIfNewConfigs());
                             break;
                         case "checkIfNewWaypoints":
-                            echo checkIfNewWaypoints();
+                            print_r(checkIfNewWaypoints());
                             break;
                         case "setConfigsUpdated":
                             print_r(setConfigsUpdated());

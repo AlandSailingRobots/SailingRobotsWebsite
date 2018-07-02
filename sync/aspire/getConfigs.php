@@ -17,7 +17,8 @@ function checkIfNewConfigs()
     }
     $result = $req->fetchAll(PDO::FETCH_ASSOC);
     $req->closeCursor();
-    return json_encode($result[0]['configs_updated']);
+    return json_encode($result[0]);
+    // return json_encode($result[0]['configs_updated']);
 }
 
 function setConfigsUpdated()
