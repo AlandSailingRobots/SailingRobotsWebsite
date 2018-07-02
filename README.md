@@ -18,7 +18,6 @@ would have been made on previous missions.
    -  Synchronisation of the server DB with ASPire DB
    -  More user-friendly interface for route planning
 
-
 ## What needs to be done :
    -  Graphs / tables with data
    -  Right Management system (see profile/README.md)

@@ -15,10 +15,12 @@ function populateDatabase($db, $table_name, $entries)
     $param_stmt = "(";
     $param_to_fill = "(";
     $param_array = array();
+    $debugstring = "";
     foreach ($entries as $column_name => $value) {
         $param_array[$column_name] = $value;
         $param_stmt = $param_stmt . ''.$column_name .',' ;
         $param_to_fill = $param_to_fill . ':'.$column_name.',';
+        $debugstring .= "$column_name=\"$value\" ";
     }
     // Remove the extra comma
     $param_stmt = substr($param_stmt, 0, -1).')';
@@ -28,9 +30,8 @@ function populateDatabase($db, $table_name, $entries)
     $param_array['id'] = null;
 
     // Prepare the SQL Query
-    $query = $db->prepare(
-        "INSERT INTO $table_name $param_stmt VALUES $param_to_fill ;"
-    );
+    $sql = "INSERT INTO $table_name $param_stmt VALUES $param_to_fill ;";
+    $query = $db->prepare($sql);
     try {
         $query->execute($param_array);
     } catch (PDOException $e) {
@@ -40,6 +41,7 @@ function populateDatabase($db, $table_name, $entries)
             true,
             500
         );
+        error_log("500: ".$e->getMessage()." on \"$sql\"");
         die($e->getMessage());
     }
 }
@@ -66,15 +68,26 @@ function pushAllLogs($boat, $data)
 
     $data = json_decode($data, true);
 
-    if (!empty($data)) {
+    if (empty($data)) {
+        header(
+            $_SERVER['SERVER_PROTOCOL'].' 400 Bad Request',
+            true,
+            400
+        );
+        die('Error: no recognizable data');
+    }
+    $dataLogs_system = [];
+    if (array_key_exists('dataLogs_system', $data)) {
         $idMap = array();
 
         $dataLogs_system = $data['dataLogs_system'][0];
         unset($data['dataLogs_system']);
+    }
 
-        foreach ($data as $table_name => $table) {
-            // Generate the array to be bind with the prepared SQL query
-            foreach ($table as $id_log => $log) {
+    foreach ($data as $table_name => $table) {
+        // Generate the array to be bind with the prepared SQL query
+        foreach ($table as $id_log => $log) {
+            if (!empty($log)) {
                 populateDatabase($db, $table_name, $log);
 
                 $tableNamePrefix = "dataLogs_";
@@ -92,11 +105,12 @@ function pushAllLogs($boat, $data)
                 }
             }
         }
+    }
 
-        foreach ($idMap as $column_name => $value) {
-            $dataLogs_system[$column_name."_id"] = $value;
-        }
-
+    foreach ($idMap as $column_name => $value) {
+        $dataLogs_system[$column_name."_id"] = $value;
+    }
+    if (!empty($dataLogs_system)) {
         populateDatabase($db, "dataLogs_system", $dataLogs_system);
     }
 }

@@ -10,6 +10,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Ods;
 use PhpOffice\PhpSpreadsheet\Writer\Csv;
 
 ini_set('memory_limit', '-1'); #fulhack
+ini_set('max_execution_time', 300); //prevent timeout
 
 class ExportSpreadsheet
 {
