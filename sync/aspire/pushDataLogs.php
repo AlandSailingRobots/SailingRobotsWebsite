@@ -108,16 +108,21 @@ function pushAllLogs($boat, $data)
     $offsets = array();
     foreach ($data as $table => $rows) {
         $tableName = "dataLogs_$table";
-        $max_mysql_id = selectFromAsInt($db, "MAX(id)", $tableName);
+        $mysql_id = selectFromAsInt($db, "MAX(id)", $tableName);
         $sqlite_id = $rows[0][0];
-        // "SELECT MAX(id) FROM $tableName";
-        error_log("$tableName MAX(id)=$max_id");
+        $idOffset = $mysql_id - $sqlite_id + 1;
+
+        $columnNames = array_shift($rows);
+        foreach ($rows as $row) {
+            $row[0] += $idOffset;
+            $sql = "INSERT INTO $tableName(".implode(',', $columnNames).") VALUES(".implode(',', $row).");";
+            // OK so far! TODO: actually perform the query. Maybe redo into PDO binding
+        }
+        error_log("$tableName ");
         // $offsets[$table."_id"] = ; // the id of the first row sent
     }
 
     return;
-
-
 
     foreach ($data as $table_name => $table) {
         // Generate the array to be bind with the prepared SQL query
