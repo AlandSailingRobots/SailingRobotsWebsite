@@ -9,7 +9,8 @@
  * @return int value
  */
 // TODO: try-catch and error checks
-function selectFromAsInt($db, $selector, $from) {
+function selectFromAsInt($db, $selector, $from)
+{
     $sql = "SELECT $selector FROM $from;";
     $stmt = $db->prepare($sql);
     $stmt->execute();
@@ -119,7 +120,12 @@ function pushAllLogs($boat, $data)
 
         // For PDO binding
         $columnBindings = $columnNames;
-        array_walk($columnBindings, function(&$value) { $value = ':'.$value; } );
+        array_walk(
+            $columnBindings,
+            function (&$value) {
+                $value = ':'.$value;
+            }
+        );
 
         $sql = "INSERT INTO $tableName(".implode(',', $columnNames).") VALUES(".implode(',', $columnBindings).");";
         $query = $db->prepare($sql);
@@ -151,7 +157,12 @@ function pushAllLogs($boat, $data)
 
     // Let's do the master table
     $idmapBindings = array_keys($idmap);
-    array_walk($idmapBindings, function(&$value) { $value = ':'.$value; } );
+    array_walk(
+        $idmapBindings,
+        function (&$value) {
+            $value = ':'.$value;
+        }
+    );
     $sql = "INSERT INTO dataLogs_system(".implode(',', array_keys($idmap)).") VALUES(".implode(',', $idmapBindings).");";
     $query = $db->prepare($sql);
     foreach ($idmap as $key => $value) {
