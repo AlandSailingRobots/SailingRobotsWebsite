@@ -99,27 +99,76 @@ function pushAllLogs($boat, $data)
 
     // We will use the dataLogs_system table differently so remove it for now
     $dataLogs_system = array();
-    if (array_key_exists('dataLogs_system', $data)) {
-        $dataLogs_system = $data['dataLogs_system'][0];
-        unset($data['dataLogs_system']);
+    if (array_key_exists('system', $data)) {
+        // $dataLogs_system = $data['system'][0];
+        unset($data['system']);
     }
 
     // Process each table but store the SQLite DB id offset to ours for each table
-    $offsets = array();
+    $idmap = array();
     foreach ($data as $table => $rows) {
         $tableName = "dataLogs_$table";
+        $columnNames = array_shift($rows);
+
+        // The SQLite and MySQL dbs have different ID series
         $mysql_id = selectFromAsInt($db, "MAX(id)", $tableName);
         $sqlite_id = $rows[0][0];
         $idOffset = $mysql_id - $sqlite_id + 1;
 
-        $columnNames = array_shift($rows);
+        // We should probably get column types as well?
+
+        // For PDO binding
+        $columnBindings = $columnNames;
+        array_walk($columnBindings, function(&$value) { $value = ':'.$value; } );
+
+        $sql = "INSERT INTO $tableName(".implode(',', $columnNames).") VALUES(".implode(',', $columnBindings).");";
+        $query = $db->prepare($sql);
+
         foreach ($rows as $row) {
             $row[0] += $idOffset;
-            $sql = "INSERT INTO $tableName(".implode(',', $columnNames).") VALUES(".implode(',', $row).");";
-            // OK so far! TODO: actually perform the query. Maybe redo into PDO binding
+
+            for ($i=0; $i<count($columnNames); $i++) {
+                if (!$query->bindValue($columnNames[$i], $row[$i])) {
+                    error_log("pushAllLogs(): Unable to bind $tableName parameter $i\"$columnNames[$i]\"=\"$row[$i]\"".PHP_EOL);
+                }
+            }
+            try {
+                if ($query->execute()) {
+                    $idmap[$table."_id"] = $row[0];
+                }
+            } catch (PDOException $e) {
+                header(
+                    $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+                    true,
+                    500
+                );
+                error_log("500: ".$e->getMessage()." on \"$sql\"".PHP_EOL);
+                die($e->getMessage());
+            }
         }
-        error_log("$tableName ");
         // $offsets[$table."_id"] = ; // the id of the first row sent
+    }
+
+    // Let's do the master table
+    $idmapBindings = array_keys($idmap);
+    array_walk($idmapBindings, function(&$value) { $value = ':'.$value; } );
+    $sql = "INSERT INTO dataLogs_system(".implode(',', array_keys($idmap)).") VALUES(".implode(',', $idmapBindings).");";
+    $query = $db->prepare($sql);
+    foreach ($idmap as $key => $value) {
+        if (!$query->bindValue(":".$key, $value, PDO::PARAM_INT)) {
+            error_log("pushAllLogs(): Unable to bind dataLogs_system parameter $i\"$columnNames[$i]\"=\"$row[$i]\"".PHP_EOL);
+        }
+    }
+    try {
+        $query->execute();
+    } catch (PDOException $e) {
+        header(
+            $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+            true,
+            500
+        );
+        error_log("500: ".$e->getMessage()." on \"$sql\"".PHP_EOL);
+        die($e->getMessage());
     }
 
     return;
