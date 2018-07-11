@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Returns value of a flag in the DB
+ *
+ * @return string JSON
+ */
 function checkIfNewConfigs()
 {
     $db = $GLOBALS['db_connection'];
@@ -12,7 +17,8 @@ function checkIfNewConfigs()
     }
     $result = $req->fetchAll(PDO::FETCH_ASSOC);
     $req->closeCursor();
-    return $result[0]['configs_updated'];
+    return json_encode($result[0]);
+    // return json_encode($result[0]['configs_updated']);
 }
 
 function setConfigsUpdated()
@@ -21,7 +27,6 @@ function setConfigsUpdated()
     $req = $db->prepare("UPDATE config_httpsync SET configs_updated = 0 where id=1");
     $result = $req->execute();
 }
-
 
 function getAllConfigs($boat)
 {

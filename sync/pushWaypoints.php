@@ -19,7 +19,8 @@ function pushWaypoint($data)
     for ($i=1; $i <= $size; $i++) {
         $waypoints = "waypoint_".$i;
         foreach ($data[$waypoints] as $row) {
-            $waypoint->execute(array($row['id'],
+            $waypoint->execute(
+                array($row['id'],
                                     $row['id_mission'],
                                     $row['rankInMission'],
                                     $row['is_checkpoint'],
@@ -30,7 +31,8 @@ function pushWaypoint($data)
                                     $row['radius'],
                                     $row['stay_time'],
                                     $row['harvested']
-                                ));
+                )
+            );
         }
     }
     $req->closeCursor();
