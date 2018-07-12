@@ -101,7 +101,7 @@ function pushAllLogs($boat, $data)
     // We will use the dataLogs_system table differently so remove it for now
     $dataLogs_system = array();
     if (array_key_exists('system', $data)) {
-        // $dataLogs_system = $data['system'][0];
+        $dataLogs_system = $data['system'];
         unset($data['system']);
     }
 
@@ -155,6 +155,9 @@ function pushAllLogs($boat, $data)
         // $offsets[$table."_id"] = ; // the id of the first row sent
     }
 
+    // This value is not like the others
+    $idmap["current_mission_id"] = $dataLogs_system[1][array_search("current_mission_id", $dataLogs_system[0])];
+
     // Let's do the master table
     $idmapBindings = array_keys($idmap);
     array_walk(
@@ -184,7 +187,7 @@ function pushAllLogs($boat, $data)
 
     return;
 
-    foreach ($data as $table_name => $table) {
+/*    foreach ($data as $table_name => $table) {
         // Generate the array to be bind with the prepared SQL query
         foreach ($table as $id_log => $log) {
             if (!empty($log)) {
@@ -212,5 +215,5 @@ function pushAllLogs($boat, $data)
     }
     if (!empty($dataLogs_system)) {
         populateDatabase($db, "dataLogs_system", $dataLogs_system);
-    }
+    }*/
 }

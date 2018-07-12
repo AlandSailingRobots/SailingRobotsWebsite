@@ -80,7 +80,7 @@ if (!empty($_POST)) {
             }
             $GLOBALS['db_connection'] = $db;
 
-            if ($_POST['gen'] == 'aspire') {
+            if (isset($_POST['gen']) && $_POST['gen'] == 'aspire') {
                 include_once 'aspire/pushDataLogs.php';
                 include_once 'aspire/getConfigs.php';
                 include_once 'aspire/pushConfigs.php';
