@@ -7,17 +7,25 @@ class DBConnection
 
     function __construct()
     {
-        require_once('../globalsettings.php');
+        //require_once('../globalsettings.php');
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+            define('__ROOT__', dirname(dirname(dirname(dirname(dirname(__FILE__))))));
+            require_once(__ROOT__.'/globalsettings.php');
+        }
+
+
+
 
         $host   = $GLOBALS['hostname'];
         $user   = $GLOBALS['username'];
         $pass   = $GLOBALS['password'];
-        $dbname = $GLOBALS['database_name_testdata'];
+        $dbname = $GLOBALS['database_ASPire'];
 
         try {
             $this->dbconn = new PDO("mysql:host=$host;dbname=$dbname", $user, $pass);
             $this->dbconn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            echo 'Connected to DB<br/>';
+            #echo 'Connected to DB<br/>'; //why though
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -26,9 +34,9 @@ class DBConnection
     public function getLatestID()
     {
         try {
-            $sql = "SELECT id_system
-					FROM system_dataLogs
-					ORDER BY id_system
+            $sql = "SELECT id
+					FROM dataLogs_system
+					ORDER BY id
 					DESC LIMIT 1;"
                     ;
             $result = $this->query($sql);
@@ -93,7 +101,7 @@ class DBConnection
         return $sth->fetchAll();
     }
 }
-
+/**
 //when in non-wsdl mode the uri option must be specified
 $options = array('uri'=>'http://localhost/');
 //create a new SOAP server
@@ -102,3 +110,5 @@ $server = new SoapServer(null, $options);
 $server->setClass('DBConnection');
 //start the SOAP requests handler
 $server->handle();
+
+ **/
