@@ -1,7 +1,7 @@
-var map, boatMarker, windDirectionMarker, lineToWaypoint, routePolyline;
-var route = [];
+let map, boatMarker, windDirectionMarker, lineToWaypoint, routePolyline;
+let route = [];
 let boatInfoWindow = null;
-var windInfoWindow = null;
+let windInfoWindow = null;
 var boatPos= new google.maps.LatLng(60.107900, 19.922975);
 //var iconBase = './images';
 //var img = new google.maps.MarkerImage(iconBase + '/boat.png', null, null, new google.maps.Point(32, 32), new google.maps.Size(64, 64));
@@ -31,23 +31,47 @@ var windDirectionIcon = {
     scale:2,
     strokeweight: 0.1,
 };
+
+var waypoints;
+let gpsData;
+
+//MAIN
+$( document ).ready(function() {
+
+    console.log( "loading functions" )
+    waypoints = getMissionWaypoints();
+    gpsData = getGpsData();
+    initMap();
+    console.log( "ready!" );
+    debug();
+});
+
+//FUNCTIONS
+
+function debug() {
+    console.log("=================================================================" +'\n' + "DEBUG START");
+    console.log("currentMisson -  waypoints: ");
+    console.log(waypoints);
+    console.log("dataLogs_gps - latest known location: ");
+    console.log(gpsData);
+
+    console.log("=================================================================" +'\n' + "END");
+}
 //TODO get currentMission waypoints
-function getSingleValueUsingJQuery() {
-    var value = "";
-    //var url = '../include/live_mission.php?data=getMissionWaypoints';
+function getMissionWaypoints() {
+    var value = null;
+    //var url = '../include/live_mission.php';
     var url = 'http://wst.local/AlandSailingRobots/pages/logs/live/include/live_mission.php';
-    console.log("staring getSIngleValueUsingJQuery");
+    console.log("running getSIngleValueUsingJQuery");
     jQuery.ajax({
         type: 'GET',
         url: url,
-        async: true,
+        async: false,
         contentType: "application/json",
         data: {data: 'getMissionWaypoints'},
         dataType: 'json',
         success: function(json) {
-            console.log(json);
-            console.log(json.latitude);   // needs to match the payload (i.e. json must have {value: "foo"}
-            value = json.latitude;
+            value = json;
         },
         error: function(e) {
             console.log("jQuery error message = "+e.message);
@@ -56,37 +80,50 @@ function getSingleValueUsingJQuery() {
     return value;
 }
 
+function getGpsData() {
+    var value = null;
 
-
-function getWaypoints () {
-    var result;
-
-    $.ajax({
+    //var url = '../include/live_mission.php';
+    var url = 'http://wst.local/AlandSailingRobots/pages/logs/live/include/live_mission.php';
+    console.log("running getSIngleValueUsingJQuery");
+    jQuery.ajax({
         type: 'GET',
-        url: 'http://wst.local/AlandSailingRobots/pages/logs/live/include/live_mission.php',
-        //url: '../include/live_mission.php?data=getMissionWaypoints',
-        //data: { get_param: 'latitude' },
-        data: {data: 'getMissionWaypoints'},
-        dataType:'json',
-        success: function (data) {
-            var names = data
-            $('#cand').html(data);
+        url: url,
+        async: false,
+        contentType: "application/json",
+        data: {data: 'getGpsData'},
+        dataType: 'json',
+        success: function(json) {
+            value = json;
+        },
+        error: function(e) {
+            console.log("jQuery error message = "+e.message);
         }
     });
-}
 
+    return value;
+
+}
 //TODO end
 
+
+
+//waypoints = [{"id":1503486574,"id_mission":41,"rankInMission":1,"isCheckpoint":0,"name":"","latitude":60.1079,"longitude":19.92235,"declination":6,"radius":30,"stay_time":0,"harvested":1},{"id":1503486622,"id_mission":41,"rankInMission":2,"isCheckpoint":0,"name":"","latitude":60.10584,"longitude":19.92246,"declination":6,"radius":30,"stay_time":0,"harvested":0},{"id":1503486665,"id_mission":41,"rankInMission":3,"isCheckpoint":0,"name":"","latitude":60.10549,"longitude":19.92049,"declination":6,"radius":30,"stay_time":0,"harvested":0},{"id":1503486698,"id_mission":41,"rankInMission":4,"isCheckpoint":0,"name":"","latitude":60.10793,"longitude":19.9216,"declination":6,"radius":30,"stay_time":60,"harvested":0}]
+
+
+
+/**
 var waypoints =[
     {id: 1, latitude: 60.107900, longitude: 19.922350, radius:30, harvested:1},
     {id: 2, latitude: 60.105840, longitude: 19.922460, radius:30, harvested:1},
     {id: 3, latitude: 60.105490, longitude: 19.920490, radius:30, harvested:0},
     {id: 4, latitude: 60.107930, longitude: 19.921600, radius:30, harvested:0},
 ];
+**/
 
 //Initialise map and place first boat marker
 function initMap() {
-    var latte = getSingleValueUsingJQuery();
+    //var latte = getMissionWaypoints();
     map = new google.maps.Map(document.getElementById('map'), {
         center: new google.maps.LatLng(getMeanLat(waypoints), getMeanLng(waypoints)),
         zoom: calculateZoom(waypoints),
@@ -158,7 +195,7 @@ function initMap() {
         console.log(map.getZoom());
     });
 }
-initMap();
+//initMap();
 
 //Refresh map without refreshing page
 setInterval( function() {
@@ -272,8 +309,8 @@ function placeWaypoint(waypoint){
     var marker = new google.maps.Marker({
         position: {lat: waypoint.latitude, lng: waypoint.longitude},
         map: map,
-        label: waypoint.id.toString(),
-        title: 'Waypoint : '+waypoint.id,
+        label: waypoint.rankInMission.toString(),
+        title: 'Waypoint : '+waypoint.rankInMission,
         icon: { //temp icon never shown because immediately replace by red or green one
             url: 'http://maps.google.com/mapfiles/ms/micons/blue.png',
             labelOrigin: new google.maps.Point(16,12),
