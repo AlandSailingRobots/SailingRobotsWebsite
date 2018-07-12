@@ -87,7 +87,7 @@ class LiveLogAspire
     }
 
     /**
-     * @return mixed
+     * @return array
      */
     public function getPosition() {
         return self::getLatestKnownPosition();
@@ -95,7 +95,7 @@ class LiveLogAspire
 
     /**
      * Return latest known gps_id that is not out of range
-     * @return mixed
+     * @return array
      */
     public function getLatestKnownPosition() {
         $outOfRange = OUT_OF_RANGE; //because constant cannot be passed as reference into bindParam()
@@ -110,8 +110,50 @@ class LiveLogAspire
         $stmt->execute();
         $sqlResult = $stmt->fetchAll();
 
-        return $sqlResult;
+        return $sqlResult[0];
 
+    }
+
+    /**
+     * @return array
+     */
+    public function getCompassData() {
+        $pdo = self::getDataSource();
+        $query = 'SELECT * FROM ithaax_ASPire_config.dataLogs_compass
+                  ORDER BY id DESC
+                  LIMIT 1';
+        $stmt = $pdo->prepare($query);
+        $stmt->execute();
+        $sqlResult = $stmt->fetchAll();
+
+        return $sqlResult[0];
+    }
+
+    /**
+     * @return array
+     */
+    public function getWindsensorData() {
+        $pdo = self::getDataSource();
+        $query = 'SELECT * FROM ithaax_ASPire_config.dataLogs_windsensor
+                  ORDER BY id DESC
+                  LIMIT 1';
+        $stmt = $pdo->prepare($query);
+        $stmt->execute();
+        $sqlResult = $stmt->fetchAll();
+
+        return $sqlResult[0];
+    }
+
+    public function getCourseData() {
+        $pdo = self::getDataSource();
+        $query = 'SELECT * FROM ithaax_ASPire_config.dataLogs_course_calculation
+                  ORDER BY id DESC
+                  LIMIT 1';
+        $stmt = $pdo->prepare($query);
+        $stmt->execute();
+        $sqlResult = $stmt->fetchAll();
+
+        return $sqlResult[0];
     }
 
     /**

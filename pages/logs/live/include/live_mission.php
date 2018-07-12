@@ -30,10 +30,22 @@ Class jsonResponse {
                 $mission = $live->getMissionWaypoints();
                 echo json_encode($mission);
                 break;
-            default:
-                //echo 'SOME ERROR';
-                $gps = $live->getPosition();
+            case 'getCompassData':
+                $gps = $live->getCompassData();
                 echo json_encode($gps);
+                break;
+            case 'getCourseData':
+                $course = $live->getCourseData();
+                echo json_encode($course);
+                break;
+            case 'getWindsensorData':
+                $wind = $live->getWindsensorData();
+                echo json_encode($wind);
+                break;
+            default:
+                echo 'SOME ERROR';
+                //$gps = $live->getPosition();
+                //echo json_encode($gps);
                 break;
         }
     }

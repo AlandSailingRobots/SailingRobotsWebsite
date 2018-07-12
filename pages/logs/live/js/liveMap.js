@@ -1,12 +1,26 @@
+//TODO CLEANUP
+
 let map, boatMarker, windDirectionMarker, lineToWaypoint, routePolyline;
 let route = [];
 let boatInfoWindow = null;
 let windInfoWindow = null;
-var boatPos= new google.maps.LatLng(60.107900, 19.922975);
+
+//var boatPos= new google.maps.LatLng(60.107900, 19.922975);
+const VALUE_NOT_SET = 1;
+
+let gpsData;
+let windsensorData;
+let courseData;
+let compassData;
+
+let boatPos     = VALUE_NOT_SET;
+let boatHeading = VALUE_NOT_SET;
+let windHeading = VALUE_NOT_SET;
+let waypoints;
+
 //var iconBase = './images';
 //var img = new google.maps.MarkerImage(iconBase + '/boat.png', null, null, new google.maps.Point(32, 32), new google.maps.Size(64, 64));
-var boatHeading = 0;
-var windHeading = 180;
+
 var boatIcon = {
     path: 'M -1,-2 L 0,-4 L 1,-2 Q1.5,0 1,2 L -1,2 Q -1.5,0 -1,-2',
     strokeColor: '#F89406',
@@ -32,15 +46,19 @@ var windDirectionIcon = {
     strokeweight: 0.1,
 };
 
-var waypoints;
-let gpsData;
 
 //MAIN
 $( document ).ready(function() {
 
-    console.log( "loading functions" )
-    waypoints = getMissionWaypoints();
-    gpsData = getGpsData();
+    console.log( "loading functions" );
+    waypoints       = getMissionWaypoints();
+    gpsData         = getGpsData();
+    courseData      = getCourseData();
+    //windsensorData  = getWindsensorData();
+    windsensorData  = getData("getWindsensorData");
+    compassData     = getData("getCompassData");
+    boatPos         = getNewBoatPos(gpsData);
+    //setBoatPosition(gpsData);
     initMap();
     console.log( "ready!" );
     debug();
@@ -54,15 +72,35 @@ function debug() {
     console.log(waypoints);
     console.log("dataLogs_gps - latest known location: ");
     console.log(gpsData);
-
+    console.log("dataLogs_compass:");
+    console.log(compassData);
     console.log("=================================================================" +'\n' + "END");
 }
+
+function getNewBoatPos(gpsData) {
+    let latitude = gpsData.latitude;
+    let longitude = gpsData.longitude;
+    boatPos = new google.maps.LatLng(latitude, longitude);
+
+    return boatPos;
+}
 //TODO get currentMission waypoints
+function setBoatPosition(gpsData) {
+    console.log(gpsData[0].latitude);
+    let latitude = gpsData[0].latitude;
+    let longitude = gpsData[0].longitude;
+    boatPos = new google.maps.LatLng(latitude, longitude);
+}
+/**
+function setWindsensorData(windsensorData) {
+    windHeading
+}
+**/
+
 function getMissionWaypoints() {
     var value = null;
     //var url = '../include/live_mission.php';
     var url = 'http://wst.local/AlandSailingRobots/pages/logs/live/include/live_mission.php';
-    console.log("running getSIngleValueUsingJQuery");
     jQuery.ajax({
         type: 'GET',
         url: url,
@@ -80,12 +118,54 @@ function getMissionWaypoints() {
     return value;
 }
 
-function getGpsData() {
+function getData(logName) {
     var value = null;
-
     //var url = '../include/live_mission.php';
     var url = 'http://wst.local/AlandSailingRobots/pages/logs/live/include/live_mission.php';
-    console.log("running getSIngleValueUsingJQuery");
+    jQuery.ajax({
+        type: 'GET',
+        url: url,
+        async: false,
+        contentType: "application/json",
+        data: {data: logName},
+        dataType: 'json',
+        success: function(json) {
+            value = json;
+        },
+        error: function(e) {
+            console.log("jQuery error message = "+e.message);
+        }
+    });
+    return value;
+
+}
+
+function getCompassData() {
+    var value = null;
+    //var url = '../include/live_mission.php';
+    var url = 'http://wst.local/AlandSailingRobots/pages/logs/live/include/live_mission.php';
+    jQuery.ajax({
+        type: 'GET',
+        url: url,
+        async: false,
+        contentType: "application/json",
+        data: {data: 'getCompassData'},
+        dataType: 'json',
+        success: function(json) {
+            value = json;
+        },
+        error: function(e) {
+            console.log("jQuery error message = "+e.message);
+        }
+    });
+    return value;
+
+}
+
+function getGpsData() {
+    var value = null;
+    //var url = '../include/live_mission.php';
+    var url = 'http://wst.local/AlandSailingRobots/pages/logs/live/include/live_mission.php';
     jQuery.ajax({
         type: 'GET',
         url: url,
@@ -100,9 +180,53 @@ function getGpsData() {
             console.log("jQuery error message = "+e.message);
         }
     });
-
     return value;
 
+}
+
+function getWindsensorData() {
+    var value = null;
+
+    //var url = '../include/live_mission.php';
+    var url = 'http://wst.local/AlandSailingRobots/pages/logs/live/include/live_mission.php';
+    jQuery.ajax({
+        type: 'GET',
+        url: url,
+        async: false,
+        contentType: "application/json",
+        data: {data: 'getWindsensorData'},
+        dataType: 'json',
+        success: function(json) {
+            value = json;
+        },
+        error: function(e) {
+            console.log("jQuery error message = "+e.message);
+        }
+    });
+    return value;
+
+}
+
+function getCourseData() {
+    var value = null;
+
+    //var url = '../include/live_mission.php';
+    var url = 'http://wst.local/AlandSailingRobots/pages/logs/live/include/live_mission.php';
+    jQuery.ajax({
+        type: 'GET',
+        url: url,
+        async: false,
+        contentType: "application/json",
+        data: {data: 'getCourseData'},
+        dataType: 'json',
+        success: function(json) {
+            value = json;
+        },
+        error: function(e) {
+            console.log("jQuery error message = "+e.message);
+        }
+    });
+    return value;
 }
 //TODO end
 
@@ -123,14 +247,13 @@ var waypoints =[
 
 //Initialise map and place first boat marker
 function initMap() {
-    //var latte = getMissionWaypoints();
     map = new google.maps.Map(document.getElementById('map'), {
         center: new google.maps.LatLng(getMeanLat(waypoints), getMeanLng(waypoints)),
         zoom: calculateZoom(waypoints),
-    })
+    });
 
     boatMarker = new google.maps.Marker({
-        position: boatPos, //TODO get position from function that creates some obj
+        position: boatPos,
         icon: boatIcon,
         map: map
     });
@@ -138,7 +261,7 @@ function initMap() {
         content:''
     });
     google.maps.event.addListener(boatMarker, 'click', function() {
-        showInfoWindow(boatMarker, boatInfoWindow, getBoatInfo())
+        showInfoWindow(boatMarker, boatInfoWindow, getBoatInfo());
         boatInfoWindow.open(map, boatMarker);
     });
 
@@ -151,7 +274,7 @@ function initMap() {
         content:''
     });
     google.maps.event.addListener(windDirectionMarker, 'click', function() {
-        showInfoWindow(windDirectionMarker, windInfoWindow, getWindInfo())
+        showInfoWindow(windDirectionMarker, windInfoWindow, getWindInfo());
         windInfoWindow.open(map, windDirectionMarker);
     });
 
@@ -192,24 +315,41 @@ function initMap() {
 
     google.maps.event.addListener(map, 'zoom_changed', function(){
         rescaleMarkers();
-        console.log(map.getZoom());
+        console.log('zoom changed: ' + map.getZoom());
     });
 }
 //initMap();
+
+//update heading
+function updateHeadings() {
+
+}
+
 
 //Refresh map without refreshing page
 setInterval( function() {
     refreshInfo()
 }, 5000);
 
+
+//getters
+function getBoatHeading() {
+    return compassData.heading;
+}
+
+function getWindHeading() {
+    return windsensorData.direction;
+}
+
+
 //###### PLACEHOLDER FUNCTIONS #######
-//TODO get data from php script
+//DEBUG
 function getNewHeading(heading){
     heading = heading+((Math.round(Math.random()) * 2 - 1) * Math.floor(Math.random()*10)); //rand between 0 and 10 multiply by -1 or 1
     return heading;
 }
 
-//TODO get data from php script
+//DEBUG
 function getNewPos(pos){
     return new google.maps.LatLng(pos.lat()+((Math.round(Math.random()) * 2 - 1)*0.00001), pos.lng()+((Math.round(Math.random()) * 2 - 1)*0.00001));
 
@@ -220,7 +360,8 @@ function getBoatInfo(){
     var lng = boatPos.lng().toFixed(5);
     var head = boatHeading.toString();
     var bearToWP = google.maps.geometry.spherical.computeHeading(boatPos, getNextWaypointPos()).toFixed();
-    var speed = Math.random().toFixed(3);
+    //var speed = Math.random().toFixed(3);
+    var speed = gpsData.speed.toFixed(3);
     var contentString = "<div class = 'title'>" +
         "<h3>" + "ASPire" + "</h3>" +
         "<div class = 'info'>" +
@@ -234,8 +375,10 @@ function getBoatInfo(){
 }
 
 function getWindInfo(){
+    //var head = windHeading.toString();
+    //var speed = (Math.random()*10).toFixed(3);
     var head = windHeading.toString();
-    var speed = (Math.random()*10).toFixed(3);
+    var speed = windsensorData.speed.toFixed(3).toString();
     var contentString = "<div class = 'title'>" +
         "<h3>" + "Wind" + "</h3>" +
         "<div class = 'info'>" +
@@ -248,14 +391,25 @@ function getWindInfo(){
 //#####################################
 
 function refreshInfo(){
-    boatHeading = getNewHeading(boatHeading);
-    windHeading = getNewHeading(windHeading);
-    boatPos = getNewPos(boatPos);
+    //boatHeading = getNewHeading(boatHeading);
+    //windHeading = getNewHeading(windHeading);
+    //boatPos = getNewPos(boatPos);
+    gpsData = getGpsData();
+    boatPos = getNewBoatPos(gpsData);
+    boatHeading = getBoatHeading();
+    windHeading = getWindHeading();
+
+
+
+    //updateHeadings();
+    //updateBoatPos();
     updateMarker(boatMarker, boatPos, boatHeading);
     updateMarker(windDirectionMarker, boatPos, windHeading);
     updateLineToWaypoint(lineToWaypoint, boatPos);
+
     showInfoWindow(boatMarker, boatInfoWindow, getBoatInfo());
     showInfoWindow(windDirectionMarker, windInfoWindow, getWindInfo());
+
     updateRoute();
 }
 
@@ -299,8 +453,8 @@ function calculateZoom(waypoints, mapHeight=550, mapWidth=900, maxZoom=22){
     var fraction_lat = (lat_rad(maxLat) - lat_rad(minLat)) / Math.PI;
 
     // get zoom for both latitude and longitude
-    var zoom_lat = Math.floor(Math.log(mapHeight / world_heigth_pix / fraction_lat) / Math.log(2))
-    var zoom_lon = Math.floor(Math.log(mapWidth / world_width_pix / fraction_lon) / Math.log(2))
+    var zoom_lat = Math.floor(Math.log(mapHeight / world_heigth_pix / fraction_lat) / Math.log(2));
+    var zoom_lon = Math.floor(Math.log(mapWidth / world_width_pix / fraction_lon) / Math.log(2));
 
     return Math.min(zoom_lat, zoom_lon, maxZoom)
 }
@@ -329,6 +483,7 @@ function placeWaypoint(waypoint){
     updateWaypoint(waypoint, marker, radius)
 }
 
+//TODO boatPos we shall not return
 function getNextWaypointPos(){
     for (var wp of waypoints){
         if (!wp.harvested){
@@ -428,4 +583,4 @@ function updateRoute(){
 google.maps.InfoWindow.prototype.isOpen = function(){
     var map = this.getMap();
     return (map !== null && typeof map !== "undefined");
-}
+};
