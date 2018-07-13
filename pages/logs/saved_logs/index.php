@@ -73,8 +73,9 @@ if ($_GET['boat'] == 'janet') {
 ?>
     <!-- Custom CSS for the page -->
     <!-- TODO Check if it's used or not -->
+
     <link href="main.css" rel="stylesheet">
-    <meta http-equiv="refresh" content="6" >
+    <meta http-equiv="refresh" content="6" > <!-- TODO INSERT GOD DAMNED SESSION COOKIE -->
 </head>
 
 <body class="nav-md">
@@ -129,7 +130,7 @@ if ($_GET['boat'] == 'janet') {
         } elseif ($connected) {
             echo '<p> You don\'t have the right to view this webdata </p>';
         } else {
-            echo '<p> You must log-in to view this data. Click <strong><a href=' . $relative_path . 'pages/users/login.php>here</a></strong> to log-in. </p>';
+            echo '<p> You must log-in to view this data. Click <strong><a href='.$relative_path.' pages/users/login.php>here</a></strong> to log-in. </p>';
         }
             ?>
         </div>
