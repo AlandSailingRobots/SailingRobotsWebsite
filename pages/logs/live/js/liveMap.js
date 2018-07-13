@@ -2,7 +2,7 @@
 const VALUE_NOT_SET = 1;
 
 //##### GLOBALS ######
-let map, boatMarker, windDirectionMarker, lineToWaypoint, routePolyline;
+let map, boatMarker, windDirectionMarker, courseToSteerMarker, lineToWaypoint, routePolyline;
 let route = [];
 let boatInfoWindow = null;
 let windInfoWindow = null;
@@ -17,10 +17,10 @@ let compassData;
 let boatPos     = VALUE_NOT_SET;
 let boatHeading = VALUE_NOT_SET;
 let windHeading = VALUE_NOT_SET;
+let courseToSteerHeading = VALUE_NOT_SET;
 let waypoints;
+let waypointsArray = [];
 
-//var iconBase = './images';
-//var img = new google.maps.MarkerImage(iconBase + '/boat.png', null, null, new google.maps.Point(32, 32), new google.maps.Size(64, 64));
 
 var boatIcon = {
     path: 'M -1,-2 L 0,-4 L 1,-2 Q1.5,0 1,2 L -1,2 Q -1.5,0 -1,-2',
@@ -30,19 +30,21 @@ var boatIcon = {
     scale: 3,
     strokeweight: 1,
 };
-var boatArrowIcon = {
-    path: 'M 0,0 L0,-2 L-1,-2 L0,-3 L1,-2 L0,-2 L0,3',
-    strokeColor: '#F89406',
-    fillOpacity: 1,
-    rotation: boatHeading,
-    scale: 3,
-    strokeweight: 1,
-};
+
 var windDirectionIcon = {
-    path: 'M0,0 L-1,2 L1,2 L0,0 L0,8',
+    path: 'M0,6 L-0.5,8 L0.5,8 L0,6 L0,14',
     strokeColor: '#1F3A93',
     fillOpacity: 1,
     rotation: windHeading,
+    scale:2,
+    strokeweight: 0.1,
+};
+
+var courseToSteerIcon = {
+    path: 'M0,0 L0,-8 L-0.5,-6 L0.5,-6 L0,-8',
+    strokeColor: '#015965',
+    fillOpacity: 1,
+    rotation: courseToSteerHeading,
     scale:2,
     strokeweight: 0.1,
 };
@@ -82,10 +84,13 @@ function debug() {
 
     console.log("dataLogs_compass:");
     console.log(compassData);
+
+    console.log("course_data");
+    console.log(courseData);
     console.log("=================================================================" +'\n' + "END");
 }
 
-//Initialise map and place first boat marker
+//Initialise map and place markers
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: new google.maps.LatLng(getMeanLat(waypoints), getMeanLng(waypoints)),
@@ -116,6 +121,12 @@ function initMap() {
     google.maps.event.addListener(windDirectionMarker, 'click', function() {
         showInfoWindow(windDirectionMarker, windInfoWindow, getWindInfo());
         windInfoWindow.open(map, windDirectionMarker);
+    });
+
+    courseToSteerMarker = new google.maps.Marker({
+        position: boatPos,
+        icon: courseToSteerIcon,
+        map: map
     });
 
     lineToWaypoint = new google.maps.Polyline({
@@ -149,9 +160,7 @@ function initMap() {
         placeWaypoint(waypoints[i]);
     }
 
-    google.maps.event.addListener(map, 'drag', function() {
-        refreshInfo();
-    });
+    drawWaypointLine();
 
     google.maps.event.addListener(map, 'zoom_changed', function(){
         rescaleMarkers();
@@ -203,12 +212,16 @@ function getWindHeading() {
     return windsensorData.direction;
 }
 
+function getSteerHeading(){
+    return courseData.course_to_steer;
+}
+
 //##### SETTERS ######
 
 //Refresh map without refreshing page
 setInterval( function() {
     refreshInfo()
-}, 5000);
+}, 1000);
 
 
 //###### PLACEHOLDER FUNCTIONS #######
@@ -227,7 +240,8 @@ setInterval( function() {
 
 //DEBUG can be used to test without live data
 function getNewHeading(heading){
-    heading = heading+((Math.round(Math.random()) * 2 - 1) * Math.floor(Math.random()*10)); //rand between 0 and 10 multiply by -1 or 1
+    // heading = heading+((Math.round(Math.random()) * 2 - 1) * Math.floor(Math.random()*10)); //rand between 0 and 10 multiply by -1 or 1
+    heading += 10;
     return heading;
 }
 
@@ -242,16 +256,22 @@ function getNewPos(pos){
 function getBoatInfo(){
     var lat = boatPos.lat().toFixed(5);
     var lng = boatPos.lng().toFixed(5);
+    var courseToSteer = courseData.course_to_steer.toFixed(5);
     var head = boatHeading.toString();
     var bearToWP = google.maps.geometry.spherical.computeHeading(boatPos, getNextWaypointPos()).toFixed();
     //var speed = Math.random().toFixed(3);
     var speed = gpsData.speed.toFixed(3);
+    var tack = courseData.tack;
+    if (tack) { tack = 'Yes'} else { tack = 'No'}
+
     var contentString = "<div class = 'title'>" +
         "<h3>" + "ASPire" + "</h3>" +
         "<div class = 'info'>" +
         "<h4> lat: " + lat + " lng: " + lng + "</h4>" +
+        "<h4> courseToSteer: " + courseToSteer + "</h4>" +
         "<h4> heading: " + head + "°" + "</h4>" +
         "<h4> bearingToWP: " + bearToWP + "°" + "</h4>" +
+        "<h4> tacking: " + tack + "</h4>" +
         "<h4> speed: " + speed + " m/s" + "</h4>" +
         "</div>";
 
@@ -279,18 +299,22 @@ function refreshInfo(){
     //uncomment and comment out the corrensponding lines bellow
 
     //boatHeading = getNewHeading(boatHeading);
-    //windHeading = getNewHeading(windHeading);
+    // windHeading = getNewHeading(windHeading);
     //boatPos = getNewPos(boatPos);
 //#####################################
 
     gpsData = getData("getGpsData");
+    waypoints = getData("getMissionWaypoints");
     boatPos = getNewBoatPos(gpsData);
     boatHeading = getBoatHeading();
     windHeading = getWindHeading();
+    courseToSteerHeading = getSteerHeading();
 
 
     updateMarker(boatMarker, boatPos, boatHeading);
     updateMarker(windDirectionMarker, boatPos, windHeading);
+    updateMarker(courseToSteerMarker, boatPos, courseToSteerHeading)
+    refreshWaypoints();
     updateLineToWaypoint(lineToWaypoint, boatPos);
 
     showInfoWindow(boatMarker, boatInfoWindow, getBoatInfo());
@@ -351,7 +375,7 @@ function placeWaypoint(waypoint){
         map: map,
         label: waypoint.rankInMission.toString(),
         title: 'Waypoint : '+waypoint.rankInMission,
-        icon: { //temp icon never shown because immediately replace by red or green one
+        icon: { //temp icon never shown because immediately replaced by red or green one
             url: 'http://maps.google.com/mapfiles/ms/micons/blue.png',
             labelOrigin: new google.maps.Point(16,12),
         }
@@ -365,8 +389,28 @@ function placeWaypoint(waypoint){
         center: marker.position,
         radius: waypoint.radius,
     });
+    //Add this waypoint to the global array that associates it with it's marker and radius
+    waypointsArray.push({wp:waypoint, wpMarker:marker, wpRadius:radius});
 
     updateWaypoint(waypoint, marker, radius)
+}
+
+function drawWaypointLine(){
+    let waypointPath = [];
+    for (var wp of waypoints){
+        waypointPath.push({lat: wp.latitude, lng: wp.longitude});
+    }
+
+    var waypointPolyline = new google.maps.Polyline({
+        path: waypointPath,
+        geodesic: true,
+        strokeColor: '#f0f8ff',
+        strokeOpacity: 0.7,
+        strokeweight: 1,
+        map: map
+    });
+
+    return waypointPolyline
 }
 
 function getNextWaypointPos(){
@@ -376,6 +420,17 @@ function getNextWaypointPos(){
         }
     }
     return boatPos
+}
+
+function refreshWaypoints(){
+    for (let i=0; i<waypoints.length; i++){
+        // waypoints[i].harvested = Math.round(Math.random()); //DEBUG ONLY
+        waypointsArray[i].wp = waypoints[i]; //Replace waypoint object in the array with new waypoint object
+    }
+
+    for (var node of waypointsArray){
+        updateWaypoint(node.wp, node.wpMarker, node.wpRadius);
+    }
 }
 
 function updateMarker(marker, pos, heading){
@@ -451,9 +506,11 @@ function rescaleMarkers(){
     var newScale = Math.max(1, map.getZoom()-13);
     boatMarker.icon.scale = newScale;
     windDirectionMarker.icon.scale = newScale - 1;
+    courseToSteerMarker.icon.scale = newScale - 1;
 
     boatMarker.setIcon(boatMarker.icon);
     windDirectionMarker.setIcon(windDirectionMarker.icon);
+    courseToSteerMarker.setIcon(courseToSteerMarker.icon);
 }
 
 function updateRoute(){
