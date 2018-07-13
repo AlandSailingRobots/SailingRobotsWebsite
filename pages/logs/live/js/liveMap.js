@@ -254,8 +254,6 @@ function getNewPos(pos){
 
 //##### MAP FUNCTIONS ######
 function getBoatInfo(){
-    var lat = boatPos.lat().toFixed(5);
-    var lng = boatPos.lng().toFixed(5);
     var courseToSteer = courseData.course_to_steer.toFixed(0);
     var head = boatHeading.toString();
     var bearToWP = parseInt(google.maps.geometry.spherical.computeHeading(boatPos, getNextWaypointPos()).toFixed());
@@ -269,7 +267,6 @@ function getBoatInfo(){
     var contentString = "<div class = 'title'>" +
         "<h3>" + "ASPire" + "</h3>" +
         "<div class = 'info'>" +
-        "<h4> lat: " + lat + " lng: " + lng + "</h4>" +
         "<h4> courseToSteer: " + courseToSteer + " °" + "</h4>" +
         "<h4> heading: " + head + " °" + "</h4>" +
         "<h4> bearingToWP: " + bearToWP + " °" + "</h4>" +
