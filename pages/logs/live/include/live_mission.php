@@ -15,7 +15,6 @@ Class jsonResponse {
         }
     }
 
-    //domain.com?page=product
     public function getRequest() {
         $live = new LiveLogAspire();
         $live->prepare();
@@ -52,8 +51,4 @@ Class jsonResponse {
 }
 
 $json = new jsonResponse();
-
 $json->run();
-
-
-?>

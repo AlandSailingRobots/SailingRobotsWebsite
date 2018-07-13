@@ -1,18 +1,19 @@
-//TODO CLEANUP
+//##### CONSTANTS ######
+const VALUE_NOT_SET = 1;
 
+//##### GLOBALS ######
 let map, boatMarker, windDirectionMarker, lineToWaypoint, routePolyline;
 let route = [];
 let boatInfoWindow = null;
 let windInfoWindow = null;
 
-//var boatPos= new google.maps.LatLng(60.107900, 19.922975);
-const VALUE_NOT_SET = 1;
-
+let absolutePath;
 let gpsData;
 let windsensorData;
 let courseData;
 let compassData;
 
+//var boatPos= new google.maps.LatLng(60.107900, 19.922975);
 let boatPos     = VALUE_NOT_SET;
 let boatHeading = VALUE_NOT_SET;
 let windHeading = VALUE_NOT_SET;
@@ -47,203 +48,42 @@ var windDirectionIcon = {
 };
 
 
-//MAIN
+//##### MAIN ######
 $( document ).ready(function() {
 
     console.log( "loading functions" );
-    waypoints       = getMissionWaypoints();
-    gpsData         = getGpsData();
-    courseData      = getCourseData();
-    //windsensorData  = getWindsensorData();
+
+    absolutePath    = getAbsolutePath();
+
+    waypoints       = getData("getMissionWaypoints");
+    gpsData         = getData("getGpsData");
+    courseData      = getData("getCourseData");
     windsensorData  = getData("getWindsensorData");
     compassData     = getData("getCompassData");
     boatPos         = getNewBoatPos(gpsData);
-    //setBoatPosition(gpsData);
+
     initMap();
-    console.log( "ready!" );
     debug();
+
+    console.log( "ready!" );
 });
 
-//FUNCTIONS
-
+//##### FUNCTIONS ######
 function debug() {
     console.log("=================================================================" +'\n' + "DEBUG START");
+    console.log(window.location);
+    console.log(absolutePath);
+
     console.log("currentMisson -  waypoints: ");
     console.log(waypoints);
+
     console.log("dataLogs_gps - latest known location: ");
     console.log(gpsData);
+
     console.log("dataLogs_compass:");
     console.log(compassData);
     console.log("=================================================================" +'\n' + "END");
 }
-
-function getNewBoatPos(gpsData) {
-    let latitude = gpsData.latitude;
-    let longitude = gpsData.longitude;
-    boatPos = new google.maps.LatLng(latitude, longitude);
-
-    return boatPos;
-}
-//TODO get currentMission waypoints
-function setBoatPosition(gpsData) {
-    console.log(gpsData[0].latitude);
-    let latitude = gpsData[0].latitude;
-    let longitude = gpsData[0].longitude;
-    boatPos = new google.maps.LatLng(latitude, longitude);
-}
-/**
-function setWindsensorData(windsensorData) {
-    windHeading
-}
-**/
-
-function getMissionWaypoints() {
-    var value = null;
-    //var url = '../include/live_mission.php';
-    var url = 'http://wst.local/AlandSailingRobots/pages/logs/live/include/live_mission.php';
-    jQuery.ajax({
-        type: 'GET',
-        url: url,
-        async: false,
-        contentType: "application/json",
-        data: {data: 'getMissionWaypoints'},
-        dataType: 'json',
-        success: function(json) {
-            value = json;
-        },
-        error: function(e) {
-            console.log("jQuery error message = "+e.message);
-        }
-    });
-    return value;
-}
-
-function getData(logName) {
-    var value = null;
-    //var url = '../include/live_mission.php';
-    var url = 'http://wst.local/AlandSailingRobots/pages/logs/live/include/live_mission.php';
-    jQuery.ajax({
-        type: 'GET',
-        url: url,
-        async: false,
-        contentType: "application/json",
-        data: {data: logName},
-        dataType: 'json',
-        success: function(json) {
-            value = json;
-        },
-        error: function(e) {
-            console.log("jQuery error message = "+e.message);
-        }
-    });
-    return value;
-
-}
-
-function getCompassData() {
-    var value = null;
-    //var url = '../include/live_mission.php';
-    var url = 'http://wst.local/AlandSailingRobots/pages/logs/live/include/live_mission.php';
-    jQuery.ajax({
-        type: 'GET',
-        url: url,
-        async: false,
-        contentType: "application/json",
-        data: {data: 'getCompassData'},
-        dataType: 'json',
-        success: function(json) {
-            value = json;
-        },
-        error: function(e) {
-            console.log("jQuery error message = "+e.message);
-        }
-    });
-    return value;
-
-}
-
-function getGpsData() {
-    var value = null;
-    //var url = '../include/live_mission.php';
-    var url = 'http://wst.local/AlandSailingRobots/pages/logs/live/include/live_mission.php';
-    jQuery.ajax({
-        type: 'GET',
-        url: url,
-        async: false,
-        contentType: "application/json",
-        data: {data: 'getGpsData'},
-        dataType: 'json',
-        success: function(json) {
-            value = json;
-        },
-        error: function(e) {
-            console.log("jQuery error message = "+e.message);
-        }
-    });
-    return value;
-
-}
-
-function getWindsensorData() {
-    var value = null;
-
-    //var url = '../include/live_mission.php';
-    var url = 'http://wst.local/AlandSailingRobots/pages/logs/live/include/live_mission.php';
-    jQuery.ajax({
-        type: 'GET',
-        url: url,
-        async: false,
-        contentType: "application/json",
-        data: {data: 'getWindsensorData'},
-        dataType: 'json',
-        success: function(json) {
-            value = json;
-        },
-        error: function(e) {
-            console.log("jQuery error message = "+e.message);
-        }
-    });
-    return value;
-
-}
-
-function getCourseData() {
-    var value = null;
-
-    //var url = '../include/live_mission.php';
-    var url = 'http://wst.local/AlandSailingRobots/pages/logs/live/include/live_mission.php';
-    jQuery.ajax({
-        type: 'GET',
-        url: url,
-        async: false,
-        contentType: "application/json",
-        data: {data: 'getCourseData'},
-        dataType: 'json',
-        success: function(json) {
-            value = json;
-        },
-        error: function(e) {
-            console.log("jQuery error message = "+e.message);
-        }
-    });
-    return value;
-}
-//TODO end
-
-
-
-//waypoints = [{"id":1503486574,"id_mission":41,"rankInMission":1,"isCheckpoint":0,"name":"","latitude":60.1079,"longitude":19.92235,"declination":6,"radius":30,"stay_time":0,"harvested":1},{"id":1503486622,"id_mission":41,"rankInMission":2,"isCheckpoint":0,"name":"","latitude":60.10584,"longitude":19.92246,"declination":6,"radius":30,"stay_time":0,"harvested":0},{"id":1503486665,"id_mission":41,"rankInMission":3,"isCheckpoint":0,"name":"","latitude":60.10549,"longitude":19.92049,"declination":6,"radius":30,"stay_time":0,"harvested":0},{"id":1503486698,"id_mission":41,"rankInMission":4,"isCheckpoint":0,"name":"","latitude":60.10793,"longitude":19.9216,"declination":6,"radius":30,"stay_time":60,"harvested":0}]
-
-
-
-/**
-var waypoints =[
-    {id: 1, latitude: 60.107900, longitude: 19.922350, radius:30, harvested:1},
-    {id: 2, latitude: 60.105840, longitude: 19.922460, radius:30, harvested:1},
-    {id: 3, latitude: 60.105490, longitude: 19.920490, radius:30, harvested:0},
-    {id: 4, latitude: 60.107930, longitude: 19.921600, radius:30, harvested:0},
-];
-**/
 
 //Initialise map and place first boat marker
 function initMap() {
@@ -318,21 +158,43 @@ function initMap() {
         console.log('zoom changed: ' + map.getZoom());
     });
 }
-//initMap();
 
-//update heading
-function updateHeadings() {
+//##### GETTERS ######
+function getData(logName) {
+    var value = null;
+    var url = absolutePath + 'include/live_mission.php';
 
+    jQuery.ajax({
+        type: 'GET',
+        url: url,
+        async: false,
+        contentType: "application/json",
+        data: {data: logName},
+        dataType: 'json',
+        success: function(json) {
+            value = json;
+        },
+        error: function(e) {
+            console.log("jQuery error message = "+e.message);
+        }
+    });
+    return value;
 }
 
+function getNewBoatPos(gpsData) {
+    let latitude = gpsData.latitude;
+    let longitude = gpsData.longitude;
+    boatPos = new google.maps.LatLng(latitude, longitude);
 
-//Refresh map without refreshing page
-setInterval( function() {
-    refreshInfo()
-}, 5000);
+    return boatPos;
+}
 
+function getAbsolutePath() {
+    var loc = window.location;
+    var pathName = loc.pathname.substring(0, loc.pathname.lastIndexOf('/') + 1);
+    return loc.href.substring(0, loc.href.length - ((loc.pathname + loc.search + loc.hash).length - pathName.length));
+}
 
-//getters
 function getBoatHeading() {
     return compassData.heading;
 }
@@ -341,20 +203,42 @@ function getWindHeading() {
     return windsensorData.direction;
 }
 
+//##### SETTERS ######
+
+//Refresh map without refreshing page
+setInterval( function() {
+    refreshInfo()
+}, 5000);
+
 
 //###### PLACEHOLDER FUNCTIONS #######
-//DEBUG
+
+//Hardcoded waypoints
+//waypoints = [{"id":1503486574,"id_mission":41,"rankInMission":1,"isCheckpoint":0,"name":"","latitude":60.1079,"longitude":19.92235,"declination":6,"radius":30,"stay_time":0,"harvested":1},{"id":1503486622,"id_mission":41,"rankInMission":2,"isCheckpoint":0,"name":"","latitude":60.10584,"longitude":19.92246,"declination":6,"radius":30,"stay_time":0,"harvested":0},{"id":1503486665,"id_mission":41,"rankInMission":3,"isCheckpoint":0,"name":"","latitude":60.10549,"longitude":19.92049,"declination":6,"radius":30,"stay_time":0,"harvested":0},{"id":1503486698,"id_mission":41,"rankInMission":4,"isCheckpoint":0,"name":"","latitude":60.10793,"longitude":19.9216,"declination":6,"radius":30,"stay_time":60,"harvested":0}]
+
+/**
+ var waypoints =[
+ {id: 1, latitude: 60.107900, longitude: 19.922350, radius:30, harvested:1},
+ {id: 2, latitude: 60.105840, longitude: 19.922460, radius:30, harvested:1},
+ {id: 3, latitude: 60.105490, longitude: 19.920490, radius:30, harvested:0},
+ {id: 4, latitude: 60.107930, longitude: 19.921600, radius:30, harvested:0},
+ ];
+ **/
+
+//DEBUG can be used to test without live data
 function getNewHeading(heading){
     heading = heading+((Math.round(Math.random()) * 2 - 1) * Math.floor(Math.random()*10)); //rand between 0 and 10 multiply by -1 or 1
     return heading;
 }
 
-//DEBUG
+//DEBUG can be used to test without live data
 function getNewPos(pos){
     return new google.maps.LatLng(pos.lat()+((Math.round(Math.random()) * 2 - 1)*0.00001), pos.lng()+((Math.round(Math.random()) * 2 - 1)*0.00001));
 
 }
+//#####################################
 
+//##### MAP FUNCTIONS ######
 function getBoatInfo(){
     var lat = boatPos.lat().toFixed(5);
     var lng = boatPos.lng().toFixed(5);
@@ -388,21 +272,23 @@ function getWindInfo(){
 
     return contentString
 }
-//#####################################
+
 
 function refreshInfo(){
+//###### FOR DEBUG ####################
+    //uncomment and comment out the corrensponding lines bellow
+
     //boatHeading = getNewHeading(boatHeading);
     //windHeading = getNewHeading(windHeading);
     //boatPos = getNewPos(boatPos);
-    gpsData = getGpsData();
+//#####################################
+
+    gpsData = getData("getGpsData");
     boatPos = getNewBoatPos(gpsData);
     boatHeading = getBoatHeading();
     windHeading = getWindHeading();
 
 
-
-    //updateHeadings();
-    //updateBoatPos();
     updateMarker(boatMarker, boatPos, boatHeading);
     updateMarker(windDirectionMarker, boatPos, windHeading);
     updateLineToWaypoint(lineToWaypoint, boatPos);
@@ -483,7 +369,6 @@ function placeWaypoint(waypoint){
     updateWaypoint(waypoint, marker, radius)
 }
 
-//TODO boatPos we shall not return
 function getNextWaypointPos(){
     for (var wp of waypoints){
         if (!wp.harvested){

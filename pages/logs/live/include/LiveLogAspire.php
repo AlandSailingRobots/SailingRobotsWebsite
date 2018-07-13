@@ -43,20 +43,6 @@ class LiveLogAspire
         ];
 
         $this->dsn = "mysql:host=$this->host;dbname=$this->db;charset=$this->charset";
-
-        $this->fetch_table
-            = '(SELECT * FROM ithaax_ASPire_config.dataLogs_system) AS mission_dataLogs'
-            .' JOIN ithaax_ASPire_config.dataLogs_marine_sensors'
-            .' ON mission_dataLogs.marine_sensors_id = dataLogs_marine_sensors.id'
-            .' JOIN ithaax_ASPire_config.dataLogs_gps'
-            .' ON mission_dataLogs.gps_id = dataLogs_gps.id'
-            .' JOIN ithaax_ASPire_config.currentMission'
-            .' ON mission_dataLogs.current_mission_id = currentMission.id'
-            .' JOIN ithaax_mission.mission'
-            .' ON ithaax_ASPire_config.currentMission.id_mission = mission.id';
-
-
-
     }
 
     /**
@@ -68,14 +54,8 @@ class LiveLogAspire
     }
 
     /**
-     * Resolution for output data
-     *
-     * @param $milliseconds
+     * @return array
      */
-    public function resolution($milliseconds) {
-
-    }
-
     public function getMissionWaypoints() {
         $pdo = self::getDataSource();
         $query = 'SELECT * FROM ithaax_ASPire_config.currentMission';
@@ -87,6 +67,7 @@ class LiveLogAspire
     }
 
     /**
+     * For now we use latest known position
      * @return array
      */
     public function getPosition() {
@@ -115,7 +96,7 @@ class LiveLogAspire
     }
 
     /**
-     * @return array
+     * @return array (single row)
      */
     public function getCompassData() {
         $pdo = self::getDataSource();
@@ -130,7 +111,7 @@ class LiveLogAspire
     }
 
     /**
-     * @return array
+     * @return array (single row)
      */
     public function getWindsensorData() {
         $pdo = self::getDataSource();
@@ -144,6 +125,9 @@ class LiveLogAspire
         return $sqlResult[0];
     }
 
+    /**
+     * @return array (single row)
+     */
     public function getCourseData() {
         $pdo = self::getDataSource();
         $query = 'SELECT * FROM ithaax_ASPire_config.dataLogs_course_calculation
@@ -157,38 +141,20 @@ class LiveLogAspire
     }
 
     /**
-    public function getNextWaypointPos() {
-
-        $nextWayPointPos;
-        for (var wp of waypoints){
-            if (!wp.harvested){
-                return new google.maps.LatLng(wp.lat, wp.lng)
-                    }
-        }
-                return $nextWayPointPos;
-            }
-    **/
-
-    public function getLatestData($table) {
-        $pdo = self::getDataSource();
-        $query = 'SELECT *
-				  FROM $table
-				  ORDER BY id
-				  DESC LIMIT 1';
-
-        $stmt = $pdo->prepare($query);
-        $stmt->bindParam(':outOfRange', $outOfRange, PDO::PARAM_INT);
-        $stmt->execute();
-        $sqlResult = $stmt->fetchAll();
-
-        return $sqlResult;
-    }
-
+     * Magic function
+     * @param $name
+     * @param $value
+     */
     public function __set($name, $value)
     {
         $this->$name = $value;
     }
 
+    /**
+     * Magic function
+     * @param $name
+     * @return mixed
+     */
     public function __get($name)
     {
         return $this->$name;
