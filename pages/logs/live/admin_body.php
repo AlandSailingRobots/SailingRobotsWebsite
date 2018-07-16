@@ -56,7 +56,7 @@
     <div class = "mapClass">
         <div id="map"></div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbBYAJitbjLYDoNJKQN4APRL5-_wDcUxQ&libraries=geometry"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbBYAJitbjLYDoNJKQN4APRL5-_wDcUxQ&libraries=geometry,drawing"></script>
         <script src="js/liveMap.js"></script>
     </div>
 

@@ -162,6 +162,17 @@ function initMap() {
 
     drawWaypointLine();
 
+    var drawing = new google.maps.drawing.DrawingManager({
+        drawingControlOptions:{
+            drawingModes:['polygon'],
+        },
+        map:map,
+    });
+
+    google.maps.event.addListener(drawing, 'polygoncomplete', function (e){   //e is the object returned by the event, the rectangle in this case
+        polygonManager(e);
+    });
+
     google.maps.event.addListener(map, 'zoom_changed', function(){
         rescaleMarkers();
         console.log('zoom changed: ' + map.getZoom());
@@ -520,6 +531,17 @@ function updateRoute(){
     //     route.shift();
     // }
     routePolyline.setPath(route);
+}
+
+function polygonManager(polygon){
+    // Click to get poly's area, rightclick to remove from map
+    polygon.addListener('click', function () {
+        let area = google.maps.geometry.spherical.computeArea(polygon.getPath());
+        console.log(area.toFixed() + ' m²');
+    })
+    polygon.addListener('rightclick', function () {
+        polygon.setMap(null);
+    })
 }
 
 //New function for InfoWindow prototype to check if it is open or not
