@@ -12,7 +12,7 @@ function pushConfigs($data)
         // Generate the array to be bind with the prepared SQL query
         $param_array = array();
         foreach ($table as $column_name => $value) {
-            // Patch b/c Marc changed its DB compared to the website
+            // Patch b/c Marc changed its DB compared to the website (but Kåre changed it back later, fix this mess)
             $column_name = $column_name == "is_checkpoint" ? "isCheckpoint" : $column_name;
 
             $param_array[$column_name] = $value;
