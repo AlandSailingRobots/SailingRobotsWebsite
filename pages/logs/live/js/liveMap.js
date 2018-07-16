@@ -165,7 +165,7 @@ function initMap() {
 
     var drawing = new google.maps.drawing.DrawingManager({
         drawingControlOptions:{
-            drawingModes:['polygon', 'marker', 'polyline'],
+            drawingModes:['polygon', 'marker', 'polyline', 'circle'],
         },
         polygonOptions:{
             geodesic: true,
@@ -179,6 +179,10 @@ function initMap() {
         },
         markerOptions:{
             draggable: true,
+        },
+        circleOptions:{
+            draggable: true,
+            editable: true,
         },
         map:map,
     });
@@ -194,6 +198,9 @@ function initMap() {
     });
     google.maps.event.addListener(drawing, 'polylinecomplete', function (e) {
        polylineManager(e);
+    });
+    google.maps.event.addListener(drawing, 'circlecomplete', function (e) {
+       circleManager(e);
     });
     google.maps.event.addListener(drawing, 'overlaycomplete', function () {
         drawing.setDrawingMode(null);
@@ -653,6 +660,33 @@ function polylineManager(polyline){
         polyline.setMap(null);
         drawingInfoWindow.close();
     });
+}
+
+function circleManager(circle){
+    drawingInfoWindow.open(map);
+    refreshDrawingInfoWindow();
+
+    google.maps.event.addListener(circle, 'click', function () {
+        drawingInfoWindow.open(map);
+        refreshDrawingInfoWindow();
+    });
+    google.maps.event.addListener(circle, 'radius_changed', function () {
+        refreshDrawingInfoWindow();
+    });
+    google.maps.event.addListener(circle, 'drag', function () {
+        refreshDrawingInfoWindow();
+    });
+
+    circle.addListener('rightclick', function () {
+        circle.setMap(null);
+        drawingInfoWindow.close();
+    });
+
+
+    function refreshDrawingInfoWindow(){
+        drawingInfoWindow.setPosition(circle.getCenter());
+        drawingInfoWindow.setContent('<h4> Radius: ' + circle.getRadius().toFixed() + ' m </h4>');
+    }
 }
 
 //New function for InfoWindow prototype to check if it is open or not
