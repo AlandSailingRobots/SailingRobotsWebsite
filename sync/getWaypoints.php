@@ -43,9 +43,7 @@ function getWaypoints()
     }
 
     $result = $req->fetchAll(PDO::FETCH_ASSOC);
-
     $array = array();
-    $array["waypoints"] = $result;
-    
+    $array["current_Mission"] = array_merge(array(array_keys($result[0])), array_values($result));
     return json_encode($array);
 }
