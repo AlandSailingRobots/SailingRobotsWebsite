@@ -6,6 +6,7 @@ let map, boatMarker, windDirectionMarker, courseToSteerMarker, lineToWaypoint, r
 let route = [];
 let boatInfoWindow = null;
 let windInfoWindow = null;
+let drawingInfoWindow = null;
 
 let absolutePath;
 let gpsData;
@@ -164,13 +165,22 @@ function initMap() {
 
     var drawing = new google.maps.drawing.DrawingManager({
         drawingControlOptions:{
-            drawingModes:['polygon'],
+            drawingModes:['polygon', 'marker'],
         },
         map:map,
     });
-
+    drawingInfoWindow = new google.maps.InfoWindow({
+        content:'',
+    });
+    
     google.maps.event.addListener(drawing, 'polygoncomplete', function (e){   //e is the object returned by the event, the rectangle in this case
         polygonManager(e);
+    });
+    google.maps.event.addListener(drawing, 'markercomplete', function (e) {
+       markerManager(e);
+    });
+    google.maps.event.addListener(drawing, 'overlaycomplete', function () {
+        drawing.setDrawingMode(null);
     });
 
     google.maps.event.addListener(map, 'zoom_changed', function(){
@@ -535,13 +545,66 @@ function updateRoute(){
 
 function polygonManager(polygon){
     // Click to get poly's area, rightclick to remove from map
-    polygon.addListener('click', function () {
-        let area = google.maps.geometry.spherical.computeArea(polygon.getPath());
-        console.log(area.toFixed() + ' m²');
-    })
+    drawingInfoWindow.open(map);
+    polygon.setEditable(true);
+
+    google.maps.event.addListener(polygon, 'click', function (click) {
+        drawingInfoWindow.open(map);
+        refreshDrawingInfoWindow(click.latLng);
+    });
+    // google.maps.event.addListener(polygon, 'dragstart', function (drag) {
+    //     latestClick = drag.latLng;
+    //     console.log(latestClick);
+    // });
+
     polygon.addListener('rightclick', function () {
         polygon.setMap(null);
-    })
+    });
+
+    function refreshDrawingInfoWindow(clickPos){
+        let area = google.maps.geometry.spherical.computeArea(polygon.getPath());
+
+        drawingInfoWindow.setPosition(clickPos);
+        drawingInfoWindow.setContent('<h4>' + 'Area: ' + area.toFixed() + ' m²' + '</h4>');
+    };
+}
+
+function markerManager(marker){
+    var distancePolyline = new google.maps.Polyline({
+        map:map,
+        path: [boatPos, marker.getPosition()],
+        strokeColor:'#000',
+        strokeOpacity: 0.2,
+    });
+    marker.setDraggable(true);
+
+    drawingInfoWindow.open(map, marker);
+    refreshDrawingInfoWindow();
+
+    google.maps.event.addListener(marker, 'click', function () {
+        drawingInfoWindow.open(map, marker);
+        refreshDrawingInfoWindow();
+    });
+    google.maps.event.addListener(marker, 'dragstart', function () {
+        drawingInfoWindow.open(map, marker);
+        refreshDrawingInfoWindow();
+    });
+    google.maps.event.addListener(marker, 'drag', function () {
+        distancePolyline.setPath([boatPos, marker.getPosition()]);
+        refreshDrawingInfoWindow();
+    });
+
+    marker.addListener('rightclick', function () {
+        distancePolyline.setMap(null);
+        drawingInfoWindow.close();
+        marker.setMap(null);
+    });
+
+    function refreshDrawingInfoWindow(){
+        let dist = google.maps.geometry.spherical.computeDistanceBetween(boatPos, marker.getPosition());
+
+        drawingInfoWindow.setContent('<h4>' + 'Distance: ' + dist.toFixed() + ' m' + '</h4>');
+    };
 }
 
 //New function for InfoWindow prototype to check if it is open or not
