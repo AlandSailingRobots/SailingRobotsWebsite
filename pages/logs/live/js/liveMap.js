@@ -165,19 +165,35 @@ function initMap() {
 
     var drawing = new google.maps.drawing.DrawingManager({
         drawingControlOptions:{
-            drawingModes:['polygon', 'marker'],
+            drawingModes:['polygon', 'marker', 'polyline'],
+        },
+        polygonOptions:{
+            geodesic: true,
+            editable: true,
+            draggable: true,
+        },
+        polylineOptions:{
+            geodesic: true,
+            editable: true,
+            draggable: true,
+        },
+        markerOptions:{
+            draggable: true,
         },
         map:map,
     });
     drawingInfoWindow = new google.maps.InfoWindow({
         content:'',
     });
-    
+
     google.maps.event.addListener(drawing, 'polygoncomplete', function (e){   //e is the object returned by the event, the rectangle in this case
         polygonManager(e);
     });
     google.maps.event.addListener(drawing, 'markercomplete', function (e) {
        markerManager(e);
+    });
+    google.maps.event.addListener(drawing, 'polylinecomplete', function (e) {
+       polylineManager(e);
     });
     google.maps.event.addListener(drawing, 'overlaycomplete', function () {
         drawing.setDrawingMode(null);
@@ -546,19 +562,19 @@ function updateRoute(){
 function polygonManager(polygon){
     // Click to get poly's area, rightclick to remove from map
     drawingInfoWindow.open(map);
-    polygon.setEditable(true);
 
     google.maps.event.addListener(polygon, 'click', function (click) {
         drawingInfoWindow.open(map);
         refreshDrawingInfoWindow(click.latLng);
     });
-    // google.maps.event.addListener(polygon, 'dragstart', function (drag) {
-    //     latestClick = drag.latLng;
-    //     console.log(latestClick);
-    // });
+
+    google.maps.event.addListener(polygon, 'drag', function (drag) {
+        refreshDrawingInfoWindow(drag.latLng);
+    });
 
     polygon.addListener('rightclick', function () {
         polygon.setMap(null);
+        drawingInfoWindow.close();
     });
 
     function refreshDrawingInfoWindow(clickPos){
@@ -576,7 +592,6 @@ function markerManager(marker){
         strokeColor:'#000',
         strokeOpacity: 0.2,
     });
-    marker.setDraggable(true);
 
     drawingInfoWindow.open(map, marker);
     refreshDrawingInfoWindow();
@@ -605,6 +620,36 @@ function markerManager(marker){
 
         drawingInfoWindow.setContent('<h4>' + 'Distance: ' + dist.toFixed() + ' m' + '</h4>');
     };
+}
+
+function polylineManager(polyline){
+    drawingInfoWindow.open(map);
+    refreshDrawingInfoWindow();
+    var polylinePath = polyline.getPath();
+
+    google.maps.event.addListener(polyline, 'click', function () {
+        drawingInfoWindow.open(map);
+        refreshDrawingInfoWindow();
+    });
+    google.maps.event.addListener(polylinePath, 'set_at', function () {
+        refreshDrawingInfoWindow();
+    });
+    google.maps.event.addListener(polylinePath, 'insert_at', function () {
+        refreshDrawingInfoWindow();
+    });
+
+    function refreshDrawingInfoWindow(){
+        let length = google.maps.geometry.spherical.computeLength(polyline.getPath());
+        polylinePath = polyline.getPath();
+
+        drawingInfoWindow.setPosition(polylinePath.getAt(polylinePath.getLength()-1));
+        drawingInfoWindow.setContent('<h4> Length: ' + length.toFixed() + ' m </h4>');
+    };
+
+    polyline.addListener('rightclick', function () {
+        polyline.setMap(null);
+        drawingInfoWindow.close();
+    });
 }
 
 //New function for InfoWindow prototype to check if it is open or not
