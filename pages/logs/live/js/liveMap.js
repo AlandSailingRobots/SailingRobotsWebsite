@@ -561,15 +561,18 @@ function updateRoute(){
 
 function polygonManager(polygon){
     // Click to get poly's area, rightclick to remove from map
+    refreshDrawingInfoWindow();
     drawingInfoWindow.open(map);
 
-    google.maps.event.addListener(polygon, 'click', function (click) {
+    google.maps.event.addListener(polygon, 'click', function () {
         drawingInfoWindow.open(map);
-        refreshDrawingInfoWindow(click.latLng);
+        refreshDrawingInfoWindow();
     });
-
-    google.maps.event.addListener(polygon, 'drag', function (drag) {
-        refreshDrawingInfoWindow(drag.latLng);
+    google.maps.event.addListener(polygon.getPath(), 'set_at', function () {
+        refreshDrawingInfoWindow();
+    });
+    google.maps.event.addListener(polygon.getPath(), 'insert_at', function () {
+        refreshDrawingInfoWindow();
     });
 
     polygon.addListener('rightclick', function () {
@@ -577,10 +580,10 @@ function polygonManager(polygon){
         drawingInfoWindow.close();
     });
 
-    function refreshDrawingInfoWindow(clickPos){
+    function refreshDrawingInfoWindow(){
         let area = google.maps.geometry.spherical.computeArea(polygon.getPath());
 
-        drawingInfoWindow.setPosition(clickPos);
+        drawingInfoWindow.setPosition(polygon.my_getBounds().getCenter());
         drawingInfoWindow.setContent('<h4>' + 'Area: ' + area.toFixed() + ' m²' + '</h4>');
     };
 }
@@ -657,3 +660,9 @@ google.maps.InfoWindow.prototype.isOpen = function(){
     var map = this.getMap();
     return (map !== null && typeof map !== "undefined");
 };
+
+google.maps.Polygon.prototype.my_getBounds=function(){
+    var bounds = new google.maps.LatLngBounds()
+    this.getPath().forEach(function(element,index){bounds.extend(element)})
+    return bounds
+}
