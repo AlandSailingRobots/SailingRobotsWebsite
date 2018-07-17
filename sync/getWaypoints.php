@@ -45,14 +45,14 @@ function getWaypoints()
     $result = $req->fetchAll(PDO::FETCH_ASSOC);
 
     $array = array();
-    $array["current_Mission"][] = array_keys($result[0]);
+    $array["currentMission"][] = array_keys($result[0]);
     foreach ($result as $r) {
         $row = array();
         $j = 0;
         foreach (array_keys($result[0]) as $key) {
             $row[$j++] = $r[$key];
         }
-        $array["current_Mission"][] = $row;
+        $array["currentMission"][] = $row;
     }
     return json_encode($array);
 }

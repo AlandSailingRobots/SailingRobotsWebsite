@@ -36,7 +36,7 @@ function populateDatabase($db, $table_name, $entries)
 
     error_log("Table:".$table_name." \"".var_dump($entries)."\"");
 
-    // TODO: This shuould be a ROLLBACKable TRANSACTION
+    // TODO: This should be a ROLLBACKable TRANSACTION
     foreach ($entries as $column_name => $row) {
         foreach ($row as $values) {
             $param_array[$column_name] = $values;
@@ -69,6 +69,40 @@ function populateDatabase($db, $table_name, $entries)
     }
 }
 
+function insertTables($tables) {
+    $db = $GLOBALS['db_connection'];
+    $idmap = array();
+
+    foreach ($tables as $tableName => $rows) {
+        // PDO binding
+        $sql = "INSERT INTO $tableName(".implode(',', $rows[0]).") VALUES(:".implode(',:', $rows[0]).")";
+        $query = $db->prepare($sql);
+
+        foreach (array_splice($rows,1) as $row) {
+            for ($i = 0; $i < count($rows[0]); $i++) {
+                if (!$query->bindValue($tables[$tableName][0][$i], $row[$i])) {
+                    error_log("insertTables(): Unable to bind $tableName parameter $i\"$rows[0][$i]\"=\"$row[$i]\"".PHP_EOL);
+                }
+            }
+
+            try {
+                if ($query->execute()) {
+                    $idmap[$tableName."_id"] = $row[array_search('id', $tables[$tableName][0])];
+                }
+            } catch (PDOException $e) {
+                header(
+                    $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+                    true,
+                    500
+                );
+                error_log("500: insertTables():".$e->getMessage()." on \"$sql\"".PHP_EOL);
+                die($e->getMessage());
+            }
+        }
+    }
+    return $idmap;
+}
+
 /**
  * Receives data from boat
  *
@@ -77,8 +111,8 @@ function populateDatabase($db, $table_name, $entries)
  *
  * @return void
  */
-function pushAllLogs($boat, $data)
-{
+function pushAllLogs($boat, $json) {
+    // Get the DB
     $db = $GLOBALS['db_connection'];
     if (!isset($db)) {
         header(
@@ -86,15 +120,19 @@ function pushAllLogs($boat, $data)
             true,
             503
         );
+        error_log("503: pushAllLogs() No db handle!".PHP_EOL);
         die('Error: No db handle!');
     }
-    $data = json_decode($data, true);
+
+    // Decode JSON
+    $data = json_decode($json, true);
     if (empty($data)) {
         header(
             $_SERVER['SERVER_PROTOCOL'].' 400 Bad Request',
             true,
             400
         );
+        error_log("400: pushAllLogs() No data in JSON!".PHP_EOL);
         die('Error: no recognizable data');
     }
 
@@ -105,115 +143,48 @@ function pushAllLogs($boat, $data)
         unset($data['system']);
     }
 
-    // Process each table but store the SQLite DB id offset to ours for each table
-    $idmap = array();
-    foreach ($data as $table => $rows) {
-        $tableName = "dataLogs_$table";
-        $columnNames = array_shift($rows);
+    // Calculate row id offsets between SQLite DB on the boat and MySQL DB on the web server
+    $tables = array();
+    foreach ($data as $tablePartName => $rows) {
+        $tableName = "dataLogs_$tablePartName";
+
 
         // The SQLite and MySQL dbs have different ID series
         $mysql_id = selectFromAsInt($db, "MAX(id)", $tableName);
-        $sqlite_id = $rows[0][0];
+        $idColumn = array_search("id", $rows[0]);
+        $sqlite_id = $rows[1][$idColumn];
         $idOffset = $mysql_id - $sqlite_id + 1;
 
-        // We should probably get column types as well?
-
-        // For PDO binding
-        $columnBindings = $columnNames;
-        array_walk(
-            $columnBindings,
-            function (&$value) {
-                $value = ':'.$value;
-            }
-        );
-
-        $sql = "INSERT INTO $tableName(".implode(',', $columnNames).") VALUES(".implode(',', $columnBindings).");";
-        $query = $db->prepare($sql);
-
+        $i = 0;
         foreach ($rows as $row) {
-            $row[0] += $idOffset;
-
-            for ($i=0; $i<count($columnNames); $i++) {
-                if (!$query->bindValue($columnNames[$i], $row[$i])) {
-                    error_log("pushAllLogs(): Unable to bind $tableName parameter $i\"$columnNames[$i]\"=\"$row[$i]\"".PHP_EOL);
-                }
+            if ($i++ > 0) {
+                $row[$idColumn] += $idOffset;
             }
-            try {
-                if ($query->execute()) {
-                    $idmap[$table."_id"] = $row[0];
-                }
-            } catch (PDOException $e) {
-                header(
-                    $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
-                    true,
-                    500
-                );
-                error_log("500: ".$e->getMessage()." on \"$sql\"".PHP_EOL);
-                die($e->getMessage());
-            }
+            $tables[$tableName][] = $row;
         }
-        // $offsets[$table."_id"] = ; // the id of the first row sent
+
     }
 
-    // This value is not like the others
+    $idmap = insertTables($tables);
+
+    // This value is not like the others. We actually just grab the mission id from the first log entry
     $idmap["current_mission_id"] = $dataLogs_system[1][array_search("current_mission_id", $dataLogs_system[0])];
 
-    // Let's do the master table
-    $idmapBindings = array_keys($idmap);
-    array_walk(
-        $idmapBindings,
-        function (&$value) {
-            $value = ':'.$value;
-        }
-    );
-    $sql = "INSERT INTO dataLogs_system(".implode(',', array_keys($idmap)).") VALUES(".implode(',', $idmapBindings).");";
-    $query = $db->prepare($sql);
-    foreach ($idmap as $key => $value) {
-        if (!$query->bindValue(":".$key, $value, PDO::PARAM_INT)) {
-            error_log("pushAllLogs(): Unable to bind dataLogs_system parameter $i\"$columnNames[$i]\"=\"$row[$i]\"".PHP_EOL);
-        }
-    }
-    try {
-        $query->execute();
-    } catch (PDOException $e) {
-        header(
-            $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
-            true,
-            500
-        );
-        error_log("500: ".$e->getMessage()." on \"$sql\"".PHP_EOL);
-        die($e->getMessage());
+    // Prepare another table insert of the indices
+    $indexTables = array();
+    $indexTables['dataLogs_system'][0] = array_keys($idmap);
+    foreach ($indexTables['dataLogs_system'][0] as $key => $columnName) {
+        unset($indexTables['dataLogs_system'][0][$key]);
+        $columnName = str_replace("dataLogs_", "", $columnName);
+        $indexTables['dataLogs_system'][0][$key] = $columnName;
     }
 
-    return;
-
-/*    foreach ($data as $table_name => $table) {
-        // Generate the array to be bind with the prepared SQL query
-        foreach ($table as $id_log => $log) {
-            if (!empty($log)) {
-                populateDatabase($db, $table_name, $log);
-
-                $tableNamePrefix = "dataLogs_";
-
-                // We have to insert the latest correct ID's into the
-                // dataLogs_system, so save the id's of new entries and
-                // insert dataLogs_system at the end
-                if (strpos($table_name, $tableNamePrefix) !== false) {
-                    $trueTableNameStart = substr(
-                        $table_name,
-                        strlen($tableNamePrefix)
-                    );
-
-                    $idMap[$trueTableNameStart] = $db->lastInsertId();
-                }
-            }
-        }
+    // Ensure the id numbers are in the same order as the keys above
+    $indexData = array();
+    foreach (array_keys($idmap) as $columnName) {
+        $indexData[] = $idmap[$columnName];
     }
+    $indexTables['dataLogs_system'][] = $indexData;
 
-    foreach ($idMap as $column_name => $value) {
-        $dataLogs_system[$column_name."_id"] = $value;
-    }
-    if (!empty($dataLogs_system)) {
-        populateDatabase($db, "dataLogs_system", $dataLogs_system);
-    }*/
+    insertTables($indexTables);
 }
