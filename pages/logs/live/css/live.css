@@ -6,7 +6,6 @@
 
 #legend {
     font-family: Arial, sans-serif;
-    font-weight: bold;
     background: #000;
     padding: 3px;
     margin: 3px;
@@ -14,6 +13,7 @@
 
 .legendFont {
     font-size: 8pt;
+    font-weight: bold;
 }
 
 .liveData {
