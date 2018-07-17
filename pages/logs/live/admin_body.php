@@ -4,6 +4,15 @@
     #map {
         height: 550PX;
     }
+
+    #legend {
+        font-family: Arial, sans-serif;
+        font-weight: bold;
+        background: #000;
+        padding: 3px;
+        margin: 3px;
+        border: 1px solid #000;
+    }
 </style>
 
 
@@ -55,6 +64,7 @@
     </div>
     <div class = "mapClass">
         <div id="map"></div>
+        <div id="legend"></div>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbBYAJitbjLYDoNJKQN4APRL5-_wDcUxQ&libraries=geometry,drawing"></script>
         <script src="js/liveMap.js"></script>

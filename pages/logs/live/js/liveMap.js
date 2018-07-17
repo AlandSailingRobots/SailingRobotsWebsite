@@ -2,7 +2,7 @@
 const VALUE_NOT_SET = 1;
 
 //##### GLOBALS ######
-let map, boatMarker, windDirectionMarker, courseToSteerMarker, lineToWaypoint, routePolyline;
+let map, legend, boatMarker, windDirectionMarker, courseToSteerMarker, lineToWaypoint, routePolyline;
 let route = [];
 let boatInfoWindow = null;
 let windInfoWindow = null;
@@ -96,7 +96,10 @@ function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: new google.maps.LatLng(getMeanLat(waypoints), getMeanLng(waypoints)),
         zoom: calculateZoom(waypoints),
+        streetViewControl: false,
     });
+
+    createLegend();
 
     boatMarker = new google.maps.Marker({
         position: boatPos,
@@ -689,6 +692,19 @@ function circleManager(circle){
         drawingInfoWindow.setPosition(circle.getCenter());
         drawingInfoWindow.setContent('<h4> Radius: ' + circle.getRadius().toFixed() + ' m </h4>');
     }
+}
+
+function createLegend(){
+    legend = document.getElementById('legend');
+    map.controls[google.maps.ControlPosition.LEFT_TOP].push(legend);
+
+    var div = document.createElement('div');
+    div.innerHTML = '<h5><p style="color:#F89406;font-weight:bold">ASPire</p></h5>'
+                    + '<h5><p style="color:#1F3A93;font-weight:bold">Wind</p></h5>'
+                    + '<h5><p style="color:#015965;font-weight:bold">Course to steer</p></h5>'
+                    + '<h5><p style="color:#FFFF00;font-weight:bold">Next waypoint</p></h5>'
+                    + '<h5><p style="color:#446CB3;font-weight:bold">Route</p></h5>';
+    legend.appendChild(div);
 }
 
 //New function for InfoWindow prototype to check if it is open or not
