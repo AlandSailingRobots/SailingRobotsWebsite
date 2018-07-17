@@ -32,8 +32,8 @@
 
         <div class="col-sm-6">
             <h2>Wind Sensor Data</h2>
-            <div id="windsensorDataKey" class="liveData col-sm-3"></div>
-            <div id="windsensorDataValue" class="liveData col-sm-3"></div>
+            <div id="windSensorDataKey" class="liveData col-sm-3"></div>
+            <div id="windSensorDataValue" class="liveData col-sm-3"></div>
         </div>
     </div>
 
@@ -63,5 +63,6 @@
 
     <div class = "mapClass">
         <div id="map"></div>
+        <div id="legend"></div>
     </div>
 </div>

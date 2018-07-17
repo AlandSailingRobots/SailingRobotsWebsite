@@ -37,7 +37,7 @@ Class jsonResponse {
                 $course = $live->getData("dataLogs_course_calculation");
                 echo json_encode($course);
                 break;
-            case 'getWindsensorData':
+            case 'getWindSensorData':
                 $wind = $live->getData("dataLogs_windsensor");
                 echo json_encode($wind);
                 break;

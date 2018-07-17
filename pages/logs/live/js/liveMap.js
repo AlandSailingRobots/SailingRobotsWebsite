@@ -10,7 +10,7 @@ let drawingInfoWindow = null;
 
 let absolutePath;
 let gpsData;
-let windsensorData;
+let windSensorData;
 let courseData;
 let compassData;
 let currentSensorData;
@@ -167,7 +167,7 @@ $( document ).ready(function() {
     waypoints           = getData("getMissionWaypoints");
     gpsData             = getData("getGpsData");
     courseData          = getData("getCourseData");
-    windsensorData      = getData("getWindsensorData");
+    windSensorData      = getData("getWindSensorData");
     compassData         = getData("getCompassData");
     currentSensorData   = getData("getCurrentSensorData");
     marineSensorData    = getData("getMarineSensorData");
@@ -194,6 +194,9 @@ function debug() {
 
     console.log("dataLogs_compass:");
     console.log(compassData);
+
+    console.log("dataLogs_windsensor:");
+    console.log(windSensorData);
 
     console.log("dataLogs_course_calculation");
     console.log(courseData);
@@ -226,7 +229,7 @@ function printLiveData(data, idKey, idValue) {
 function updateLiveData() {
     printLiveData(gpsData, "gpsDataKey", "gpsDataValue");
     printLiveData(compassData, "compassDataKey", "compassDataValue");
-    printLiveData(windsensorData, "windsensorDataKey", "windsensorDataValue");
+    printLiveData(windSensorData, "windSensorDataKey", "windSensorDataValue");
     printLiveData(courseData, "courseDataKey", "courseDataValue");
     printLiveData(currentSensorData, "currentSensorDataKey", "currentSensorDataValue");
     printLiveData(marineSensorData, "marineSensorDataKey", "marineSensorDataValue");
@@ -402,7 +405,7 @@ function getBoatHeading() {
 }
 
 function getWindHeading() {
-    return windsensorData.direction;
+    return windSensorData.direction;
 }
 
 function getSteerHeading(){
@@ -475,7 +478,7 @@ function getWindInfo(){
     //var head = windHeading.toString();
     //var speed = (Math.random()*10).toFixed(3);
     var head = windHeading.toString();
-    var speed = windsensorData.speed.toFixed(3).toString();
+    var speed = windSensorData.speed.toFixed(3).toString();
     var contentString = "<div class = 'title'>" +
         "<h3>" + "Wind" + "</h3>" +
         "<div class = 'info'>" +
