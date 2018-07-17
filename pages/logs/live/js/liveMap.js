@@ -22,7 +22,7 @@ let boatPos     = VALUE_NOT_SET;
 let boatHeading = VALUE_NOT_SET;
 let windHeading = VALUE_NOT_SET;
 let courseToSteerHeading = VALUE_NOT_SET;
-let waypoints;
+let waypoints = null;
 let waypointsArray = [];
 
 var crispStyle = [
@@ -241,14 +241,15 @@ function updateLiveData() {
 //Initialise map and place markers
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
-        center: new google.maps.LatLng(getMeanLat(waypoints), getMeanLng(waypoints)),
+        // center: new google.maps.LatLng(getMeanLat(waypoints), getMeanLng(waypoints)),
+        center: new google.maps.LatLng(60.107227, 19.924288), //HARDCODED FOR SAIL TEST
         zoom: calculateZoom(waypoints),
         streetViewControl: false,
         mapTypeControlOptions: {
             mapTypeIds: ['crispStyle', google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.TERRAIN, google.maps.MapTypeId.SATELLITE]
         },
     });
-    map.mapTypes.set('crispStyle', new google.maps.StyledMapType(crispStyle, { name: 'Night Mode' }));
+    map.mapTypes.set('crispStyle', new google.maps.StyledMapType(crispStyle, {name: 'Night Mode'}));
     google.maps.event.addListener(map, 'maptypeid_changed', function () {
         switchModes();
     })
@@ -260,9 +261,9 @@ function initMap() {
     });
 
     boatInfoWindow = new google.maps.InfoWindow({
-        content:''
+        content: ''
     });
-    google.maps.event.addListener(boatMarker, 'click', function() {
+    google.maps.event.addListener(boatMarker, 'click', function () {
         showInfoWindow(boatMarker, boatInfoWindow, getBoatInfo());
         boatInfoWindow.open(map, boatMarker);
     });
@@ -273,9 +274,9 @@ function initMap() {
     });
 
     windInfoWindow = new google.maps.InfoWindow({
-        content:''
+        content: ''
     });
-    google.maps.event.addListener(windDirectionMarker, 'click', function() {
+    google.maps.event.addListener(windDirectionMarker, 'click', function () {
         showInfoWindow(windDirectionMarker, windInfoWindow, getWindInfo());
         windInfoWindow.open(map, windDirectionMarker);
     });
@@ -312,7 +313,7 @@ function initMap() {
         map: map
     });
 
-    for (var i=0; i<waypoints.length; i++){
+    for (var i = 0; i < waypoints.length; i++) {
         placeWaypoint(waypoints[i]);
     }
 
@@ -321,49 +322,49 @@ function initMap() {
     createLegend();
 
     var drawing = new google.maps.drawing.DrawingManager({
-        drawingControlOptions:{
-            drawingModes:['polygon', 'marker', 'polyline', 'circle'],
+        drawingControlOptions: {
+            drawingModes: ['polygon', 'marker', 'polyline', 'circle'],
         },
-        polygonOptions:{
+        polygonOptions: {
             geodesic: true,
             editable: true,
             draggable: true,
         },
-        polylineOptions:{
+        polylineOptions: {
             geodesic: true,
             editable: true,
             draggable: true,
         },
-        markerOptions:{
+        markerOptions: {
             draggable: true,
         },
-        circleOptions:{
+        circleOptions: {
             draggable: true,
             editable: true,
         },
-        map:map,
+        map: map,
     });
     drawingInfoWindow = new google.maps.InfoWindow({
-        content:'',
+        content: '',
     });
 
-    google.maps.event.addListener(drawing, 'polygoncomplete', function (e){   //e is the object returned by the event, the rectangle in this case
+    google.maps.event.addListener(drawing, 'polygoncomplete', function (e) {   //e is the object returned by the event, the rectangle in this case
         polygonManager(e);
     });
     google.maps.event.addListener(drawing, 'markercomplete', function (e) {
-       markerManager(e);
+        markerManager(e);
     });
     google.maps.event.addListener(drawing, 'polylinecomplete', function (e) {
-       polylineManager(e);
+        polylineManager(e);
     });
     google.maps.event.addListener(drawing, 'circlecomplete', function (e) {
-       circleManager(e);
+        circleManager(e);
     });
     google.maps.event.addListener(drawing, 'overlaycomplete', function () {
         drawing.setDrawingMode(null);
     });
 
-    google.maps.event.addListener(map, 'zoom_changed', function(){
+    google.maps.event.addListener(map, 'zoom_changed', function () {
         rescaleMarkers();
         console.log('zoom changed: ' + map.getZoom());
     });
@@ -421,9 +422,7 @@ function getSteerHeading(){
 
 //Refresh map without refreshing page
 setInterval( function() {
-    if (gpsData) {
-        refreshInfo();
-    }
+    refreshInfo();
 }, 5000);
 
 
