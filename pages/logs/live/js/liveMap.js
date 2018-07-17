@@ -7,6 +7,7 @@ let route = [];
 let boatInfoWindow = null;
 let windInfoWindow = null;
 let drawingInfoWindow = null;
+let legendDiv = null;
 
 let absolutePath;
 let gpsData;
@@ -140,7 +141,7 @@ var boatIcon = {
 
 var windDirectionIcon = {
     path: 'M0,6 L-0.5,8 L0.5,8 L0,6 L0,14',
-    strokeColor: '#26A65B',
+    strokeColor: '#1F3A93',
     fillOpacity: 1,
     rotation: windHeading,
     scale:2,
@@ -149,7 +150,7 @@ var windDirectionIcon = {
 
 var courseToSteerIcon = {
     path: 'M0,0 L0,-8 L-0.5,-6 L0.5,-6 L0,-8',
-    strokeColor: '#95A5A6',
+    strokeColor: '#26A65B',
     fillOpacity: 1,
     rotation: courseToSteerHeading,
     scale:2,
@@ -247,14 +248,16 @@ function initMap() {
         },
     });
     map.mapTypes.set('crispStyle', new google.maps.StyledMapType(crispStyle, { name: 'Night Mode' }));
-
-    createLegend();
+    google.maps.event.addListener(map, 'maptypeid_changed', function () {
+        switchModes();
+    })
 
     boatMarker = new google.maps.Marker({
         position: boatPos,
         icon: boatIcon,
         map: map
     });
+
     boatInfoWindow = new google.maps.InfoWindow({
         content:''
     });
@@ -262,12 +265,12 @@ function initMap() {
         showInfoWindow(boatMarker, boatInfoWindow, getBoatInfo());
         boatInfoWindow.open(map, boatMarker);
     });
-
     windDirectionMarker = new google.maps.Marker({
         position: boatPos,
         icon: windDirectionIcon,
         map: map
     });
+
     windInfoWindow = new google.maps.InfoWindow({
         content:''
     });
@@ -275,7 +278,6 @@ function initMap() {
         showInfoWindow(windDirectionMarker, windInfoWindow, getWindInfo());
         windInfoWindow.open(map, windDirectionMarker);
     });
-
     courseToSteerMarker = new google.maps.Marker({
         position: boatPos,
         icon: courseToSteerIcon,
@@ -310,10 +312,13 @@ function initMap() {
     });
 
     for (var i=0; i<waypoints.length; i++){
+
         placeWaypoint(waypoints[i]);
     }
 
     drawWaypointLine();
+
+    createLegend();
 
     var drawing = new google.maps.drawing.DrawingManager({
         drawingControlOptions:{
@@ -508,11 +513,11 @@ function refreshInfo(){
     courseToSteerHeading = getSteerHeading();
 
 
-    updateMarker(boatMarker, boatPos, boatHeading);
-    updateMarker(windDirectionMarker, boatPos, windHeading);
-    updateMarker(courseToSteerMarker, boatPos, courseToSteerHeading)
+    updateMarker(boatMarker, boatHeading);
+    updateMarker(windDirectionMarker, windHeading);
+    updateMarker(courseToSteerMarker, courseToSteerHeading)
     refreshWaypoints();
-    updateLineToWaypoint(lineToWaypoint, boatPos);
+    updateLineToWaypoint();
 
     showInfoWindow(boatMarker, boatInfoWindow, getBoatInfo());
     showInfoWindow(windDirectionMarker, windInfoWindow, getWindInfo());
@@ -631,14 +636,14 @@ function refreshWaypoints(){
     }
 }
 
-function updateMarker(marker, pos, heading){
-    marker.setPosition(pos);
+function updateMarker(marker, heading){
+    marker.setPosition(boatPos);
     marker.icon.rotation = heading;
     marker.setIcon(marker.icon);
 }
 
-function updateLineToWaypoint(line, pos){
-    line.setPath([pos, getNextWaypointPos()])
+function updateLineToWaypoint(){
+    lineToWaypoint.setPath([boatPos, getNextWaypointPos()])
 }
 
 function updateWaypoint(waypoint, marker, radius){
@@ -848,13 +853,48 @@ function createLegend(){
     legend = document.getElementById('legend');
     map.controls[google.maps.ControlPosition.LEFT_TOP].push(legend);
 
-    var div = document.createElement('div');
-    div.innerHTML = '<h5><p style="color:#F89406;font-weight:bold">ASPire</p></h5>'
-                    + '<h5><p style="color:#26A65B;font-weight:bold">Wind</p></h5>'
-                    + '<h5><p style="color:#95A5A6;font-weight:bold">Course to steer</p></h5>'
-                    + '<h5><p style="color:#D2527F;font-weight:bold">Next waypoint</p></h5>'
-                    + '<h5><p style="color:#446CB3;font-weight:bold">Route</p></h5>';
-    legend.appendChild(div);
+    legendDiv = document.createElement('div');
+    updateLegend('#fff');
+    legend.appendChild(legendDiv);
+}
+
+function updateLegend(background) {
+    legendDiv.innerHTML = '<h5><p class="legendFont" style="color:' + boatIcon.strokeColor + ';font-weight:bold">ASPire</p></h5>'
+                    + '<h5><p class="legendFont" style="color:' + windDirectionMarker.icon.strokeColor + ';font-weight:bold">Wind</p></h5>'
+                    + '<h5><p class="legendFont" style="color:' + courseToSteerMarker.icon.strokeColor + ';font-weight:bold">Course to steer</p></h5>'
+                    + '<h5><p class="legendFont" style="color:' + lineToWaypoint.strokeColor + ';font-weight:bold">Next waypoint</p></h5>'
+                    + '<h5><p class="legendFont" style="color:' + routePolyline.strokeColor + ';font-weight:bold">Route</p></h5>';
+
+    legend.style.background = background;
+}
+
+function switchModes(){
+    let mapID = map.getMapTypeId();
+
+    if (mapID === 'crispStyle'){
+        windDirectionMarker.icon.strokeColor = '#19B5FE';
+        courseToSteerMarker.icon.strokeColor = '#87D37C';
+        lineToWaypoint.setOptions({
+            strokeColor: '#fff000',
+        });
+        routePolyline.setOptions({
+            strokeColor: '#EEEEEE',
+        });
+        updateLegend('#000')
+    } else {
+        windDirectionMarker.icon.strokeColor = '#1F3A93';
+        courseToSteerMarker.icon.strokeColor = '#26A65B';
+        lineToWaypoint.setOptions({
+            strokeColor: '#D2527F',
+        })
+        routePolyline.setOptions({
+            strokeColor: '#446CB3',
+        });
+        updateLegend('#fff');
+    }
+
+    updateMarker(windDirectionMarker, windHeading);
+    updateMarker(courseToSteerMarker, courseToSteerHeading);
 }
 
 //New function for InfoWindow prototype to check if it is open or not
