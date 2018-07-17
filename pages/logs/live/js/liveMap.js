@@ -509,6 +509,7 @@ function refreshInfo(){
     gpsData = getData("getGpsData");
     waypoints = getData("getMissionWaypoints");
     boatPos = getNewBoatPos(gpsData);
+    // console.log('LAT: ' + boatPos.lat() + ' | LNG: ' + boatPos.lng() + ' | ID: ' + gpsData.id);
     boatHeading = getBoatHeading();
     windHeading = getWindHeading();
     courseToSteerHeading = getSteerHeading();
@@ -516,7 +517,7 @@ function refreshInfo(){
 
     updateMarker(boatMarker, boatHeading);
     updateMarker(windDirectionMarker, windHeading);
-    updateMarker(courseToSteerMarker, courseToSteerHeading)
+    updateMarker(courseToSteerMarker, courseToSteerHeading);
     refreshWaypoints();
     updateLineToWaypoint();
 
@@ -619,7 +620,7 @@ function drawWaypointLine(){
 
 function getNextWaypointPos(){
     for (var wp of waypoints){
-        if (!wp.harvested){
+        if (!parseInt(wp.harvested)){
             return new google.maps.LatLng(wp.latitude, wp.longitude)
         }
     }
@@ -649,14 +650,14 @@ function updateLineToWaypoint(){
 
 function updateWaypoint(waypoint, marker, radius){
     //Set green or red depending on harvested status
-    if(waypoint.harvested){
+    if(parseInt(waypoint.harvested)){
         marker.icon.url='https://maps.google.com/mapfiles/ms/micons/green.png';
         marker.setIcon(marker.icon);
         radius.setOptions({
             fillColor: '#32CD32',
             strokeColor: '#32CD32'
         });
-    } else{
+    } else {
         marker.icon.url='https://maps.google.com/mapfiles/ms/micons/red.png';
         marker.setIcon(marker.icon);
         radius.setOptions({
