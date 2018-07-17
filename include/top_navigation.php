@@ -11,13 +11,13 @@
                 echo '<li class="">';
             ?>
                 
-                <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                  <img src=<?php echo $relative_path . $_SESSION['face_pic'] ?> alt=""><?php echo $_SESSION['username'] ?>
+                <a href="javascript:" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                  <img src="<?php echo $relative_path . $_SESSION['face_pic'] ?>" alt=""><?php echo $_SESSION['username'] ?>
                   
                   <span class=" fa fa-angle-down"></span>
                 </a>
                 <ul class="dropdown-menu dropdown-usermenu pull-right">
-                  <li><a href=<?php echo $relative_path . 'pages/profile/index.php' ?>> Profile</a></li>
+                  <li><a href="<?php echo $relative_path . 'pages/profile/index.php' ?>"> Profile</a></li>
 <!--                   <li>
                     <a href="javascript:;">
                       <span class="badge bg-red pull-right">50%</span>
@@ -27,9 +27,9 @@
                   <!-- <li><a href="javascript:;">Help</a></li> -->
                   <li><a href= <?php echo $relative_path . 'pages/users/logout.php' ?> ><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
                 </ul>
-                </li>
+
                 <li role="presentation" class="dropdown">
-                  <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                  <a href="javascript:" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
                     <!-- <i class="fa fa-envelope-o"></i> -->
                     <!-- <span class="badge bg-green">6</span> -->
                   </a>
@@ -48,14 +48,14 @@
                 echo '<li class="">';
             ?>
 
-                <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                  <img src= <?php echo $relative_path . 'resources/users/default.png'?> alt="">Guest
+                <a href="javascript:" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <!--<img src="<?php echo $relative_path . 'resources/users/default.png'?>" alt="">Guest-->
                   <span class=" fa fa-angle-down"></span>
                 </a>
                 <ul class="dropdown-menu dropdown-usermenu pull-right">
                   <!-- <li><a href="javascript:;">Help</a></li> -->
                   <li>
-                    <a href=<?php echo $relative_path . 'pages/users/login.php' ?>><i class="fa fa-sign-in pull-right"></i>Log In</a>
+                    <a href="<?php echo $relative_path . 'pages/users/login.php' ?>"><i class="fa fa-sign-in pull-right"></i>Log In</a>
                   </li>
                 </ul>
             <?php
