@@ -1,5 +1,4 @@
 <?php
-
 //$options = array('location' => 'http://www.sailingrobots.com/testdata/live/dbconnection.php', 'uri' => 'http://localhost/');
 $options = array('location' => $GLOBALS['server'].'/pages/logs/live/DB_Connection.php', 'uri' => 'http://localhost/');
 //create an instante of the SOAPClient (the API will be available)
