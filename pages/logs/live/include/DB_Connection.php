@@ -4,16 +4,13 @@ and the username to 'ithaax_testdata' if you want to test on hostgator*/
 class DBConnection
 {
     private $dbconn;
-
     function __construct()
     {
         require_once('../globalsettings.php');
-
         $host   = $GLOBALS['hostname'];
         $user   = $GLOBALS['username'];
         $pass   = $GLOBALS['password'];
         $dbname = $GLOBALS['database_name_testdata'];
-
         try {
             $this->dbconn = new PDO("mysql:host=$host;dbname=$dbname", $user, $pass);
             $this->dbconn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -22,7 +19,6 @@ class DBConnection
             echo $e->getMessage();
         }
     }
-
     public function getLatestID()
     {
         try {
@@ -30,7 +26,7 @@ class DBConnection
 					FROM system_dataLogs
 					ORDER BY id_system
 					DESC LIMIT 1;"
-                    ;
+            ;
             $result = $this->query($sql);
         } catch (PDOException $e) {
             header(
@@ -42,7 +38,6 @@ class DBConnection
         }
         return $result;
     }
-
     public function getLatestData($table, $id)
     {
         try {
@@ -61,7 +56,6 @@ class DBConnection
         }
         return $result;
     }
-
     public function getWaypoints()
     {
         try {
@@ -78,14 +72,12 @@ class DBConnection
         }
         return $result;
     }
-
     private function query($sql)
     {
         $sth = $this->dbconn->prepare($sql);
         $sth->execute();
         return $sth->fetch();
     }
-
     private function queryAll($sql)
     {
         $sth = $this->dbconn->prepare($sql);
@@ -93,7 +85,6 @@ class DBConnection
         return $sth->fetchAll();
     }
 }
-
 //when in non-wsdl mode the uri option must be specified
 $options = array('uri'=>'http://localhost/');
 //create a new SOAP server

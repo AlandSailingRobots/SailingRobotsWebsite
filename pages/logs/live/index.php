@@ -47,7 +47,8 @@ if (isset($_SESSION['id']) and isset($_SESSION['username'])) {
         } elseif ($connected) {
             echo '<p> You don\'t have the right to view this webpage </p>';
         } else {
-            echo '<p> You must log-in to view this page. Click <strong><a href=' . $relative_path . 'pages/users/login.php>here</a></strong> to log-in. </p>';
+            echo '<p> You must log-in to view this page. Click <strong><a href=' .
+                $relative_path . 'pages/users/login.php>here</a></strong> to log-in. </p>';
         }
         ?>
     </div>

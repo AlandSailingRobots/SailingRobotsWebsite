@@ -28,9 +28,9 @@ function is_pwd_correct($passwordToCheck)
         );
     } catch (Exception $e) {
         header(
-            $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+            $_SERVER['SERVER_PROTOCOL'].' 503 Service Unavailable',
             true,
-            500
+            503
         );
         die('Error : '.$e->getMessage());
     }
