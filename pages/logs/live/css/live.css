@@ -12,6 +12,10 @@
     margin: 3px;
 }
 
+.legendFont {
+    font-size: 8pt;
+}
+
 .liveData {
     font-size: 8pt;
     white-space: nowrap
