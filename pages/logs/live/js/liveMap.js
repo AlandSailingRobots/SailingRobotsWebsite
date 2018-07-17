@@ -265,7 +265,7 @@ function getSteerHeading(){
 //Refresh map without refreshing page
 setInterval( function() {
     refreshInfo()
-}, 1000);
+}, 5000);
 
 
 //###### PLACEHOLDER FUNCTIONS #######
@@ -609,6 +609,7 @@ function markerManager(marker){
     google.maps.event.addListener(marker, 'click', function () {
         drawingInfoWindow.open(map, marker);
         refreshDrawingInfoWindow();
+
     });
     google.maps.event.addListener(marker, 'dragstart', function () {
         drawingInfoWindow.open(map, marker);
@@ -628,7 +629,8 @@ function markerManager(marker){
     function refreshDrawingInfoWindow(){
         let dist = google.maps.geometry.spherical.computeDistanceBetween(boatPos, marker.getPosition());
 
-        drawingInfoWindow.setContent('<h4>' + 'Distance: ' + dist.toFixed() + ' m' + '</h4>');
+        var contentString = '<h4>' + 'Distance: ' + dist.toFixed() + ' m' + '</h4>';
+        drawingInfoWindow.setContent(contentString);
     };
 }
 
