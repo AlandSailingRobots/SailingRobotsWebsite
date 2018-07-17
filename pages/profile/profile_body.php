@@ -1,3 +1,26 @@
+<script src="../../assets/vendors/jquery/dist/jquery.min.js"></script>
+<link  href="../../assets/vendors/cropper/dist/cropper.css" rel="stylesheet">
+<script src="../../assets/vendors/cropper/dist/cropper.js"></script>
+
+<!--
+<script>
+function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                //$('#avatar-img')
+                  $('[id="avatar-img"]')
+                    .attr('src', e.target.result)
+                    .width(150)
+                    .height(200);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+-->
 <div class="right_col" role="main">
     <div class="">
         <div class="page-title">
@@ -18,7 +41,7 @@
                                 <!-- end of image cropping -->
                                 <div id="crop-avatar">
                                     <!-- Current avatar -->
-                                    <img class="img-responsive avatar-view" src=<?php echo $relative_path . $_SESSION['face_pic'] ?> alt="Avatar" title="Change the avatar">
+                                    <img class="img-responsive avatar-view" src="<?php echo $relative_path . $_SESSION['face_pic'] ?>" alt="Avatar" title="Change the avatar">
 
                                 <!-- Loading state -->
                                     <div class="loading" aria-label="Loading" role="img" tabindex="-1"></div>
@@ -30,7 +53,7 @@
 
                             <ul class="list-unstyled user_data">
                                 <li>
-                                    <i class="fa fa-briefcase user-profile-icon"></i> 
+                                    <i class="fa fa-briefcase user-profile-icon"></i>
                                     <?php
                                     if ($_SESSION['right'] == 'admin') {
                                         $title = 'an administrator';
@@ -73,16 +96,16 @@
                                     <form method="post" action="php/changePassword_post.php">
                                     <!-- Text input-->
                                     <div class="form-group">
-                                      <label class="col-md-4 control-label" for="password" >Password</label>  
-                                      <input id="editPasswordForm" name="Name" placeholder="ex: SailingTest" class="form-control input-md" required="1" type="text" >
-                                      <span class="help-block">Write your new password.</span>  
+                                      <label class="col-md-4 control-label" for="password" >Password</label>
+                                      <input id="editPasswordForm" name="Name" placeholder="ex: SailingTest" class="form-control input-md" required type="text" >
+                                      <span class="help-block">Write your new password.</span>
                                     </div>
 
                                     <!-- Text input-->
                                     <div class="form-group">
-                                      <label class="col-md-4 control-label" for="Confirmation" >Corfirmation</label>  
-                                      <input id="editPasswordConfirmation" name="Name" placeholder="ex: SailingTest" class="form-control input-md" required="1" type="text" >
-                                      <span class="help-block">Please confirm your new password.</span>  
+                                      <label class="col-md-4 control-label" for="Confirmation" >Corfirmation</label>
+                                      <input id="editPasswordConfirmation" name="Name" placeholder="ex: SailingTest" class="form-control input-md" required type="text" >
+                                      <span class="help-block">Please confirm your new password.</span>
                                     </div>
                                   </form>
                                 </div>
@@ -117,11 +140,13 @@
                                                 <!-- Crop and preview -->
                                                 <div class="row">
                                                     <div class="col-md-9">
-                                                        <div class="avatar-wrapper"></div>
+                                                        <div class="avatar-wrapper">
+                                                             <img id="avatar-img" src="#" alt="your image" />
+                                                        </div>
                                                     </div>
                                                     <div class="col-md-3">
-                                                        <div class="avatar-preview preview-lg"></div>
-                                                        <div class="avatar-preview preview-md"></div>
+                                                        <div class="avatar-preview preview-lg"><img id="avatar-img" src="#" alt="your image" /></div>
+                                                        <div class="avatar-preview preview-md"><img id="avatar-img" src="#" alt="your image" /></div>
                                                         <div class="avatar-preview preview-sm"></div>
                                                     </div>
                                                 </div>

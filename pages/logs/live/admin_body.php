@@ -1,68 +1,68 @@
-<!-- Marketing messaging and featurettes
-    ================================================== -->
-<!-- Wrap the rest of the page in another container to center all the content. -->
-<div class="container marketing">
-<!-- START THE FEATURETTES -->
-<div class="container marketing">
-    <br><br><br><br><br>
-    <div class="row featurette">
-        <div class="col-md-4">
-            <div id='boatData'>
-                <div id='boatDataSystem'>
-                    <h2>SystemDataLogs</h2>
-                    <div id='dataNamesSystem'></div>
-                    <div id='dataValuesSystem'></div>
-                </div>
-                <div id='boatDataCompass' >
-                    <h2>CompassData</h2>
-                    <div id='dataNamesCompass'></div>
-                    <div id='dataValuesCompass'></div>
-                </div>
-                <div id='boatDataCourse' >
-                    <h2>CourseData</h2>
-                    <div id='dataNamesCourse'></div>
-                    <div id='dataValuesCourse'></div>
-                </div>
-            </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbBYAJitbjLYDoNJKQN4APRL5-_wDcUxQ&libraries=geometry,drawing"></script>
+<script src="js/liveMap.js"></script>
+<link rel="stylesheet" href="css/live.css">
+
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-sm-6">
+            <h2>Current Sensors</h2>
+            <div id="currentSensorDataKey" class="liveData col-sm-3">currentSensorDataKey</div>
+            <div id="currentSensorDataValue" class="liveData col-sm-3">currentSensorDataValue</div>
         </div>
-        <div class="col-md-3">
-            <div id='boatData'>
-                <div id='boatDataGps'>
-                    <h2>Gps Data</h2>
-                    <div id='dataNameGps'></div>
-                    <div id='dataValueGps'></div>
-                </div>
-                <div id='boatDataWindSensor' >
-                    <h2>WindSensorData</h2>
-                    <div id='dataNamesWindSensor'></div>
-                    <div id='dataValuesWindSensor'></div>
-                </div>
-            </div>
-            <br><br><br><br>
+
+
+        <div class="col-sm-6">
+            <h2>GPS Data</h2>
+            <div id="gpsDataKey" class="liveData col-sm-3"></div>
+            <div id="gpsDataValue" class="liveData col-sm-3"></div>
         </div>
-        <br>
-  <!-- <div class="col-md-5">
-            <div id='mapbtn'>
-                <input type="button" class="btn btn-success" value="maps/boat" onclick="hideShowMapBoat()" />
-            </div>
-            <div id='boatCanvas'>
-                <canvas width='900px' height='900px' id='pingCanvas' ></canvas>
-                <canvas width='900px' height='900px' id='layerCanvas'></canvas>
-                <canvas width='900px' height='900px' id='layerHeading'></canvas>
-                <canvas width='900px' height='900px' id='layerTWD'></canvas>
-                <canvas width='900px' height='900px' id='layerWaypoint'></canvas>
-                <canvas width='900px' height='900px' id='layerCompasHeading'></canvas>
-                <canvas width='900px' height='900px' id='layerBoatHeading'></canvas>
-                <div>
-                    <p>Light yellow arrow: bearing to waypoints</p>
-                    <p>Tiny yellow arrow: heading</p>
-                </div>
-            </div>
-            <div id='map'></div>
-        </div> -->
     </div>
-    <!-- /END THE FEATURETTES -->
-    <!-- FOOTER -->
-    <br><br><br><br>
+
+    <div class="row">
+
+        <div class="col-sm-6">
+            <h2>Compass Data</h2>
+            <div id="compassDataKey" class="liveData col-sm-3">s</div>
+            <div id="compassDataValue" class="liveData col-sm-3"></div>
+        </div>
+
+
+        <div class="col-sm-6">
+            <h2>Wind Sensor Data</h2>
+            <div id="windSensorDataKey" class="liveData col-sm-3"></div>
+            <div id="windSensorDataValue" class="liveData col-sm-3"></div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <div class="col-sm-6">
+            <h2>Course Data</h2>
+            <div id="courseDataKey" class="liveData col-sm-3">courseDataKey</div>
+            <div id="courseDataValue" class="liveData col-sm-3">courseDataValue</div>
+        </div>
+
+
+        <div class="col-sm-6">
+            <h2>Marine Sensor Data</h2>
+            <div id="marineSensorDataKey" class="liveData col-sm-3">
+
+            </div>
+            <div id="marineSensorDataValue" class="liveData col-sm-3">
+
+            </div>
+        </div>
+    </div>
 </div>
-<!-- /.container -->
+
+<div class="container">
+
+
+    <div class = "mapClass">
+        <div id="map"></div>
+        <div id="legend"></div>
+    </div>
+</div>

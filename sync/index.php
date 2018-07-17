@@ -67,17 +67,23 @@ if (!empty($_POST)) {
                         case "getWaypoints":
                             print_r(getWaypoints());
                             break;
-                        case "pushConfigs":
-                            print_r(pushConfigs($_POST["data"]));
-                            break;
-                        case "pushWaypoints":
-                            print_r(pushWaypoint($_POST["data"]));
-                            break;
-                        case "pushAllLogs":
-                            print_r(pushAllLogs($_POST["id"], $_POST["data"]));
-                            break;
                         default:
                             break;
+                    }
+                    if (isset($_POST["data"])) {
+                        switch ($_POST["serv"]) {
+                            case "pushConfigs":
+                                print_r(pushConfigs($_POST["data"]));
+                                break;
+                            case "pushWaypoints":
+                                print_r(pushWaypoint($_POST["data"]));
+                                break;
+                            case "pushAllLogs":
+                                print_r(pushAllLogs($_POST["id"], $_POST["data"]));
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 } catch (Exception $e) {
                     header(
@@ -86,6 +92,10 @@ if (!empty($_POST)) {
                         500
                     );
                     print_r(
+                        "ERROR: (exception thrown in sync/index.php): "
+                        .$e->getMessage()
+                    );
+                    error_log(
                         "ERROR: (exception thrown in sync/index.php): "
                         .$e->getMessage()
                     );
