@@ -13,6 +13,8 @@ let gpsData;
 let windsensorData;
 let courseData;
 let compassData;
+let currentSensorData;
+let marineSensorData;
 
 //var boatPos= new google.maps.LatLng(60.107900, 19.922975);
 let boatPos     = VALUE_NOT_SET;
@@ -160,17 +162,19 @@ $( document ).ready(function() {
 
     console.log( "loading functions" );
 
-    absolutePath    = getAbsolutePath();
+    absolutePath        = getAbsolutePath();
 
-    waypoints       = getData("getMissionWaypoints");
-    gpsData         = getData("getGpsData");
-    courseData      = getData("getCourseData");
-    windsensorData  = getData("getWindsensorData");
-    compassData     = getData("getCompassData");
-    marineData      = getData("getMarineSensorData");
-    boatPos         = getNewBoatPos(gpsData);
+    waypoints           = getData("getMissionWaypoints");
+    gpsData             = getData("getGpsData");
+    courseData          = getData("getCourseData");
+    windsensorData      = getData("getWindsensorData");
+    compassData         = getData("getCompassData");
+    currentSensorData   = getData("getCurrentSensorData");
+    marineSensorData    = getData("getMarineSensorData");
+    boatPos             = getNewBoatPos(gpsData);
 
     initMap();
+    updateLiveData();
     debug();
 
     console.log( "ready!" );
@@ -194,10 +198,40 @@ function debug() {
     console.log("dataLogs_course_calculation");
     console.log(courseData);
 
+    console.log("dataLogs_current_sensors");
+    console.log(currentSensorData);
+
     console.log("dataLogs_marine_sensors");
-    console.log(marineData);
+    console.log(marineSensorData);
     console.log("=================================================================" +'\n' + "END");
 }
+
+function printLiveData(data, idKey, idValue) {
+    let dataKey = null;
+    let dataValue = null;
+    Object.keys(data).forEach(function(key) {
+        if (!dataKey) {
+            dataKey = "<div>" + key + "</div>";
+            dataValue = "<div>" + data[key] + "</div>";
+        } else {
+            dataKey += "<div>" + key + "</div>";
+            dataValue += "<div>" + data[key] + "</div>";
+        }
+    })
+
+    document.getElementById(idKey).innerHTML = dataKey;
+    document.getElementById(idValue).innerHTML = dataValue;
+}
+
+function updateLiveData() {
+    printLiveData(gpsData, "gpsDataKey", "gpsDataValue");
+    printLiveData(compassData, "compassDataKey", "compassDataValue");
+    printLiveData(windsensorData, "windsensorDataKey", "windsensorDataValue");
+    printLiveData(courseData, "courseDataKey", "courseDataValue");
+    printLiveData(currentSensorData, "currentSensorDataKey", "currentSensorDataValue");
+    printLiveData(marineSensorData, "marineSensorDataKey", "marineSensorDataValue");
+}
+
 
 //Initialise map and place markers
 function initMap() {
@@ -481,6 +515,7 @@ function refreshInfo(){
     showInfoWindow(windDirectionMarker, windInfoWindow, getWindInfo());
 
     updateRoute();
+    updateLiveData();
 }
 
 function degrees_to_radians(degrees){

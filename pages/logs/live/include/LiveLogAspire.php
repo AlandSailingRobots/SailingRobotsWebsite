@@ -55,7 +55,7 @@ class LiveLogAspire
 
     /**
      * @param $table
-     * @return array
+     * @return array (single row)
      */
     public function getData($table) {
         $pdo = self::getDataSource();
@@ -71,7 +71,7 @@ class LiveLogAspire
     }
 
     /**
-     * @return array
+     * @return array (all rows)
      */
     public function getMissionWaypoints() {
         $pdo = self::getDataSource();
@@ -85,7 +85,7 @@ class LiveLogAspire
 
     /**
      * For now we use latest known position
-     * @return array
+     * @return array (single row)
      */
     public function getPosition() {
         return self::getLatestKnownPosition();
@@ -93,7 +93,7 @@ class LiveLogAspire
 
     /**
      * Return latest known gps_id that is not out of range
-     * @return array
+     * @return array (single row)
      */
     public function getLatestKnownPosition() {
         $outOfRange = OUT_OF_RANGE; //because constant cannot be passed as reference into bindParam()
@@ -107,9 +107,9 @@ class LiveLogAspire
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(':outOfRange', $outOfRange, PDO::PARAM_INT);
         $stmt->execute();
-        $sqlResult = $stmt->fetchAll();
+        $sqlResult = $stmt->fetch();
 
-        return $sqlResult[0];
+        return $sqlResult;
 
     }
 

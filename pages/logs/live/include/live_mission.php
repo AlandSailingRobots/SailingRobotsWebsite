@@ -45,6 +45,10 @@ Class jsonResponse {
                 $sensor = $live->getData("dataLogs_marine_sensors");
                 echo json_encode($sensor);
                 break;
+            case 'getCurrentSensorData':
+                $sensor = $live->getData("dataLogs_current_sensors");
+                echo json_encode($sensor);
+                break;
             default:
                 echo 'SOME ERROR';
                 //$gps = $live->getPosition();
