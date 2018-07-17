@@ -8,10 +8,9 @@
     #legend {
         font-family: Arial, sans-serif;
         font-weight: bold;
-        background: #000;
+        background: #fff;
         padding: 3px;
         margin: 3px;
-        border: 1px solid #000;
     }
 </style>
 

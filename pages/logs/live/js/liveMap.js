@@ -22,6 +22,110 @@ let courseToSteerHeading = VALUE_NOT_SET;
 let waypoints;
 let waypointsArray = [];
 
+var crispStyle = [
+    {
+        "featureType": "water",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#193341"
+            }
+        ]
+    },
+    {
+        "featureType": "landscape",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#2c5a71"
+            }
+        ]
+    },
+    {
+        "featureType": "road",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#29768a"
+            },
+            {
+                "lightness": -37
+            }
+        ]
+    },
+    {
+        "featureType": "poi",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#406d80"
+            }
+        ]
+    },
+    {
+        "featureType": "transit",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#406d80"
+            }
+        ]
+    },
+    {
+        "elementType": "labels.text.stroke",
+        "stylers": [
+            {
+                "visibility": "on"
+            },
+            {
+                "color": "#3e606f"
+            },
+            {
+                "weight": 2
+            },
+            {
+                "gamma": 0.84
+            }
+        ]
+    },
+    {
+        "elementType": "labels.text.fill",
+        "stylers": [
+            {
+                "color": "#ffffff"
+            }
+        ]
+    },
+    {
+        "featureType": "administrative",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "weight": 0.6
+            },
+            {
+                "color": "#1a3541"
+            }
+        ]
+    },
+    {
+        "elementType": "labels.icon",
+        "stylers": [
+            {
+                "visibility": "off"
+            }
+        ]
+    },
+    {
+        "featureType": "poi.park",
+        "elementType": "geometry",
+        "stylers": [
+            {
+                "color": "#2c5a71"
+            }
+        ]
+    }
+];
 
 var boatIcon = {
     path: 'M -1,-2 L 0,-4 L 1,-2 Q1.5,0 1,2 L -1,2 Q -1.5,0 -1,-2',
@@ -34,7 +138,7 @@ var boatIcon = {
 
 var windDirectionIcon = {
     path: 'M0,6 L-0.5,8 L0.5,8 L0,6 L0,14',
-    strokeColor: '#1F3A93',
+    strokeColor: '#26A65B',
     fillOpacity: 1,
     rotation: windHeading,
     scale:2,
@@ -43,7 +147,7 @@ var windDirectionIcon = {
 
 var courseToSteerIcon = {
     path: 'M0,0 L0,-8 L-0.5,-6 L0.5,-6 L0,-8',
-    strokeColor: '#015965',
+    strokeColor: '#95A5A6',
     fillOpacity: 1,
     rotation: courseToSteerHeading,
     scale:2,
@@ -97,7 +201,11 @@ function initMap() {
         center: new google.maps.LatLng(getMeanLat(waypoints), getMeanLng(waypoints)),
         zoom: calculateZoom(waypoints),
         streetViewControl: false,
+        mapTypeControlOptions: {
+            mapTypeIds: ['crispStyle', google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.TERRAIN, google.maps.MapTypeId.SATELLITE]
+        },
     });
+    map.mapTypes.set('crispStyle', new google.maps.StyledMapType(crispStyle, { name: 'Night Mode' }));
 
     createLegend();
 
@@ -136,7 +244,7 @@ function initMap() {
     lineToWaypoint = new google.maps.Polyline({
         path: [boatPos, getNextWaypointPos()],
         geodesic: true,
-        strokeColor: '#FFFF00',
+        strokeColor: '#D2527F',
         strokeOpacity: 0.7,
         strokeweight: 2,
         icons: [{
@@ -700,9 +808,9 @@ function createLegend(){
 
     var div = document.createElement('div');
     div.innerHTML = '<h5><p style="color:#F89406;font-weight:bold">ASPire</p></h5>'
-                    + '<h5><p style="color:#1F3A93;font-weight:bold">Wind</p></h5>'
-                    + '<h5><p style="color:#015965;font-weight:bold">Course to steer</p></h5>'
-                    + '<h5><p style="color:#FFFF00;font-weight:bold">Next waypoint</p></h5>'
+                    + '<h5><p style="color:#26A65B;font-weight:bold">Wind</p></h5>'
+                    + '<h5><p style="color:#95A5A6;font-weight:bold">Course to steer</p></h5>'
+                    + '<h5><p style="color:#D2527F;font-weight:bold">Next waypoint</p></h5>'
                     + '<h5><p style="color:#446CB3;font-weight:bold">Route</p></h5>';
     legend.appendChild(div);
 }
