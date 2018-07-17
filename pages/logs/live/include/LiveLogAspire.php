@@ -54,6 +54,23 @@ class LiveLogAspire
     }
 
     /**
+     * @param $table
+     * @return array
+     */
+    public function getData($table) {
+        $pdo = self::getDataSource();
+        $tbl = self::__get("db") . '.' . $table;
+        $query = "SELECT * FROM $tbl
+                  ORDER BY id DESC 
+                  LIMIT 1";
+        $stmt = $pdo->prepare($query);
+        $stmt->execute();
+        $sqlResult = $stmt->fetch();
+
+        return $sqlResult;
+    }
+
+    /**
      * @return array
      */
     public function getMissionWaypoints() {
@@ -81,10 +98,11 @@ class LiveLogAspire
     public function getLatestKnownPosition() {
         $outOfRange = OUT_OF_RANGE; //because constant cannot be passed as reference into bindParam()
         $pdo = self::getDataSource();
-        $query = 'SELECT * FROM ithaax_ASPire_config.dataLogs_gps
+        $gps = 'ithaax_ASPire_config.' . 'dataLogs_gps';
+        $query = "SELECT * FROM $gps
                   WHERE latitude AND longitude != :outOfRange
                   ORDER BY id DESC
-                  limit 1';
+                  limit 1";
 
         $stmt = $pdo->prepare($query);
         $stmt->bindParam(':outOfRange', $outOfRange, PDO::PARAM_INT);
@@ -93,51 +111,6 @@ class LiveLogAspire
 
         return $sqlResult[0];
 
-    }
-
-    /**
-     * @return array (single row)
-     */
-    public function getCompassData() {
-        $pdo = self::getDataSource();
-        $query = 'SELECT * FROM ithaax_ASPire_config.dataLogs_compass
-                  ORDER BY id DESC
-                  LIMIT 1';
-        $stmt = $pdo->prepare($query);
-        $stmt->execute();
-        $sqlResult = $stmt->fetchAll();
-
-        return $sqlResult[0];
-    }
-
-    /**
-     * @return array (single row)
-     */
-    public function getWindsensorData() {
-        $pdo = self::getDataSource();
-        $query = 'SELECT * FROM ithaax_ASPire_config.dataLogs_windsensor
-                  ORDER BY id DESC
-                  LIMIT 1';
-        $stmt = $pdo->prepare($query);
-        $stmt->execute();
-        $sqlResult = $stmt->fetchAll();
-
-        return $sqlResult[0];
-    }
-
-    /**
-     * @return array (single row)
-     */
-    public function getCourseData() {
-        $pdo = self::getDataSource();
-        $query = 'SELECT * FROM ithaax_ASPire_config.dataLogs_course_calculation
-                  ORDER BY id DESC
-                  LIMIT 1';
-        $stmt = $pdo->prepare($query);
-        $stmt->execute();
-        $sqlResult = $stmt->fetchAll();
-
-        return $sqlResult[0];
     }
 
     /**

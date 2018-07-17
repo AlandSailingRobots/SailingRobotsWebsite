@@ -167,6 +167,7 @@ $( document ).ready(function() {
     courseData      = getData("getCourseData");
     windsensorData  = getData("getWindsensorData");
     compassData     = getData("getCompassData");
+    marineData      = getData("getMarineSensorData");
     boatPos         = getNewBoatPos(gpsData);
 
     initMap();
@@ -190,8 +191,11 @@ function debug() {
     console.log("dataLogs_compass:");
     console.log(compassData);
 
-    console.log("course_data");
+    console.log("dataLogs_course_calculation");
     console.log(courseData);
+
+    console.log("dataLogs_marine_sensors");
+    console.log(marineData);
     console.log("=================================================================" +'\n' + "END");
 }
 

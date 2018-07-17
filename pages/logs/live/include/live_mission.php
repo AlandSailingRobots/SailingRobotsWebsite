@@ -30,16 +30,20 @@ Class jsonResponse {
                 echo json_encode($mission);
                 break;
             case 'getCompassData':
-                $gps = $live->getCompassData();
+                $gps = $live->getData("dataLogs_compass");
                 echo json_encode($gps);
                 break;
             case 'getCourseData':
-                $course = $live->getCourseData();
+                $course = $live->getData("dataLogs_course_calculation");
                 echo json_encode($course);
                 break;
             case 'getWindsensorData':
-                $wind = $live->getWindsensorData();
+                $wind = $live->getData("dataLogs_windsensor");
                 echo json_encode($wind);
+                break;
+            case 'getMarineSensorData':
+                $sensor = $live->getData("dataLogs_marine_sensors");
+                echo json_encode($sensor);
                 break;
             default:
                 echo 'SOME ERROR';
