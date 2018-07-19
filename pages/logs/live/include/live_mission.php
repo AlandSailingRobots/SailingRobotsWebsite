@@ -50,9 +50,18 @@ Class jsonResponse {
                 echo json_encode($sensor);
                 break;
             default:
-                echo 'SOME ERROR';
-                //$gps = $live->getPosition();
-                //echo json_encode($gps);
+                $data['currentMission'] = $live->getMissionWaypoints();
+                $data['gpsData'] = $live->getPosition();
+                $data['compassData'] = $live->getData("dataLogs_compass");
+                $data['courseData'] = $live->getData("dataLogs_course_calculation");
+                $data['windSensorData'] = $live->getData("dataLogs_windsensor");
+                $data['marineSensorData'] = $live->getData("dataLogs_marine_sensors");
+                $data['currentSensorData'] = $live->getData("dataLogs_current_sensors");
+                $data['actuatorFeedbackData'] = $live->getData("dataLogs_actuator_feedback");
+
+                $result = Array();
+                array_push($result, $data);
+                echo json_encode($result);
                 break;
         }
     }
