@@ -17,7 +17,6 @@ var courseData;
 var compassData;
 var currentSensorData;
 var marineSensorData;
-var actuatorFeedbackData;
 
 //var boatPos= new google.maps.LatLng(60.107900, 19.922975);
 var boatPos     = VALUE_NOT_SET;
@@ -160,6 +159,7 @@ var courseToSteerIcon = {
     strokeweight: 0.1,
 };
 
+//TODO Add rc_on or off to boatInfo
 
 //##### MAIN ######
 $(document).ready(function () {
@@ -179,7 +179,7 @@ $(document).ready(function () {
         currentSensorData = getData("getCurrentSensorData");
         marineSensorData = getData("getMarineSensorData");
          **/
-        boatPos = getNewBoatPos(gpsData);
+
 
         updateLiveData();
         debug();
@@ -190,9 +190,7 @@ $(document).ready(function () {
 
         //Refresh map without refreshing page
         setInterval( function() {
-            console.time('refreshInfo \t\t');
             refreshInfo();
-            console.timeEnd('refreshInfo \t\t');
         }, 5000);
 });
 
@@ -233,7 +231,10 @@ function updateAllData(jsonArray) {
     compassData = jsonArray[0].compassData;
     currentSensorData = jsonArray[0].currentSensorData;
     marineSensorData = jsonArray[0].marineSensorData;
-    actuatorFeedbackData = jsonArray[0].actuatorFeedbackData;
+    boatPos = getNewBoatPos(gpsData);
+    boatHeading = getBoatHeading();
+    windHeading = getWindHeading();
+    courseToSteerHeading = getSteerHeading();
 }
 
 function printLiveData(data, idKey, idValue) {
@@ -571,9 +572,8 @@ function refreshInfo(){
     // windHeading = getNewHeading(windHeading);
     //boatPos = getNewPos(boatPos);
 //#####################################
-    console.log('\n\n###################################');
 
-    console.time('getData \t\t');
+    data = getAllData();
     updateAllData(data);
     /**
     console.time('courseData \t\t');
@@ -620,11 +620,11 @@ function refreshInfo(){
     courseToSteerHeading = getSteerHeading();
     console.timeEnd('courseToSteerHeading \t');
     **/
-    console.timeEnd('getData \t\t');
+
     // console.log('\n\n' + 'LAT: ' + boatPos.lat() + ' | LNG: ' + boatPos.lng() + ' | ID: ' + gpsData.id);
     // console.log('BOATHEAD: ' + boatHeading + ' | WINDHEAD: ' + windHeading + ' | COURSE TO STEER: ' + courseToSteerHeading);
 
-    console.time('updateMap \t\t');
+
     updateMarker(boatMarker, boatHeading);
     updateMarker(windDirectionMarker, windHeading);
     updateMarker(courseToSteerMarker, courseToSteerHeading);
@@ -635,12 +635,8 @@ function refreshInfo(){
     showInfoWindow(windDirectionMarker, windInfoWindow, getWindInfo());
 
     updateRoute();
-    console.timeEnd('updateMap \t\t');
-    console.time('updateLive \t\t');
-    updateLiveData();
-    console.timeEnd('updateLive \t\t');
 
-    console.log('###################################');
+    updateLiveData();
 }
 
 function degrees_to_radians(degrees){
