@@ -6,7 +6,10 @@
 
 #legend {
     font-family: Arial, sans-serif;
-    background: #000;
+
+    font-weight: bold;
+    background: #ffff00;
+
     padding: 3px;
     margin: 3px;
 }
