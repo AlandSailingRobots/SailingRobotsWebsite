@@ -185,9 +185,9 @@ $(document).ready(function () {
 
         //Refresh map without refreshing page
         setInterval( function() {
-            console.time('refreshInfo');
+            console.time('refreshInfo \t\t');
             refreshInfo();
-            console.timeEnd('refreshInfo');
+            console.timeEnd('refreshInfo \t\t');
         }, 5000);
 });
 
@@ -533,57 +533,59 @@ function refreshInfo(){
     // windHeading = getNewHeading(windHeading);
     //boatPos = getNewPos(boatPos);
 //#####################################
-    console.time('getData');
+    console.log('\n\n###################################');
 
-    console.time('courseData');
+    console.time('getData \t\t');
+
+    console.time('courseData \t\t');
     courseData = getData("getCourseData");
-    console.timeEnd('courseData');
+    console.timeEnd('courseData \t\t');
 
-    console.time('windSensorData');
+    console.time('windSensorData \t\t');
     windSensorData = getData("getWindSensorData");
-    console.timeEnd('windSensorData');
+    console.timeEnd('windSensorData \t\t');
 
-    console.time('compassData');
+    console.time('compassData \t\t');
     compassData = getData("getCompassData");
-    console.timeEnd('compassData');
+    console.timeEnd('compassData \t\t');
 
-    console.time('currentSensorData');
+    console.time('currentSensorData \t');
     currentSensorData = getData("getCurrentSensorData");
-    console.timeEnd('currentSensorData');
+    console.timeEnd('currentSensorData \t');
 
-    console.time('marineSensorData');
+    console.time('marineSensorData \t');
     marineSensorData = getData("getMarineSensorData");
-    console.timeEnd('marineSensorData');
+    console.timeEnd('marineSensorData \t');
 
-    console.time('gpsData');
+    console.time('gpsData \t\t');
     gpsData = getData("getGpsData");
-    console.timeEnd('gpsData');
+    console.timeEnd('gpsData \t\t');
 
-    console.time('waypoints');
+    console.time('waypoints \t\t');
     waypoints = getData("getMissionWaypoints");
-    console.timeEnd('waypoints');
+    console.timeEnd('waypoints \t\t');
 
-    console.time('boatPos');
+    console.time('boatPos \t\t');
     boatPos = getNewBoatPos(gpsData);
-    console.timeEnd('boatPos');
+    console.timeEnd('boatPos \t\t');
 
-    console.time('boatHeading');
+    console.time('boatHeading \t\t');
     boatHeading = getBoatHeading();
-    console.timeEnd('boatHeading');
+    console.timeEnd('boatHeading \t\t');
 
-    console.time('windHeading');
+    console.time('windHeading \t\t');
     windHeading = getWindHeading();
-    console.timeEnd('windHeading');
+    console.timeEnd('windHeading \t\t');
 
-    console.time('courseToSteerHeading');
+    console.time('courseToSteerHeading \t');
     courseToSteerHeading = getSteerHeading();
-    console.timeEnd('courseToSteerHeading');
+    console.timeEnd('courseToSteerHeading \t');
 
-    console.timeEnd('getData');
+    console.timeEnd('getData \t\t');
     // console.log('\n\n' + 'LAT: ' + boatPos.lat() + ' | LNG: ' + boatPos.lng() + ' | ID: ' + gpsData.id);
     // console.log('BOATHEAD: ' + boatHeading + ' | WINDHEAD: ' + windHeading + ' | COURSE TO STEER: ' + courseToSteerHeading);
 
-
+    console.time('updateMap \t\t');
     updateMarker(boatMarker, boatHeading);
     updateMarker(windDirectionMarker, windHeading);
     updateMarker(courseToSteerMarker, courseToSteerHeading);
@@ -594,7 +596,12 @@ function refreshInfo(){
     showInfoWindow(windDirectionMarker, windInfoWindow, getWindInfo());
 
     updateRoute();
-    // updateLiveData();
+    console.timeEnd('updateMap \t\t');
+    console.time('updateLive \t\t');
+    updateLiveData();
+    console.timeEnd('updateLive \t\t');
+
+    console.log('###################################');
 }
 
 function degrees_to_radians(degrees){
