@@ -22,8 +22,6 @@ Class jsonResponse {
         $request = $_GET['data'];
         switch ($request) {
             case 'getGpsData':
-                $mission = $live->getMissionWaypoints();
-                echo json_encode($mission);
                 $gps = $live->getPosition();
                 echo json_encode($gps);
                 break;
