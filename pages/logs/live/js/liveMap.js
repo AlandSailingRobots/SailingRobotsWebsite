@@ -17,6 +17,7 @@ var courseData;
 var compassData;
 var currentSensorData;
 var marineSensorData;
+var actuatorFeedbackData;
 
 //var boatPos= new google.maps.LatLng(60.107900, 19.922975);
 var boatPos     = VALUE_NOT_SET;
@@ -232,6 +233,7 @@ function updateAllData(jsonArray) {
     compassData = jsonArray[0].compassData;
     currentSensorData = jsonArray[0].currentSensorData;
     marineSensorData = jsonArray[0].marineSensorData;
+    actuatorFeedbackData = jsonArray[0].actuatorFeedbackData;
 }
 
 function printLiveData(data, idKey, idValue) {
