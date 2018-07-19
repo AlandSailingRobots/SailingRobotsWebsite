@@ -159,6 +159,7 @@ var courseToSteerIcon = {
     strokeweight: 0.1,
 };
 
+//TODO Add rc_on or off to boatInfo
 
 //##### MAIN ######
 $(document).ready(function () {
@@ -189,9 +190,7 @@ $(document).ready(function () {
 
         //Refresh map without refreshing page
         setInterval( function() {
-            console.time('refreshInfo \t\t');
             refreshInfo();
-            console.timeEnd('refreshInfo \t\t');
         }, 5000);
 });
 
@@ -573,9 +572,7 @@ function refreshInfo(){
     // windHeading = getNewHeading(windHeading);
     //boatPos = getNewPos(boatPos);
 //#####################################
-    console.log('\n\n###################################');
 
-    console.time('getData \t\t');
     data = getAllData();
     updateAllData(data);
     /**
@@ -623,11 +620,11 @@ function refreshInfo(){
     courseToSteerHeading = getSteerHeading();
     console.timeEnd('courseToSteerHeading \t');
     **/
-    console.timeEnd('getData \t\t');
+
     // console.log('\n\n' + 'LAT: ' + boatPos.lat() + ' | LNG: ' + boatPos.lng() + ' | ID: ' + gpsData.id);
     // console.log('BOATHEAD: ' + boatHeading + ' | WINDHEAD: ' + windHeading + ' | COURSE TO STEER: ' + courseToSteerHeading);
 
-    console.time('updateMap \t\t');
+
     updateMarker(boatMarker, boatHeading);
     updateMarker(windDirectionMarker, windHeading);
     updateMarker(courseToSteerMarker, courseToSteerHeading);
@@ -638,12 +635,8 @@ function refreshInfo(){
     showInfoWindow(windDirectionMarker, windInfoWindow, getWindInfo());
 
     updateRoute();
-    console.timeEnd('updateMap \t\t');
-    console.time('updateLive \t\t');
-    updateLiveData();
-    console.timeEnd('updateLive \t\t');
 
-    console.log('###################################');
+    updateLiveData();
 }
 
 function degrees_to_radians(degrees){
