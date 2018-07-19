@@ -178,7 +178,7 @@ $(document).ready(function () {
         currentSensorData = getData("getCurrentSensorData");
         marineSensorData = getData("getMarineSensorData");
          **/
-        boatPos = getNewBoatPos(gpsData);
+
 
         updateLiveData();
         debug();
@@ -232,6 +232,10 @@ function updateAllData(jsonArray) {
     compassData = jsonArray[0].compassData;
     currentSensorData = jsonArray[0].currentSensorData;
     marineSensorData = jsonArray[0].marineSensorData;
+    boatPos = getNewBoatPos(gpsData);
+    boatHeading = getBoatHeading();
+    windHeading = getWindHeading();
+    courseToSteerHeading = getSteerHeading();
 }
 
 function printLiveData(data, idKey, idValue) {
@@ -572,6 +576,7 @@ function refreshInfo(){
     console.log('\n\n###################################');
 
     console.time('getData \t\t');
+    data = getAllData();
     updateAllData(data);
     /**
     console.time('courseData \t\t');
