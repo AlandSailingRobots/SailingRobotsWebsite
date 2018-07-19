@@ -18,144 +18,137 @@ if (!empty($_POST)) {
     //print_r($_POST);
     //echo "\n";
 
-    if (isset($_POST['gen']) && $_POST['gen'] == 'aspire') {
-        // ASPire connection to the website
-        if (isset($_POST['id']) && isset($_POST['pwd'])) {
-            if (is_pwd_correct($_POST['pwd'])) {
-                $hostname  = $GLOBALS['hostname'];
-                $username  = $GLOBALS['username'];
-                $password  = $GLOBALS['password'];
-                $dbname    = $GLOBALS['database_ASPire'];
-                try {
-                    $db = new PDO(
-                        "mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
-                        $username,
-                        $password,
-                        array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
-                    );
-                } catch (Exception $e) {
-                    header(
-                        $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
-                        true,
-                        500
-                    );
-                    die('Error : '.$e->getMessage());
-                }
-                $GLOBALS['db_connection'] = $db;
+    if (!(isset($_POST['id']) || isset($_POST['pwd']))) {
+        header(
+            $_SERVER['SERVER_PROTOCOL'] . ' 401 Unauthorized',
+            true,
+            401
+        );
+        exit;
+    }
 
+
+    if (isset($_POST['gen']) && $_POST['gen'] == 'janet') {
+        // Janet connection - Much less secure (?)
+
+        $optionsPushlogs = array(
+            'location' => $GLOBALS['server'] . 'sync/janet/pushDatalogs.php',
+            'uri' => 'http://localhost/');
+        $optionsGetConfigs = array(
+            'location' => $GLOBALS['server'] . 'sync/janet/getConfigs.php',
+            'uri' => 'http://localhost/');
+        $optionsPushConfigs = array(
+            'location' => $GLOBALS['server'] . 'sync/janet/pushConfigs.php',
+            'uri' => 'http://localhost/');
+        $optionsPushwaypoints = array(
+            'location' => $GLOBALS['server'] . 'sync/janet/pushWaypoints.php',
+            'uri' => 'http://localhost/');
+        $optionsGetWaypoints = array(
+            'location' => $GLOBALS['server'] . 'sync/janet/getWaypoints.php',
+            'uri' => 'http://localhost/');
+
+        $connected = true;  // flag for using SOAP code last in this file
+    } else {
+        // ASPire connection to the website (but still might be legacy binary or new stuff)
+        if (!is_pwd_correct($_POST['pwd'])) {
+            header(
+                $_SERVER['SERVER_PROTOCOL'] . ' 401 Unauthorized',
+                true,
+                401
+            );
+            exit;
+            // echo "ERROR: Wrong Password ! \n";
+        } else {
+            $hostname  = $GLOBALS['hostname'];
+            $username  = $GLOBALS['username'];
+            $password  = $GLOBALS['password'];
+            $dbname    = $GLOBALS['database_ASPire'];
+            try {
+                $db = new PDO(
+                    "mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
+                    $username,
+                    $password,
+                    array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
+                );
+            } catch (Exception $e) {
+                header(
+                    $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+                    true,
+                    500
+                );
+                die('Error : '.$e->getMessage());
+            }
+            $GLOBALS['db_connection'] = $db;
+
+            if (isset($_POST['gen']) && $_POST['gen'] == 'aspire') {
                 include_once 'aspire/pushDataLogs.php';
                 include_once 'aspire/getConfigs.php';
                 include_once 'aspire/pushConfigs.php';
                 include_once 'aspire/pushWaypoints.php';
                 include_once 'aspire/getWaypoints.php';
+            } else {
+                // In an ideal situation this would always be the case but old ASPire binaries and Janet have
+                // their own code
+                include_once 'pushDataLogs.php';
+                include_once 'getConfigs.php';
+                include_once 'pushConfigs.php';
+                include_once 'pushWaypoints.php';
+                include_once 'getWaypoints.php';
+            }
 
-
-                try {
+            try {
+                switch ($_POST["serv"]) {
+                    case "checkIfNewConfigs":
+                        print_r(checkIfNewConfigs());
+                        break;
+                    case "checkIfNewWaypoints":
+                        print_r(checkIfNewWaypoints());
+                        break;
+                    case "setConfigsUpdated":
+                        print_r(setConfigsUpdated());
+                        break;
+                    case "getAllConfigs":
+                        print_r(getAllConfigs($_POST["id"]));
+                        break;
+                    case "getWaypoints":
+                        print_r(getWaypoints());
+                        break;
+                    default:
+                        break;
+                }
+                if (isset($_POST["data"])) {
                     switch ($_POST["serv"]) {
-                        case "checkIfNewConfigs":
-                            echo checkIfNewConfigs();
+                        case "pushConfigs":
+                            print_r(pushConfigs($_POST["data"]));
                             break;
-                        case "checkIfNewWaypoints":
-                            echo checkIfNewWaypoints();
+                        case "pushWaypoints":
+                            print_r(pushWaypoint($_POST["data"]));
                             break;
-                        case "setConfigsUpdated":
-                            print_r(setConfigsUpdated());
-                            break;
-                        case "getAllConfigs":
-                            print_r(getAllConfigs($_POST["id"]));
-                            break;
-                        case "getWaypoints":
-                            print_r(getWaypoints());
+                        case "pushAllLogs":
+                            print_r(pushAllLogs($_POST["id"], $_POST["data"]));
                             break;
                         default:
                             break;
                     }
-                    if (isset($_POST["data"])) {
-                        switch ($_POST["serv"]) {
-                            case "pushConfigs":
-                                print_r(pushConfigs($_POST["data"]));
-                                break;
-                            case "pushWaypoints":
-                                print_r(pushWaypoint($_POST["data"]));
-                                break;
-                            case "pushAllLogs":
-                                print_r(pushAllLogs($_POST["id"], $_POST["data"]));
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                } catch (Exception $e) {
-                    header(
-                        $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
-                        true,
-                        500
-                    );
-                    print_r(
-                        "ERROR: (exception thrown in sync/index.php): "
-                        .$e->getMessage()
-                    );
-                    error_log(
-                        "ERROR: (exception thrown in sync/index.php): "
-                        .$e->getMessage()
-                    );
                 }
-
-                // $connected = true;
-            } else {
-                // echo "ERROR: Wrong Password ! \n";
+            } catch (Exception $e) {
                 header(
-                    $_SERVER['SERVER_PROTOCOL'].' 401 Unauthorized',
+                    $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
                     true,
-                    401
+                    500
                 );
-                exit;
+                print_r(
+                    "ERROR: (exception thrown in sync/index.php): "
+                    .$e->getMessage()
+                );
+                error_log(
+                    "ERROR: (exception thrown in sync/index.php): "
+                    .$e->getMessage()
+                );
             }
-        } else {
-            // echo 'ERROR: Missing fild : "id" and/or "pwd"';
-            header(
-                $_SERVER['SERVER_PROTOCOL'].' 400 Bad Request',
-                true,
-                400
-            );
-            exit;
+            // $connected = true; // Flag for using SOAP
         }
-    } elseif (isset($_POST['gen']) && $_POST['gen'] == 'janet') {
-        // Janet connection
-        // Much less secure
-        if (isset($_POST['id']) && isset($_POST['pwd'])) {
-            $optionsPushlogs      = array(
-                'location' => $GLOBALS['server'].'sync/janet/pushDatalogs.php',
-                'uri' => 'http://localhost/');
-            $optionsGetConfigs    = array(
-                'location' => $GLOBALS['server'].'sync/janet/getConfigs.php',
-                'uri' => 'http://localhost/');
-            $optionsPushConfigs   = array(
-                'location' => $GLOBALS['server'].'sync/janet/pushConfigs.php',
-                'uri' => 'http://localhost/');
-            $optionsPushwaypoints = array(
-                'location' => $GLOBALS['server'].'sync/janet/pushWaypoints.php',
-                'uri' => 'http://localhost/');
-            $optionsGetWaypoints  = array(
-                'location' => $GLOBALS['server'].'sync/janet/getWaypoints.php',
-                'uri' => 'http://localhost/');
 
-            $connected = true;
-        } else {
-            header(
-                $_SERVER['SERVER_PROTOCOL'].' 401 Unauthorized',
-                true,
-                401
-            );
-            echo ' ERROR: Missing fild : "id" and/or "pwd"';
-        }
-    } else {
-        header(
-            $_SERVER['SERVER_PROTOCOL'].' 400 Bad Request',
-            true,
-            400
-        );
-        echo ' ERROR: "gen" field "aspire" or "janet" missing !';
     }
 
     // Janet connection
