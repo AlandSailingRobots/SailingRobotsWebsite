@@ -10,6 +10,7 @@ var drawingInfoWindow = null;
 var legendDiv = null;
 
 var absolutePath;
+var data = null;
 var gpsData = null;
 var windSensorData;
 var courseData;
@@ -166,7 +167,9 @@ $(document).ready(function () {
         console.log("loading functions");
 
         absolutePath = getAbsolutePath();
-
+        data = getAllData();
+        updateAllData(data);
+        /**
         waypoints = getData("getMissionWaypoints");
         gpsData = getData("getGpsData");
         courseData = getData("getCourseData");
@@ -174,6 +177,7 @@ $(document).ready(function () {
         compassData = getData("getCompassData");
         currentSensorData = getData("getCurrentSensorData");
         marineSensorData = getData("getMarineSensorData");
+         **/
         boatPos = getNewBoatPos(gpsData);
 
         updateLiveData();
@@ -218,6 +222,16 @@ function debug() {
     console.log("dataLogs_marine_sensors");
     console.log(marineSensorData);
     console.log("=================================================================" +'\n' + "END");
+}
+
+function updateAllData(jsonArray) {
+    waypoints = jsonArray[0].currentMission;
+    gpsData = jsonArray[0].gpsData;
+    courseData = jsonArray[0].courseData;
+    windSensorData = jsonArray[0].windSensorData;
+    compassData = jsonArray[0].compassData;
+    currentSensorData = jsonArray[0].currentSensorData;
+    marineSensorData = jsonArray[0].marineSensorData;
 }
 
 function printLiveData(data, idKey, idValue) {
@@ -405,6 +419,28 @@ function initMap() {
 }
 
 //##### GETTERS ######
+function getAllData() {
+    var value = null;
+    var url = absolutePath + 'include/live_mission.php';
+
+    jQuery.ajax({
+        type: 'GET',
+        url: url,
+        async: false,
+        contentType: "application/json",
+        data: {data: ""},
+        dataType: 'json',
+        success: function(json) {
+            value = json;
+        },
+        error: function(e) {
+            console.log("jQuery error message = "+e.message);
+        }
+    });
+    return value;
+
+}
+
 function getData(logName) {
     var value = null;
     var url = absolutePath + 'include/live_mission.php';
@@ -536,7 +572,8 @@ function refreshInfo(){
     console.log('\n\n###################################');
 
     console.time('getData \t\t');
-
+    updateAllData(data);
+    /**
     console.time('courseData \t\t');
     courseData = getData("getCourseData");
     console.timeEnd('courseData \t\t');
@@ -580,7 +617,7 @@ function refreshInfo(){
     console.time('courseToSteerHeading \t');
     courseToSteerHeading = getSteerHeading();
     console.timeEnd('courseToSteerHeading \t');
-
+    **/
     console.timeEnd('getData \t\t');
     // console.log('\n\n' + 'LAT: ' + boatPos.lat() + ' | LNG: ' + boatPos.lng() + ' | ID: ' + gpsData.id);
     // console.log('BOATHEAD: ' + boatHeading + ' | WINDHEAD: ' + windHeading + ' | COURSE TO STEER: ' + courseToSteerHeading);
