@@ -930,11 +930,11 @@ function createLegend(){
 }
 
 function updateLegend(background) {
-    legendDiv.innerHTML = '<h5><p class="legendFont" style="color:' + boatIcon.strokeColor + ';font-weight:bold">ASPire</p></h5>'
-                    + '<h5><p class="legendFont" style="color:' + windDirectionMarker.icon.strokeColor + ';font-weight:bold">Wind</p></h5>'
-                    + '<h5><p class="legendFont" style="color:' + courseToSteerMarker.icon.strokeColor + ';font-weight:bold">Course to steer</p></h5>'
-                    + '<h5><p class="legendFont" style="color:' + lineToWaypoint.strokeColor + ';font-weight:bold">Next waypoint</p></h5>'
-                    + '<h5><p class="legendFont" style="color:' + routePolyline.strokeColor + ';font-weight:bold">Route</p></h5>';
+    legendDiv.innerHTML = '<h5><p class="legendFont" style="color:' + boatIcon.strokeColor + '">ASPire</p></h5>'
+                    + '<h5><p class="legendFont" style="color:' + windDirectionMarker.icon.strokeColor + '">Wind</p></h5>'
+                    + '<h5><p class="legendFont" style="color:' + courseToSteerMarker.icon.strokeColor + '">Course to steer</p></h5>'
+                    + '<h5><p class="legendFont" style="color:' + lineToWaypoint.strokeColor + '">Next waypoint</p></h5>'
+                    + '<h5><p class="legendFont" style="color:' + routePolyline.strokeColor + '">Route</p></h5>';
 
     legend.style.background = background;
 }
