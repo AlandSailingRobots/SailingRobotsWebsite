@@ -24,7 +24,7 @@
     ob_start(); // Allows the session header to be cached
 
     //$GLOBALS['server'] = "http://localhost/tests/Tuto_OCR/SailingRobotsWebsite/";
-    $GLOBALS['server'] = "http://localhost/SnailboatWebSiteOfDoom";
+    $GLOBALS['server'] = "http://localhost";
     $GLOBALS['username'] = 'root';
     //$GLOBALS['username'] = 'ithaax_testdata';
     $GLOBALS['password'] = '';
