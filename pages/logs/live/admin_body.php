@@ -3,8 +3,9 @@
 <script src="js/liveMap.js"></script>
 <link rel="stylesheet" href="css/live.css">
 
+<button class="btn btn-info btn-lg btn-block" data-toggle="collapse" data-target="#liveData" role="button" aria-pressed="true">Show current data</button>
 
-<div class="container-fluid">
+<div id="liveData" class="container-fluid collapse">
     <div class="row">
         <div class="col-sm-6">
             <h2>Current Sensors</h2>

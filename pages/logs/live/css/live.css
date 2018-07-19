@@ -21,5 +21,10 @@
 
 .liveData {
     font-size: 8pt;
-    white-space: nowrap
+    white-space: nowrap;
+    color: #26A65B;
 }
+
+.liveData-outOfRange {color: #D2527F;}
+
+.liveData-inRange {color: #26A65B;}

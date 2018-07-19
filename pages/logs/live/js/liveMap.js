@@ -1,5 +1,6 @@
 //##### CONSTANTS ######
 const VALUE_NOT_SET = 1;
+const OUT_OF_RANGE = -2000;
 
 //##### GLOBALS ######
 var map, legend, boatMarker, windDirectionMarker, courseToSteerMarker, lineToWaypoint, routePolyline, drawing;
@@ -243,20 +244,20 @@ function updateAllData(jsonArray) {
 }
 
 function printLiveData(data, idKey, idValue) {
-    var dataKey = null;
-    var dataValue = null;
+    let dataKey = "";
+    let dataValue = "";
     Object.keys(data).forEach(function(key) {
-        if (!dataKey) {
-            dataKey = "<div>" + key + "</div>";
-            dataValue = "<div>" + data[key] + "</div>";
-        } else {
             dataKey += "<div>" + key + "</div>";
-            dataValue += "<div>" + data[key] + "</div>";
-        }
+            if (data[key] == OUT_OF_RANGE) {
+                dataValue += "<div class='liveData-outOfRange'>" + data[key] + "</div>";
+            } else {
+                dataValue += "<div class='liveData-inRange'>" + data[key] + "</div>";
+            }
     })
 
     document.getElementById(idKey).innerHTML = dataKey;
     document.getElementById(idValue).innerHTML = dataValue;
+
 }
 
 function updateLiveData() {
