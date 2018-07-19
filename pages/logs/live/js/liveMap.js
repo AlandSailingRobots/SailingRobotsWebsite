@@ -17,6 +17,7 @@ var courseData;
 var compassData;
 var currentSensorData;
 var marineSensorData;
+var actuatorFeedbackData;
 
 //var boatPos= new google.maps.LatLng(60.107900, 19.922975);
 var boatPos     = VALUE_NOT_SET;
@@ -220,6 +221,9 @@ function debug() {
 
     console.log("dataLogs_marine_sensors");
     console.log(marineSensorData);
+
+    console.log("dataLogs_actuator_feedback");
+    console.log(actuatorFeedbackData);
     console.log("=================================================================" +'\n' + "END");
 }
 
@@ -235,6 +239,7 @@ function updateAllData(jsonArray) {
     boatHeading = getBoatHeading();
     windHeading = getWindHeading();
     courseToSteerHeading = getSteerHeading();
+    actuatorFeedbackData = jsonArray[0].actuatorFeedbackData;
 }
 
 function printLiveData(data, idKey, idValue) {
