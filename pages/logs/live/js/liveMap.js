@@ -904,6 +904,10 @@ function markerManager(marker){
         distancePolyline.setPath([boatPos, marker.getPosition()]);
         refreshDrawingInfoWindow();
     });
+    google.maps.event.addListener(map, 'center_changed', function () {
+        distancePolyline.setPath([boatPos, marker.getPosition()]);
+        refreshDrawingInfoWindow();
+    });
 
     marker.addListener('rightclick', function () {
         distancePolyline.setMap(null);
@@ -1072,6 +1076,7 @@ function CenterControl(controlDiv) {
         }
     });
 }
+
 //Function to retrieve button's state
 CenterControl.prototype.getState = function() {
     return this.state;
