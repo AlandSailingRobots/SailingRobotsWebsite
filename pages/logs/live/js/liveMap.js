@@ -883,6 +883,10 @@ function polygonManager(polygon){
         polygon.setMap(null);
         drawingPolygonInfoWindow.close();
     });
+    polygon.addListener('dblclick', function () {
+        polygon.setMap(null);
+        drawingPolygonInfoWindow.close();
+    });
 
     function refreshDrawingInfoWindow(){
         var area = google.maps.geometry.spherical.computeArea(polygon.getPath());
@@ -925,6 +929,11 @@ function markerManager(marker){
         drawingMarkerInfoWindow.close();
         marker.setMap(null);
     });
+    marker.addListener('dblclick', function () {
+        distancePolyline.setMap(null);
+        drawingMarkerInfoWindow.close();
+        marker.setMap(null);
+    });
 
     function refreshDrawingInfoWindow(){
         var dist = google.maps.geometry.spherical.computeDistanceBetween(boatPos, marker.getPosition());
@@ -962,6 +971,10 @@ function polylineManager(polyline){
         polyline.setMap(null);
         drawingPolylineInfoWindow.close();
     });
+    polyline.addListener('dblclick', function () {
+        polyline.setMap(null);
+        drawingPolylineInfoWindow.close();
+    });
 }
 
 function circleManager(circle){
@@ -983,7 +996,10 @@ function circleManager(circle){
         circle.setMap(null);
         drawingCircleInfoWindow.close();
     });
-
+    circle.addListener('dblclick', function () {
+        circle.setMap(null);
+        drawingCircleInfoWindow.close();
+    });
 
     function refreshDrawingInfoWindow(){
         drawingCircleInfoWindow.setPosition(circle.getCenter());
