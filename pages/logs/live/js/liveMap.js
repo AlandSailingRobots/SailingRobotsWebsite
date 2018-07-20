@@ -529,15 +529,17 @@ function getNewPos(pos){
 
 //##### MAP FUNCTIONS ######
 function getBoatInfo(){
-    var courseToSteer = courseData.course_to_steer;
+    var courseToSteer = parseInt(courseData.course_to_steer).toFixed();
     var head = boatHeading.toString();
     var bearToWP = parseInt(google.maps.geometry.spherical.computeHeading(boatPos, getNextWaypointPos()).toFixed());
     if (bearToWP<0) { bearToWP = (360+bearToWP).toString() } //Convert heading in range [-180, 180] to range [0, 360]
     var distanceToWP = google.maps.geometry.spherical.computeDistanceBetween(boatPos, getNextWaypointPos()).toFixed();
     //var speed = Math.random().toFixed(3);
-    var speed = parseInt(gpsData.speed).toFixed(3);
-    var tack = courseData.tack;
+    var speed = parseInt(gpsData.speed).toFixed(2);
+    var tack = parseInt(courseData.tack);
     if (tack) { tack = 'Yes'} else { tack = 'No'}
+    var rcON = parseInt(actuatorFeedbackData.rc_on);
+    if (rcON) { rcON = 'Yes'} else { rcON = 'No'}
 
     var contentString = "<div class = 'title'>" +
         "<h3>" + "ASPire" + "</h3>" +
@@ -548,6 +550,7 @@ function getBoatInfo(){
         "<h4> distanceToWP: " + distanceToWP + " m" + "</h4>" +
         "<h4> tacking: " + tack + "</h4>" +
         "<h4> speed: " + speed + " m/s" + "</h4>" +
+        "<h4> rc_ON: " + rcON + "</h4>" +
         "</div>";
 
     return contentString
@@ -557,7 +560,7 @@ function getWindInfo(){
     //var head = windHeading.toString();
     //var speed = (Math.random()*10).toFixed(3);
     var head = windHeading.toString();
-    var speed = parseInt(windSensorData.speed).toFixed(3).toString();
+    var speed = parseInt(windSensorData.speed).toFixed(2).toString();
     var contentString = "<div class = 'title'>" +
         "<h3>" + "Wind" + "</h3>" +
         "<div class = 'info'>" +
