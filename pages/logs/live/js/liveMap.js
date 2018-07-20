@@ -13,6 +13,7 @@ var drawingPolylineInfoWindow = null;
 var drawingCircleInfoWindow = null;
 var legendDiv = null;
 var centerControl;
+var refreshEvent;
 
 var absolutePath;
 var data = null;
@@ -402,6 +403,8 @@ function createMap(){
         console.log('zoom changed: ' + map.getZoom());
     });
 
+    refreshEvent = new CustomEvent('infoRefreshed');
+
     createLegend();
     createControl();
 }
@@ -662,6 +665,8 @@ function refreshInfo(){
     if (centerControl.getState()) {
         map.setCenter(boatPos);
     }
+
+    document.dispatchEvent(refreshEvent);
 }
 
 function degrees_to_radians(degrees){
@@ -924,15 +929,23 @@ function markerManager(marker){
         refreshDrawingInfoWindow();
     });
 
+    var refresh = function() {
+        distancePolyline.setPath([boatPos, marker.getPosition()]);
+        refreshDrawingInfoWindow();
+    };
+    document.addEventListener('infoRefreshed', refresh);
+
     marker.addListener('rightclick', function () {
         distancePolyline.setMap(null);
         drawingMarkerInfoWindow.close();
         marker.setMap(null);
+        document.removeEventListener('infoRefreshed', refresh);
     });
     marker.addListener('dblclick', function () {
         distancePolyline.setMap(null);
         drawingMarkerInfoWindow.close();
         marker.setMap(null);
+        document.removeEventListener('infoRefreshed', refresh);
     });
 
     function refreshDrawingInfoWindow(){
