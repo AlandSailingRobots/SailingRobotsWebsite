@@ -682,7 +682,7 @@ function lat_rad(lat){
     return Math.max(Math.min(rad_2, Math.PI), -Math.PI) / 2
 }
 
-function calculateZoom(waypoints, mapHeight=550, mapWidth=900, maxZoom=22){
+function calculateZoom(waypoints, mapHeight=650, mapWidth=900, maxZoom=22){
     // at zoom level 0 the entire world can be displayed in an area that is 256 x 256 pixels
     var world_heigth_pix = 256;
     var world_width_pix = 256;
