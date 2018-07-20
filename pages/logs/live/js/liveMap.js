@@ -989,7 +989,7 @@ function createControl() {
   centerControl = new CenterControl(centerControlDiv);
 
   centerControlDiv.index = 1;
-  map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
+  map.controls[google.maps.ControlPosition.LEFT_CENTER].push(centerControlDiv);
 }
 
 function updateLegend(background) {
@@ -1044,7 +1044,7 @@ function CenterControl(controlDiv) {
     controlUI.style.borderRadius = '3px';
     controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
     controlUI.style.cursor = 'pointer';
-    controlUI.style.marginBottom = '22px';
+    controlUI.style.marginBottom = '2px';
     controlUI.style.textAlign = 'center';
     controlUI.title = 'Click to recenter the map';
     controlDiv.appendChild(controlUI);
@@ -1053,11 +1053,12 @@ function CenterControl(controlDiv) {
     var controlText = document.createElement('div');
     controlText.style.color = 'rgb(25,25,25)';
     controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
-    controlText.style.fontSize = '16px';
-    controlText.style.lineHeight = '38px';
-    controlText.style.paddingLeft = '5px';
-    controlText.style.paddingRight = '5px';
-    controlText.innerHTML = 'Center on boat';
+    controlText.style.fontSize = '13px';
+    controlText.style.fontWeight = 'bold';
+    controlText.style.lineHeight = '20px';
+    controlText.style.paddingLeft = '3px';
+    controlText.style.paddingRight = '3px';
+    controlText.innerHTML = 'Center boat';
     controlUI.appendChild(controlText);
 
     // Setup the click event listeners: Flip from one state to the other
