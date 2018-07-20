@@ -161,8 +161,6 @@ var courseToSteerIcon = {
     strokeweight: 0.1,
 };
 
-//TODO Add rc_on or off to boatInfo
-
 //##### MAIN ######
 $(document).ready(function () {
         createMap();
@@ -337,7 +335,7 @@ function createMap(){
     routePolyline = new google.maps.Polyline({
         path: [defaultPos, defaultPos],
         geodesic: true,
-        strokeColor: '#446CB3',
+        strokeColor: '#FFA500',
         strokeOpacity: 0.7,
         strokeweight: 1,
         map: map
@@ -1010,7 +1008,7 @@ function switchModes(){
             strokeColor: '#D2527F',
         })
         routePolyline.setOptions({
-            strokeColor: '#446CB3',
+            strokeColor: '#FFA500',
         });
         updateLegend('#fff');
     }
