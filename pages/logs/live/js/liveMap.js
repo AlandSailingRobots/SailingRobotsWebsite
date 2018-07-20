@@ -9,6 +9,7 @@ var boatInfoWindow = null;
 var windInfoWindow = null;
 var drawingInfoWindow = null;
 var legendDiv = null;
+var centerControl;
 
 var absolutePath;
 var data = null;
@@ -390,6 +391,7 @@ function createMap(){
     });
 
     createLegend();
+    createControl();
 }
 //Initialise map and place markers
 function initMap() {
@@ -644,6 +646,10 @@ function refreshInfo(){
     updateRoute();
 
     updateLiveData();
+
+    if (centerControl.getState()) {
+        map.setCenter(boatPos);
+    }
 }
 
 function degrees_to_radians(degrees){
@@ -978,6 +984,14 @@ function createLegend(){
     legend.appendChild(legendDiv);
 }
 
+function createControl() {
+  var centerControlDiv = document.createElement('div');
+  centerControl = new CenterControl(centerControlDiv);
+
+  centerControlDiv.index = 1;
+  map.controls[google.maps.ControlPosition.TOP_CENTER].push(centerControlDiv);
+}
+
 function updateLegend(background) {
     legendDiv.innerHTML = '<h5><p class="legendFont" style="color:' + boatIcon.strokeColor + '">ASPire</p></h5>'
                     + '<h5><p class="legendFont" style="color:' + windDirectionMarker.icon.strokeColor + '">Wind</p></h5>'
@@ -1016,6 +1030,52 @@ function switchModes(){
     updateMarker(windDirectionMarker, windHeading);
     updateMarker(courseToSteerMarker, courseToSteerHeading);
 }
+
+function CenterControl(controlDiv) {
+
+    var control = this;
+    //state false : don't follow boat | state true : follow boat
+    control.state = false;
+
+    // Set CSS for the control border.
+    var controlUI = document.createElement('div');
+    controlUI.style.backgroundColor = '#fff';
+    controlUI.style.border = '2px solid #fff';
+    controlUI.style.borderRadius = '3px';
+    controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+    controlUI.style.cursor = 'pointer';
+    controlUI.style.marginBottom = '22px';
+    controlUI.style.textAlign = 'center';
+    controlUI.title = 'Click to recenter the map';
+    controlDiv.appendChild(controlUI);
+
+    // Set CSS for the control interior.
+    var controlText = document.createElement('div');
+    controlText.style.color = 'rgb(25,25,25)';
+    controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+    controlText.style.fontSize = '16px';
+    controlText.style.lineHeight = '38px';
+    controlText.style.paddingLeft = '5px';
+    controlText.style.paddingRight = '5px';
+    controlText.innerHTML = 'Center on boat';
+    controlUI.appendChild(controlText);
+
+    // Setup the click event listeners: Flip from one state to the other
+    controlUI.addEventListener('click', function() {
+        control.state = !control.state;
+        //Change background colour depending on state
+        if (control.state) {
+            controlUI.style.background = '#ffa'
+        } else {
+            controlUI.style.backgroundColor = '#fff'
+        }
+    });
+}
+//Function to retrieve button's state
+CenterControl.prototype.getState = function() {
+    return this.state;
+};
+
 
 //New function for InfoWindow prototype to check if it is open or not
 google.maps.InfoWindow.prototype.isOpen = function(){
