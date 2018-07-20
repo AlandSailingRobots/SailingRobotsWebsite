@@ -1000,7 +1000,7 @@ function switchModes(){
             strokeColor: '#fff000',
         });
         routePolyline.setOptions({
-            strokeColor: '#EEEEEE',
+            strokeColor: '#FFA500',
         });
         updateLegend('#000')
     } else {
