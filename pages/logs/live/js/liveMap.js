@@ -527,13 +527,13 @@ function getNewPos(pos){
 
 //##### MAP FUNCTIONS ######
 function getBoatInfo(){
-    var courseToSteer = parseInt(courseData.course_to_steer).toFixed();
+    var courseToSteer = parseFloat(courseData.course_to_steer).toFixed();
     var head = boatHeading.toString();
-    var bearToWP = parseInt(google.maps.geometry.spherical.computeHeading(boatPos, getNextWaypointPos()).toFixed());
+    var bearToWP = parseFloat(google.maps.geometry.spherical.computeHeading(boatPos, getNextWaypointPos()).toFixed());
     if (bearToWP<0) { bearToWP = (360+bearToWP).toString() } //Convert heading in range [-180, 180] to range [0, 360]
     var distanceToWP = google.maps.geometry.spherical.computeDistanceBetween(boatPos, getNextWaypointPos()).toFixed();
     //var speed = Math.random().toFixed(3);
-    var speed = parseInt(gpsData.speed).toFixed(2);
+    var speed = parseFloat(gpsData.speed).toFixed(2);
     var tack = parseInt(courseData.tack);
     if (tack) { tack = 'Yes'} else { tack = 'No'}
     var rcON = parseInt(actuatorFeedbackData.rc_on);
@@ -558,7 +558,7 @@ function getWindInfo(){
     //var head = windHeading.toString();
     //var speed = (Math.random()*10).toFixed(3);
     var head = windHeading.toString();
-    var speed = parseInt(windSensorData.speed).toFixed(2).toString();
+    var speed = parseFloat(windSensorData.speed).toFixed(2).toString();
     var contentString = "<div class = 'title'>" +
         "<h3>" + "Wind" + "</h3>" +
         "<div class = 'info'>" +
