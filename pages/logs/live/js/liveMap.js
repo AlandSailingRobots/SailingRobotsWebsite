@@ -7,7 +7,10 @@ var map, legend, boatMarker, windDirectionMarker, courseToSteerMarker, lineToWay
 var route = [];
 var boatInfoWindow = null;
 var windInfoWindow = null;
-var drawingInfoWindow = null;
+var drawingPolygonInfoWindow = null;
+var drawingMarkerInfoWindow = null;
+var drawingPolylineInfoWindow = null;
+var drawingCircleInfoWindow = null;
 var legendDiv = null;
 var centerControl;
 
@@ -365,7 +368,16 @@ function createMap(){
         },
         map: map,
     });
-    drawingInfoWindow = new google.maps.InfoWindow({
+    drawingPolygonInfoWindow = new google.maps.InfoWindow({
+        content: '',
+    });
+    drawingMarkerInfoWindow = new google.maps.InfoWindow({
+        content: '',
+    });
+    drawingPolylineInfoWindow = new google.maps.InfoWindow({
+        content: '',
+    });
+    drawingCircleInfoWindow = new google.maps.InfoWindow({
         content: '',
     });
 
@@ -854,10 +866,10 @@ function updateRoute(){
 function polygonManager(polygon){
     // Click to get poly's area, rightclick to remove from map
     refreshDrawingInfoWindow();
-    drawingInfoWindow.open(map);
+    drawingPolygonInfoWindow.open(map);
 
     google.maps.event.addListener(polygon, 'click', function () {
-        drawingInfoWindow.open(map);
+        drawingPolygonInfoWindow.open(map);
         refreshDrawingInfoWindow();
     });
     google.maps.event.addListener(polygon.getPath(), 'set_at', function () {
@@ -869,14 +881,14 @@ function polygonManager(polygon){
 
     polygon.addListener('rightclick', function () {
         polygon.setMap(null);
-        drawingInfoWindow.close();
+        drawingPolygonInfoWindow.close();
     });
 
     function refreshDrawingInfoWindow(){
         var area = google.maps.geometry.spherical.computeArea(polygon.getPath());
 
-        drawingInfoWindow.setPosition(polygon.my_getBounds().getCenter());
-        drawingInfoWindow.setContent('<h4>' + 'Area: ' + area.toFixed() + ' m²' + '</h4>');
+        drawingPolygonInfoWindow.setPosition(polygon.my_getBounds().getCenter());
+        drawingPolygonInfoWindow.setContent('<h4>' + 'Area: ' + area.toFixed() + ' m²' + '</h4>');
     };
 }
 
@@ -888,16 +900,15 @@ function markerManager(marker){
         strokeOpacity: 0.2,
     });
 
-    drawingInfoWindow.open(map, marker);
+    drawingMarkerInfoWindow.open(map, marker);
     refreshDrawingInfoWindow();
 
     google.maps.event.addListener(marker, 'click', function () {
-        drawingInfoWindow.open(map, marker);
+        drawingMarkerInfoWindow.open(map, marker);
         refreshDrawingInfoWindow();
-
     });
     google.maps.event.addListener(marker, 'dragstart', function () {
-        drawingInfoWindow.open(map, marker);
+        drawingMarkerInfoWindow.open(map, marker);
         refreshDrawingInfoWindow();
     });
     google.maps.event.addListener(marker, 'drag', function () {
@@ -911,7 +922,7 @@ function markerManager(marker){
 
     marker.addListener('rightclick', function () {
         distancePolyline.setMap(null);
-        drawingInfoWindow.close();
+        drawingMarkerInfoWindow.close();
         marker.setMap(null);
     });
 
@@ -919,17 +930,17 @@ function markerManager(marker){
         var dist = google.maps.geometry.spherical.computeDistanceBetween(boatPos, marker.getPosition());
 
         var contentString = '<h4>' + 'Distance: ' + dist.toFixed() + ' m' + '</h4>';
-        drawingInfoWindow.setContent(contentString);
+        drawingMarkerInfoWindow.setContent(contentString);
     };
 }
 
 function polylineManager(polyline){
-    drawingInfoWindow.open(map);
+    drawingPolylineInfoWindow.open(map);
     refreshDrawingInfoWindow();
     var polylinePath = polyline.getPath();
 
     google.maps.event.addListener(polyline, 'click', function () {
-        drawingInfoWindow.open(map);
+        drawingPolylineInfoWindow.open(map);
         refreshDrawingInfoWindow();
     });
     google.maps.event.addListener(polylinePath, 'set_at', function () {
@@ -943,22 +954,22 @@ function polylineManager(polyline){
         var length = google.maps.geometry.spherical.computeLength(polyline.getPath());
         polylinePath = polyline.getPath();
 
-        drawingInfoWindow.setPosition(polylinePath.getAt(polylinePath.getLength()-1));
-        drawingInfoWindow.setContent('<h4> Length: ' + length.toFixed() + ' m </h4>');
+        drawingPolylineInfoWindow.setPosition(polylinePath.getAt(polylinePath.getLength()-1));
+        drawingPolylineInfoWindow.setContent('<h4> Length: ' + length.toFixed() + ' m </h4>');
     };
 
     polyline.addListener('rightclick', function () {
         polyline.setMap(null);
-        drawingInfoWindow.close();
+        drawingPolylineInfoWindow.close();
     });
 }
 
 function circleManager(circle){
-    drawingInfoWindow.open(map);
+    drawingCircleInfoWindow.open(map);
     refreshDrawingInfoWindow();
 
     google.maps.event.addListener(circle, 'click', function () {
-        drawingInfoWindow.open(map);
+        drawingCircleInfoWindow.open(map);
         refreshDrawingInfoWindow();
     });
     google.maps.event.addListener(circle, 'radius_changed', function () {
@@ -970,13 +981,13 @@ function circleManager(circle){
 
     circle.addListener('rightclick', function () {
         circle.setMap(null);
-        drawingInfoWindow.close();
+        drawingCircleInfoWindow.close();
     });
 
 
     function refreshDrawingInfoWindow(){
-        drawingInfoWindow.setPosition(circle.getCenter());
-        drawingInfoWindow.setContent('<h4> Radius: ' + circle.getRadius().toFixed() + ' m </h4>');
+        drawingCircleInfoWindow.setPosition(circle.getCenter());
+        drawingCircleInfoWindow.setContent('<h4> Radius: ' + circle.getRadius().toFixed() + ' m </h4>');
     }
 }
 
@@ -1071,6 +1082,7 @@ function CenterControl(controlDiv) {
         //Change background colour depending on state
         if (control.state) {
             controlUI.style.background = '#ffa'
+            map.setCenter(boatPos);
         } else {
             controlUI.style.backgroundColor = '#fff'
         }
