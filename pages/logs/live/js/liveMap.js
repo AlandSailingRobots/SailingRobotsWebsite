@@ -862,9 +862,9 @@ function rescaleMarkers(){
 
 function updateRoute(){
     route.push(boatPos);
-    if (route.length>50){  //keep only last 100 points of boat's route
+    /*if (route.length>50){  //keep only last 50 points of boat's route
         route.shift();
-    }
+    }*/
     routePolyline.setPath(route);
 }
 
