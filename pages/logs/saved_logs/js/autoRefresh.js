@@ -1,4 +1,3 @@
-const count = 1;
 let enabled = null;
 let timeout = 6000;
 let refreshTimer;
@@ -25,8 +24,8 @@ function init () {
     console.log("current cookie: ");
     console.log(document.cookie);
     counter = JSON.parse(getCookie("counter"));
-    counter += count;
-    setCookie("counter", counter);
+    counter++;
+    setCookie("counter", counter++);
     //=======================
 
 }
@@ -85,8 +84,10 @@ function toggleTimeout () {
 
 function updateButton () {
     if (enabled == true) {
-        document.getElementById ("timeoutBtn").innerText = "Auto refresh [ON]";
+        document.getElementById ("timeoutRefresh").innerText = " Auto refresh [ON]";
+        document.getElementById ("timeoutRefresh").className = "fa fa-refresh";
     } else {
-        document.getElementById ("timeoutBtn").innerText = "Auto refresh [OFF]";
+        document.getElementById ("timeoutRefresh").innerText = " Auto refresh [OFF]";
+        document.getElementById ("timeoutRefresh").className = "fa fa-refresh fa-disabled";
     }
 }

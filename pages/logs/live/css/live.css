@@ -27,3 +27,11 @@
 .liveData-outOfRange {color: #D2527F;}
 
 .liveData-inRange {color: #26A65B;}
+
+.liveData-toggle[aria-expanded=false] .liveData-expanded {
+    display: none;
+}
+
+.liveData-toggle[aria-expanded=true] .liveData-collapsed {
+    display: none;
+}
