@@ -1,4 +1,3 @@
-const count = 1;
 let enabled = null;
 let timeout = 6000;
 let refreshTimer;
@@ -25,8 +24,8 @@ function init () {
     console.log("current cookie: ");
     console.log(document.cookie);
     counter = JSON.parse(getCookie("counter"));
-    counter += count;
-    setCookie("counter", counter);
+    counter++;
+    setCookie("counter", counter++);
     //=======================
 
 }

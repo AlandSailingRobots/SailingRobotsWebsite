@@ -75,7 +75,7 @@ if ($_GET['boat'] == 'janet') {
     <!-- TODO Check if it's used or not -->
 
     <link href="main.css" rel="stylesheet">
-    <!-- <meta http-equiv="refresh" content="6" > <!-- TODO INSERT GOD DAMNED SESSION COOKIE -->
+    <!-- <meta http-equiv="refresh" content="6" > <!-- SESSION COOKIE controls this with JavaScript-->
 </head>
 
 <body class="nav-md">
