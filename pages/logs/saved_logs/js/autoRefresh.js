@@ -2,9 +2,8 @@ let enabled = null;
 let timeout = 6000;
 let refreshTimer;
 
-
 $(document).ready(function () {
-    enabled = JSON.parse(getCookie("enabled"));
+    CheckOpenMenu();
     init();
     updateButton();
 
@@ -15,17 +14,22 @@ function init () {
         setCookie("timeout", timeout);
         setCookie("enabled", true);
         setCookie("counter", 1);
-        document.getElementById ("timeoutBtn").innerText = "Auto refresh [init = ON]";
     }
+    if (document.cookie.indexOf("enabled") >= 0 && document.getElementById("dataTable")) {
+        enabled = JSON.parse(getCookie("enabled"));
+    } else {
+        enabled = false;
+    }
+
     updateButton();
-    runTimer(enabled);
+        runTimer(enabled);
 
     //======= DEBUG =========
-    console.log("current cookie: ");
-    console.log(document.cookie);
     counter = JSON.parse(getCookie("counter"));
     counter++;
     setCookie("counter", counter++);
+    console.log("current cookie: ");
+    console.log(document.cookie);
     //=======================
 
 }
@@ -43,7 +47,7 @@ function runTimer (bool) {
 function startTimer () {
     let timer = setInterval(function () {
         window.location.reload();
-    }, 3000);
+    }, 6000);
 
     return timer;
 }
@@ -51,20 +55,6 @@ function startTimer () {
 function stopTimer (timer) {
     window.clearInterval(timer);
 }
-
-function setCookie (name, value) {
-    document.cookie = name + "=" + value + ";";
-}
-
-function getCookie(name) {
-    let value = "; " + document.cookie;
-    let parts = value.split("; " + name + "=");
-    if (parts.length == 2) return parts.pop().split(";").shift();
-}
-
-document.getElementById ("timeoutBtn").onclick = function () {
-    toggleTimeout ();
-};
 
 function toggleTimeout () {
     enabled = JSON.parse(getCookie("enabled"));
@@ -83,7 +73,7 @@ function toggleTimeout () {
 }
 
 function updateButton () {
-    if (enabled == true) {
+    if (enabled) {
         document.getElementById ("timeoutRefresh").innerText = " Auto refresh [ON]";
         document.getElementById ("timeoutRefresh").className = "fa fa-refresh";
     } else {
@@ -91,3 +81,29 @@ function updateButton () {
         document.getElementById ("timeoutRefresh").className = "fa fa-refresh fa-disabled";
     }
 }
+
+function CheckOpenMenu () {
+    let checkClickInsideSidebarMenu = document.querySelector("#sidebar-menu");
+
+    document.body.addEventListener('click', function (event) {
+        if (checkClickInsideSidebarMenu.contains(event.target)) {
+            if (enabled) {
+                toggleTimeout ();
+            }
+        }
+    });
+}
+
+function setCookie (name, value) {
+    document.cookie = name + "=" + value + ";";
+}
+
+function getCookie(name) {
+    let value = "; " + document.cookie;
+    let parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
+}
+
+document.getElementById ("timeoutBtn").onclick = function () {
+    toggleTimeout ();
+};
