@@ -42,7 +42,7 @@ if (isset($_SESSION['id']) and isset($_SESSION['username'])) {
     <div class="right_col" role="main">
         <?php
         if ($connected and $_SESSION['right'] == 'admin') {
-            echo '<p> You are an ' . $_SESSION['right'] . '! ';
+            //echo '<p> You are an ' . $_SESSION['right'] . '! ';
             include 'admin_body.php';
         } elseif ($connected) {
             echo '<p> You don\'t have the right to view this webpage </p>';

@@ -126,7 +126,7 @@ if ($boatName == 'janet') {
     <div class="row">
         <div class="col-sm-9 col-md-10 main">
         <h1 class="sub-header jumbotron"><?php echo $page_title ;?></h1>
-            <div class="table-responsive">
+            <div id="dataTable"  class="table-responsive">
                     <?php
                     if ($result && count($result) > 0) {
                         echo '<h3>Total pages: '. $pages .'</h3>'."\n";

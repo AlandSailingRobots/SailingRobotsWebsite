@@ -75,7 +75,8 @@ if ($_GET['boat'] == 'janet') {
     <!-- TODO Check if it's used or not -->
 
     <link href="main.css" rel="stylesheet">
-    <meta http-equiv="refresh" content="6" > <!-- TODO INSERT GOD DAMNED SESSION COOKIE -->
+    <link rel="stylesheet" href="css/autoRefresh.css">
+    <!-- <meta http-equiv="refresh" content="6" > <!-- SESSION COOKIE controls this with JavaScript-->
 </head>
 
 <body class="nav-md">
@@ -104,7 +105,9 @@ if ($_GET['boat'] == 'janet') {
                     }
                     ?>
                     </ul>
+                    <button id="timeoutBtn" onclick="toggleTimeout"><i id="timeoutRefresh" class="fa fa-refresh"></i></button>
                 </div>
+
             </div>
 
             <?php
@@ -153,6 +156,10 @@ if ($_GET['boat'] == 'janet') {
     <!-- Custom Theme Scripts -->
     <script src=<?php echo $relative_path . "assets/js/custom.min.js"?>></script>
 
+  <script type="text/javascript" src="js/autoRefresh.js">
+
+
+  </script>
     <!-- TODO Check if it's used or not  -->
     <!-- <script src="jsfunctions.js"></script> -->
 

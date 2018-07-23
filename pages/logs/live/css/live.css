@@ -1,15 +1,14 @@
 /* Always set the map height explicitly to define the size of the div
  * element that contains the map. */
 #map {
-    height: 550PX;
+    height: 650PX;
 }
 
 #legend {
-    font-family: Arial, sans-serif;
+    font-family: Roboto, Arial, sans-serif;
 
     font-weight: bold;
-    background: #ffff00;
-
+    background: #fff;
     padding: 3px;
     margin: 3px;
 }
@@ -21,5 +20,18 @@
 
 .liveData {
     font-size: 8pt;
-    white-space: nowrap
+    white-space: nowrap;
+    color: #26A65B;
+}
+
+.liveData-outOfRange {color: #D2527F;}
+
+.liveData-inRange {color: #26A65B;}
+
+.liveData-toggle[aria-expanded=false] .liveData-expanded {
+    display: none;
+}
+
+.liveData-toggle[aria-expanded=true] .liveData-collapsed {
+    display: none;
 }
