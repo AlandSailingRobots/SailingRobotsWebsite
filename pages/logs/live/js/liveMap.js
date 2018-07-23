@@ -898,7 +898,7 @@ function polygonManager(polygon){
 
         drawingPolygonInfoWindow.setPosition(polygon.my_getBounds().getCenter());
         drawingPolygonInfoWindow.setContent('<h4>' + 'Area: ' + area.toFixed() + ' m²' + '</h4>');
-    };
+    }
 }
 
 function markerManager(marker){
@@ -953,7 +953,7 @@ function markerManager(marker){
 
         var contentString = '<h4>' + 'Distance: ' + dist.toFixed() + ' m' + '</h4>';
         drawingMarkerInfoWindow.setContent(contentString);
-    };
+    }
 }
 
 function polylineManager(polyline){
@@ -978,7 +978,7 @@ function polylineManager(polyline){
 
         drawingPolylineInfoWindow.setPosition(polylinePath.getAt(polylinePath.getLength()-1));
         drawingPolylineInfoWindow.setContent('<h4> Length: ' + length.toFixed() + ' m </h4>');
-    };
+    }
 
     polyline.addListener('rightclick', function () {
         polyline.setMap(null);

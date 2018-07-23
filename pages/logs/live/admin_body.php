@@ -3,7 +3,11 @@
 <script src="js/liveMap.js"></script>
 <link rel="stylesheet" href="css/live.css">
 
-<button class="btn btn-info btn-lg btn-block" data-toggle="collapse" data-target="#liveData" role="button" aria-pressed="true">Show current data</button>
+<button class="btn btn-info btn-lg btn-block liveData-toggle" data-toggle="collapse" data-target="#liveData" role="button" aria-pressed="true" aria-expanded="false">
+    <i class="fa fa-database"></i>
+    <span class="liveData-collapsed">Show current data</span>
+    <span class="liveData-expanded">Hide current data</span>
+</button>
 
 <div id="liveData" class="container-fluid collapse">
     <div class="row">
