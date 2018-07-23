@@ -11,14 +11,12 @@ function checkIfNewConfigs()
 
     $req = $db->prepare("SELECT configs_updated FROM config_httpsync");
     $exec = $req->execute();
-    
     if (!$exec) {
         throw new Exception("Database Error {$req->error}");
     }
     $result = $req->fetchAll(PDO::FETCH_ASSOC);
     $req->closeCursor();
     return json_encode($result[0]);
-    // return json_encode($result[0]['configs_updated']);
 }
 
 function setConfigsUpdated()
@@ -31,7 +29,27 @@ function setConfigsUpdated()
 function getAllConfigs($boat)
 {
     setConfigsUpdated();
-    $allData = array_merge(
+    $db = $GLOBALS['db_connection'];
+    $req = $db->prepare("SELECT table_name FROM information_schema.tables WHERE table_schema='ithaax_".$boat."_config' AND table_name LIKE 'config_%'");
+    $req->execute();
+    $rows = $req->fetchAll(PDO::FETCH_ASSOC);
+
+    $tables = array();
+    foreach ($rows as $row) {
+        $tables[] = "ithaax_".$boat."_config.".$row['table_name'];
+    }
+
+    // Id could be PDO bound to a named parameter but well ..
+    $result = getTables($tables, "*", "WHERE id = 1");
+
+    foreach ($result as $key => $value) {
+        $result[str_replace("ithaax_".$boat."_config.config_", "", $key)] = $value;
+        unset($result[$key]);
+    }
+    $result = json_encode($result);
+    return $result;
+}
+/*    $allData = array_merge(
         getConfig($boat, "config_ais"),
         getConfig($boat, "config_ais_processing"),
         getConfig($boat, "config_buffer"),
@@ -66,4 +84,4 @@ function getConfig($boat, $table)
     $array = array($table => 0);
     $array[$table] = $result[0];
     return $array;
-}
+}*/
