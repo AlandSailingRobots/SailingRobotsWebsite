@@ -22,8 +22,6 @@ Class jsonResponse {
         $request = $_GET['data'];
         switch ($request) {
             case 'getGpsData':
-                $mission = $live->getMissionWaypoints();
-                echo json_encode($mission);
                 $gps = $live->getPosition();
                 echo json_encode($gps);
                 break;
@@ -59,6 +57,8 @@ Class jsonResponse {
                 $data['windSensorData'] = $live->getData("dataLogs_windsensor");
                 $data['marineSensorData'] = $live->getData("dataLogs_marine_sensors");
                 $data['currentSensorData'] = $live->getData("dataLogs_current_sensors");
+                $data['actuatorFeedbackData'] = $live->getData("dataLogs_actuator_feedback");
+
                 $result = Array();
                 array_push($result, $data);
                 echo json_encode($result);

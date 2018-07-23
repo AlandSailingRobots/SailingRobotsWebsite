@@ -3,17 +3,19 @@
 <script src="js/liveMap.js"></script>
 <link rel="stylesheet" href="css/live.css">
 
+<button class="btn btn-info btn-lg btn-block liveData-toggle" data-toggle="collapse" data-target="#liveData" role="button" aria-pressed="true" aria-expanded="false">
+    <i class="fa fa-database"></i>
+    <span class="liveData-collapsed">Show current data</span>
+    <span class="liveData-expanded">Hide current data</span>
+</button>
 
-<div class="container-fluid">
+<div id="liveData" class="container-fluid collapse">
     <div class="row">
-
         <div class="col-sm-6">
             <h2>Current Sensors</h2>
             <div id="currentSensorDataKey" class="liveData col-sm-3"></div>
             <div id="currentSensorDataValue" class="liveData col-sm-3"></div>
         </div>
-
-
         <div class="col-sm-6">
             <h2>GPS Data</h2>
             <div id="gpsDataKey" class="liveData col-sm-3"></div>
@@ -22,14 +24,11 @@
     </div>
 
     <div class="row">
-
         <div class="col-sm-6">
             <h2>Compass Data</h2>
             <div id="compassDataKey" class="liveData col-sm-3"></div>
             <div id="compassDataValue" class="liveData col-sm-3"></div>
         </div>
-
-
         <div class="col-sm-6">
             <h2>Wind Sensor Data</h2>
             <div id="windSensorDataKey" class="liveData col-sm-3"></div>
@@ -38,29 +37,20 @@
     </div>
 
     <div class="row">
-
         <div class="col-sm-6">
             <h2>Course Data</h2>
             <div id="courseDataKey" class="liveData col-sm-3"></div>
             <div id="courseDataValue" class="liveData col-sm-3"></div>
         </div>
-
-
         <div class="col-sm-6">
             <h2>Marine Sensor Data</h2>
-            <div id="marineSensorDataKey" class="liveData col-sm-3">
-
-            </div>
-            <div id="marineSensorDataValue" class="liveData col-sm-3">
-
-            </div>
+            <div id="marineSensorDataKey" class="liveData col-sm-3"></div>
+            <div id="marineSensorDataValue" class="liveData col-sm-3"></div>
         </div>
     </div>
 </div>
 
 <div class="container">
-
-
     <div class = "mapClass">
         <div id="map"></div>
         <div id="legend"></div>

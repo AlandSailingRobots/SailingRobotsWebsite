@@ -1,21 +1,29 @@
 //##### CONSTANTS ######
 const VALUE_NOT_SET = 1;
+const OUT_OF_RANGE = -2000;
 
 //##### GLOBALS ######
 var map, legend, boatMarker, windDirectionMarker, courseToSteerMarker, lineToWaypoint, routePolyline, drawing;
 var route = [];
 var boatInfoWindow = null;
 var windInfoWindow = null;
-var drawingInfoWindow = null;
+var drawingPolygonInfoWindow = null;
+var drawingMarkerInfoWindow = null;
+var drawingPolylineInfoWindow = null;
+var drawingCircleInfoWindow = null;
 var legendDiv = null;
+var centerControl;
+var refreshEvent;
 
 var absolutePath;
+var data = null;
 var gpsData = null;
 var windSensorData;
 var courseData;
 var compassData;
 var currentSensorData;
 var marineSensorData;
+var actuatorFeedbackData;
 
 //var boatPos= new google.maps.LatLng(60.107900, 19.922975);
 var boatPos     = VALUE_NOT_SET;
@@ -158,7 +166,6 @@ var courseToSteerIcon = {
     strokeweight: 0.1,
 };
 
-
 //##### MAIN ######
 $(document).ready(function () {
         createMap();
@@ -166,7 +173,9 @@ $(document).ready(function () {
         console.log("loading functions");
 
         absolutePath = getAbsolutePath();
-
+        data = getAllData();
+        updateAllData(data);
+        /**
         waypoints = getData("getMissionWaypoints");
         gpsData = getData("getGpsData");
         courseData = getData("getCourseData");
@@ -174,7 +183,8 @@ $(document).ready(function () {
         compassData = getData("getCompassData");
         currentSensorData = getData("getCurrentSensorData");
         marineSensorData = getData("getMarineSensorData");
-        boatPos = getNewBoatPos(gpsData);
+         **/
+
 
         updateLiveData();
         debug();
@@ -185,9 +195,7 @@ $(document).ready(function () {
 
         //Refresh map without refreshing page
         setInterval( function() {
-            console.time('refreshInfo');
             refreshInfo();
-            console.timeEnd('refreshInfo');
         }, 5000);
 });
 
@@ -217,24 +225,42 @@ function debug() {
 
     console.log("dataLogs_marine_sensors");
     console.log(marineSensorData);
+
+    console.log("dataLogs_actuator_feedback");
+    console.log(actuatorFeedbackData);
     console.log("=================================================================" +'\n' + "END");
 }
 
+function updateAllData(jsonArray) {
+    waypoints = jsonArray[0].currentMission;
+    gpsData = jsonArray[0].gpsData;
+    courseData = jsonArray[0].courseData;
+    windSensorData = jsonArray[0].windSensorData;
+    compassData = jsonArray[0].compassData;
+    currentSensorData = jsonArray[0].currentSensorData;
+    marineSensorData = jsonArray[0].marineSensorData;
+    boatPos = getNewBoatPos(gpsData);
+    boatHeading = getBoatHeading();
+    windHeading = getWindHeading();
+    courseToSteerHeading = getSteerHeading();
+    actuatorFeedbackData = jsonArray[0].actuatorFeedbackData;
+}
+
 function printLiveData(data, idKey, idValue) {
-    var dataKey = null;
-    var dataValue = null;
+    let dataKey = "";
+    let dataValue = "";
     Object.keys(data).forEach(function(key) {
-        if (!dataKey) {
-            dataKey = "<div>" + key + "</div>";
-            dataValue = "<div>" + data[key] + "</div>";
-        } else {
             dataKey += "<div>" + key + "</div>";
-            dataValue += "<div>" + data[key] + "</div>";
-        }
+            if (data[key] == OUT_OF_RANGE) {
+                dataValue += "<div class='liveData-outOfRange'>" + data[key] + "</div>";
+            } else {
+                dataValue += "<div class='liveData-inRange'>" + data[key] + "</div>";
+            }
     })
 
     document.getElementById(idKey).innerHTML = dataKey;
     document.getElementById(idValue).innerHTML = dataValue;
+
 }
 
 function updateLiveData() {
@@ -314,7 +340,7 @@ function createMap(){
     routePolyline = new google.maps.Polyline({
         path: [defaultPos, defaultPos],
         geodesic: true,
-        strokeColor: '#446CB3',
+        strokeColor: '#FFA500',
         strokeOpacity: 0.7,
         strokeweight: 1,
         map: map
@@ -343,7 +369,16 @@ function createMap(){
         },
         map: map,
     });
-    drawingInfoWindow = new google.maps.InfoWindow({
+    drawingPolygonInfoWindow = new google.maps.InfoWindow({
+        content: '',
+    });
+    drawingMarkerInfoWindow = new google.maps.InfoWindow({
+        content: '',
+    });
+    drawingPolylineInfoWindow = new google.maps.InfoWindow({
+        content: '',
+    });
+    drawingCircleInfoWindow = new google.maps.InfoWindow({
         content: '',
     });
 
@@ -368,7 +403,10 @@ function createMap(){
         console.log('zoom changed: ' + map.getZoom());
     });
 
+    refreshEvent = new CustomEvent('infoRefreshed');
+
     createLegend();
+    createControl();
 }
 //Initialise map and place markers
 function initMap() {
@@ -405,6 +443,28 @@ function initMap() {
 }
 
 //##### GETTERS ######
+function getAllData() {
+    var value = null;
+    var url = absolutePath + 'include/live_mission.php';
+
+    jQuery.ajax({
+        type: 'GET',
+        url: url,
+        async: false,
+        contentType: "application/json",
+        data: {data: ""},
+        dataType: 'json',
+        success: function(json) {
+            value = json;
+        },
+        error: function(e) {
+            console.log("jQuery error message = "+e.message);
+        }
+    });
+    return value;
+
+}
+
 function getData(logName) {
     var value = null;
     var url = absolutePath + 'include/live_mission.php';
@@ -484,15 +544,17 @@ function getNewPos(pos){
 
 //##### MAP FUNCTIONS ######
 function getBoatInfo(){
-    var courseToSteer = courseData.course_to_steer;
+    var courseToSteer = parseFloat(courseData.course_to_steer).toFixed();
     var head = boatHeading.toString();
-    var bearToWP = parseInt(google.maps.geometry.spherical.computeHeading(boatPos, getNextWaypointPos()).toFixed());
+    var bearToWP = parseFloat(google.maps.geometry.spherical.computeHeading(boatPos, getNextWaypointPos()).toFixed());
     if (bearToWP<0) { bearToWP = (360+bearToWP).toString() } //Convert heading in range [-180, 180] to range [0, 360]
     var distanceToWP = google.maps.geometry.spherical.computeDistanceBetween(boatPos, getNextWaypointPos()).toFixed();
     //var speed = Math.random().toFixed(3);
-    var speed = parseInt(gpsData.speed).toFixed(3);
-    var tack = courseData.tack;
+    var speed = parseFloat(gpsData.speed).toFixed(2);
+    var tack = parseInt(courseData.tack);
     if (tack) { tack = 'Yes'} else { tack = 'No'}
+    var rcON = parseInt(actuatorFeedbackData.rc_on);
+    if (rcON) { rcON = 'Yes'} else { rcON = 'No'}
 
     var contentString = "<div class = 'title'>" +
         "<h3>" + "ASPire" + "</h3>" +
@@ -503,6 +565,7 @@ function getBoatInfo(){
         "<h4> distanceToWP: " + distanceToWP + " m" + "</h4>" +
         "<h4> tacking: " + tack + "</h4>" +
         "<h4> speed: " + speed + " m/s" + "</h4>" +
+        "<h4> rc_ON: " + rcON + "</h4>" +
         "</div>";
 
     return contentString
@@ -512,7 +575,7 @@ function getWindInfo(){
     //var head = windHeading.toString();
     //var speed = (Math.random()*10).toFixed(3);
     var head = windHeading.toString();
-    var speed = parseInt(windSensorData.speed).toFixed(3).toString();
+    var speed = parseFloat(windSensorData.speed).toFixed(2).toString();
     var contentString = "<div class = 'title'>" +
         "<h3>" + "Wind" + "</h3>" +
         "<div class = 'info'>" +
@@ -533,53 +596,55 @@ function refreshInfo(){
     // windHeading = getNewHeading(windHeading);
     //boatPos = getNewPos(boatPos);
 //#####################################
-    console.time('getData');
 
-    console.time('courseData');
+    data = getAllData();
+    updateAllData(data);
+    /**
+    console.time('courseData \t\t');
     courseData = getData("getCourseData");
-    console.timeEnd('courseData');
+    console.timeEnd('courseData \t\t');
 
-    console.time('windSensorData');
+    console.time('windSensorData \t\t');
     windSensorData = getData("getWindSensorData");
-    console.timeEnd('windSensorData');
+    console.timeEnd('windSensorData \t\t');
 
-    console.time('compassData');
+    console.time('compassData \t\t');
     compassData = getData("getCompassData");
-    console.timeEnd('compassData');
+    console.timeEnd('compassData \t\t');
 
-    console.time('currentSensorData');
+    console.time('currentSensorData \t');
     currentSensorData = getData("getCurrentSensorData");
-    console.timeEnd('currentSensorData');
+    console.timeEnd('currentSensorData \t');
 
-    console.time('marineSensorData');
+    console.time('marineSensorData \t');
     marineSensorData = getData("getMarineSensorData");
-    console.timeEnd('marineSensorData');
+    console.timeEnd('marineSensorData \t');
 
-    console.time('gpsData');
+    console.time('gpsData \t\t');
     gpsData = getData("getGpsData");
-    console.timeEnd('gpsData');
+    console.timeEnd('gpsData \t\t');
 
-    console.time('waypoints');
+    console.time('waypoints \t\t');
     waypoints = getData("getMissionWaypoints");
-    console.timeEnd('waypoints');
+    console.timeEnd('waypoints \t\t');
 
-    console.time('boatPos');
+    console.time('boatPos \t\t');
     boatPos = getNewBoatPos(gpsData);
-    console.timeEnd('boatPos');
+    console.timeEnd('boatPos \t\t');
 
-    console.time('boatHeading');
+    console.time('boatHeading \t\t');
     boatHeading = getBoatHeading();
-    console.timeEnd('boatHeading');
+    console.timeEnd('boatHeading \t\t');
 
-    console.time('windHeading');
+    console.time('windHeading \t\t');
     windHeading = getWindHeading();
-    console.timeEnd('windHeading');
+    console.timeEnd('windHeading \t\t');
 
-    console.time('courseToSteerHeading');
+    console.time('courseToSteerHeading \t');
     courseToSteerHeading = getSteerHeading();
-    console.timeEnd('courseToSteerHeading');
+    console.timeEnd('courseToSteerHeading \t');
+    **/
 
-    console.timeEnd('getData');
     // console.log('\n\n' + 'LAT: ' + boatPos.lat() + ' | LNG: ' + boatPos.lng() + ' | ID: ' + gpsData.id);
     // console.log('BOATHEAD: ' + boatHeading + ' | WINDHEAD: ' + windHeading + ' | COURSE TO STEER: ' + courseToSteerHeading);
 
@@ -594,7 +659,14 @@ function refreshInfo(){
     showInfoWindow(windDirectionMarker, windInfoWindow, getWindInfo());
 
     updateRoute();
-    // updateLiveData();
+
+    updateLiveData();
+
+    if (centerControl.getState()) {
+        map.setCenter(boatPos);
+    }
+
+    document.dispatchEvent(refreshEvent);
 }
 
 function degrees_to_radians(degrees){
@@ -610,7 +682,7 @@ function lat_rad(lat){
     return Math.max(Math.min(rad_2, Math.PI), -Math.PI) / 2
 }
 
-function calculateZoom(waypoints, mapHeight=550, mapWidth=900, maxZoom=22){
+function calculateZoom(waypoints, mapHeight=650, mapWidth=900, maxZoom=22){
     // at zoom level 0 the entire world can be displayed in an area that is 256 x 256 pixels
     var world_heigth_pix = 256;
     var world_width_pix = 256;
@@ -790,19 +862,19 @@ function rescaleMarkers(){
 
 function updateRoute(){
     route.push(boatPos);
-    if (route.length>50){  //keep only last 100 points of boat's route
+    /*if (route.length>50){  //keep only last 50 points of boat's route
         route.shift();
-    }
+    }*/
     routePolyline.setPath(route);
 }
 
 function polygonManager(polygon){
     // Click to get poly's area, rightclick to remove from map
     refreshDrawingInfoWindow();
-    drawingInfoWindow.open(map);
+    drawingPolygonInfoWindow.open(map);
 
     google.maps.event.addListener(polygon, 'click', function () {
-        drawingInfoWindow.open(map);
+        drawingPolygonInfoWindow.open(map);
         refreshDrawingInfoWindow();
     });
     google.maps.event.addListener(polygon.getPath(), 'set_at', function () {
@@ -814,15 +886,19 @@ function polygonManager(polygon){
 
     polygon.addListener('rightclick', function () {
         polygon.setMap(null);
-        drawingInfoWindow.close();
+        drawingPolygonInfoWindow.close();
+    });
+    polygon.addListener('dblclick', function () {
+        polygon.setMap(null);
+        drawingPolygonInfoWindow.close();
     });
 
     function refreshDrawingInfoWindow(){
         var area = google.maps.geometry.spherical.computeArea(polygon.getPath());
 
-        drawingInfoWindow.setPosition(polygon.my_getBounds().getCenter());
-        drawingInfoWindow.setContent('<h4>' + 'Area: ' + area.toFixed() + ' m²' + '</h4>');
-    };
+        drawingPolygonInfoWindow.setPosition(polygon.my_getBounds().getCenter());
+        drawingPolygonInfoWindow.setContent('<h4>' + 'Area: ' + area.toFixed() + ' m²' + '</h4>');
+    }
 }
 
 function markerManager(marker){
@@ -833,44 +909,60 @@ function markerManager(marker){
         strokeOpacity: 0.2,
     });
 
-    drawingInfoWindow.open(map, marker);
+    drawingMarkerInfoWindow.open(map, marker);
     refreshDrawingInfoWindow();
 
     google.maps.event.addListener(marker, 'click', function () {
-        drawingInfoWindow.open(map, marker);
+        drawingMarkerInfoWindow.open(map, marker);
         refreshDrawingInfoWindow();
-
     });
     google.maps.event.addListener(marker, 'dragstart', function () {
-        drawingInfoWindow.open(map, marker);
+        drawingMarkerInfoWindow.open(map, marker);
         refreshDrawingInfoWindow();
     });
     google.maps.event.addListener(marker, 'drag', function () {
         distancePolyline.setPath([boatPos, marker.getPosition()]);
         refreshDrawingInfoWindow();
     });
+    google.maps.event.addListener(map, 'center_changed', function () {
+        distancePolyline.setPath([boatPos, marker.getPosition()]);
+        refreshDrawingInfoWindow();
+    });
+
+    var refresh = function() {
+        distancePolyline.setPath([boatPos, marker.getPosition()]);
+        refreshDrawingInfoWindow();
+    };
+    document.addEventListener('infoRefreshed', refresh);
 
     marker.addListener('rightclick', function () {
         distancePolyline.setMap(null);
-        drawingInfoWindow.close();
+        drawingMarkerInfoWindow.close();
         marker.setMap(null);
+        document.removeEventListener('infoRefreshed', refresh);
+    });
+    marker.addListener('dblclick', function () {
+        distancePolyline.setMap(null);
+        drawingMarkerInfoWindow.close();
+        marker.setMap(null);
+        document.removeEventListener('infoRefreshed', refresh);
     });
 
     function refreshDrawingInfoWindow(){
         var dist = google.maps.geometry.spherical.computeDistanceBetween(boatPos, marker.getPosition());
 
         var contentString = '<h4>' + 'Distance: ' + dist.toFixed() + ' m' + '</h4>';
-        drawingInfoWindow.setContent(contentString);
-    };
+        drawingMarkerInfoWindow.setContent(contentString);
+    }
 }
 
 function polylineManager(polyline){
-    drawingInfoWindow.open(map);
+    drawingPolylineInfoWindow.open(map);
     refreshDrawingInfoWindow();
     var polylinePath = polyline.getPath();
 
     google.maps.event.addListener(polyline, 'click', function () {
-        drawingInfoWindow.open(map);
+        drawingPolylineInfoWindow.open(map);
         refreshDrawingInfoWindow();
     });
     google.maps.event.addListener(polylinePath, 'set_at', function () {
@@ -884,22 +976,26 @@ function polylineManager(polyline){
         var length = google.maps.geometry.spherical.computeLength(polyline.getPath());
         polylinePath = polyline.getPath();
 
-        drawingInfoWindow.setPosition(polylinePath.getAt(polylinePath.getLength()-1));
-        drawingInfoWindow.setContent('<h4> Length: ' + length.toFixed() + ' m </h4>');
-    };
+        drawingPolylineInfoWindow.setPosition(polylinePath.getAt(polylinePath.getLength()-1));
+        drawingPolylineInfoWindow.setContent('<h4> Length: ' + length.toFixed() + ' m </h4>');
+    }
 
     polyline.addListener('rightclick', function () {
         polyline.setMap(null);
-        drawingInfoWindow.close();
+        drawingPolylineInfoWindow.close();
+    });
+    polyline.addListener('dblclick', function () {
+        polyline.setMap(null);
+        drawingPolylineInfoWindow.close();
     });
 }
 
 function circleManager(circle){
-    drawingInfoWindow.open(map);
+    drawingCircleInfoWindow.open(map);
     refreshDrawingInfoWindow();
 
     google.maps.event.addListener(circle, 'click', function () {
-        drawingInfoWindow.open(map);
+        drawingCircleInfoWindow.open(map);
         refreshDrawingInfoWindow();
     });
     google.maps.event.addListener(circle, 'radius_changed', function () {
@@ -911,13 +1007,16 @@ function circleManager(circle){
 
     circle.addListener('rightclick', function () {
         circle.setMap(null);
-        drawingInfoWindow.close();
+        drawingCircleInfoWindow.close();
+    });
+    circle.addListener('dblclick', function () {
+        circle.setMap(null);
+        drawingCircleInfoWindow.close();
     });
 
-
     function refreshDrawingInfoWindow(){
-        drawingInfoWindow.setPosition(circle.getCenter());
-        drawingInfoWindow.setContent('<h4> Radius: ' + circle.getRadius().toFixed() + ' m </h4>');
+        drawingCircleInfoWindow.setPosition(circle.getCenter());
+        drawingCircleInfoWindow.setContent('<h4> Radius: ' + circle.getRadius().toFixed() + ' m </h4>');
     }
 }
 
@@ -927,6 +1026,14 @@ function createLegend(){
 
     legendDiv = document.createElement('div');
     legend.appendChild(legendDiv);
+}
+
+function createControl() {
+  var centerControlDiv = document.createElement('div');
+  centerControl = new CenterControl(centerControlDiv);
+
+  centerControlDiv.index = 1;
+  map.controls[google.maps.ControlPosition.LEFT_CENTER].push(centerControlDiv);
 }
 
 function updateLegend(background) {
@@ -949,7 +1056,7 @@ function switchModes(){
             strokeColor: '#fff000',
         });
         routePolyline.setOptions({
-            strokeColor: '#EEEEEE',
+            strokeColor: '#FFA500',
         });
         updateLegend('#000')
     } else {
@@ -959,7 +1066,7 @@ function switchModes(){
             strokeColor: '#D2527F',
         })
         routePolyline.setOptions({
-            strokeColor: '#446CB3',
+            strokeColor: '#FFA500',
         });
         updateLegend('#fff');
     }
@@ -967,6 +1074,55 @@ function switchModes(){
     updateMarker(windDirectionMarker, windHeading);
     updateMarker(courseToSteerMarker, courseToSteerHeading);
 }
+
+function CenterControl(controlDiv) {
+
+    var control = this;
+    //state false : don't follow boat | state true : follow boat
+    control.state = false;
+
+    // Set CSS for the control border.
+    var controlUI = document.createElement('div');
+    controlUI.style.backgroundColor = '#fff';
+    controlUI.style.border = '2px solid #fff';
+    controlUI.style.borderRadius = '3px';
+    controlUI.style.boxShadow = '0 2px 6px rgba(0,0,0,.3)';
+    controlUI.style.cursor = 'pointer';
+    controlUI.style.marginBottom = '2px';
+    controlUI.style.textAlign = 'center';
+    controlUI.title = 'Click to recenter the map';
+    controlDiv.appendChild(controlUI);
+
+    // Set CSS for the control interior.
+    var controlText = document.createElement('div');
+    controlText.style.color = 'rgb(25,25,25)';
+    controlText.style.fontFamily = 'Roboto,Arial,sans-serif';
+    controlText.style.fontSize = '13px';
+    controlText.style.fontWeight = 'bold';
+    controlText.style.lineHeight = '20px';
+    controlText.style.paddingLeft = '3px';
+    controlText.style.paddingRight = '3px';
+    controlText.innerHTML = 'Center boat';
+    controlUI.appendChild(controlText);
+
+    // Setup the click event listeners: Flip from one state to the other
+    controlUI.addEventListener('click', function() {
+        control.state = !control.state;
+        //Change background colour depending on state
+        if (control.state) {
+            controlUI.style.background = '#ffa'
+            map.setCenter(boatPos);
+        } else {
+            controlUI.style.backgroundColor = '#fff'
+        }
+    });
+}
+
+//Function to retrieve button's state
+CenterControl.prototype.getState = function() {
+    return this.state;
+};
+
 
 //New function for InfoWindow prototype to check if it is open or not
 google.maps.InfoWindow.prototype.isOpen = function(){
