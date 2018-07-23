@@ -84,8 +84,10 @@ function toggleTimeout () {
 
 function updateButton () {
     if (enabled == true) {
-        document.getElementById ("timeoutBtn").innerText = "Auto refresh [ON]";
+        document.getElementById ("timeoutRefresh").innerText = " Auto refresh [ON]";
+        document.getElementById ("timeoutRefresh").className = "fa fa-refresh";
     } else {
-        document.getElementById ("timeoutBtn").innerText = "Auto refresh [OFF]";
+        document.getElementById ("timeoutRefresh").innerText = " Auto refresh [OFF]";
+        document.getElementById ("timeoutRefresh").className = "fa fa-refresh fa-disabled";
     }
 }
