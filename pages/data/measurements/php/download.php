@@ -2,8 +2,9 @@
 session_start();
 define('__ROOT__', dirname(dirname(dirname(dirname(dirname(__FILE__))))));
 require_once __ROOT__.'/globalsettings.php';
+require_once __ROOT__.'/vendor/autoload.php';
 require_once 'measurements.php';
-require_once 'vendor/autoload.php';
+
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Writer\Ods;
