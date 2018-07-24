@@ -89,10 +89,11 @@ if (!empty($_POST)) {
             } else {
                 // In an ideal situation this would always be the case but old ASPire binaries and Janet have
                 // their own code
+                include_once 'php/DB_functions.php';
                 include_once 'pushDataLogs.php';
-                include_once 'getConfigs.php';
                 include_once 'pushConfigs.php';
                 include_once 'pushWaypoints.php';
+                include_once 'getConfigs.php';
                 include_once 'getWaypoints.php';
             }
 
