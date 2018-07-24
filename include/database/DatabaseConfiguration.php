@@ -18,6 +18,16 @@ class DatabaseConfiguration
     private $charset;
     private $opt;
 
+    /**
+     * DatabaseConfiguration constructor.
+     * @param string $host
+     * @param int $port
+     * @param string $db
+     * @param string $usr
+     * @param string $pwd
+     * @param string $charset
+     * @param array $opt
+     */
     public function __construct (string $host, int $port = 3306, string $db, string $usr, string $pwd,
                                  string $charset = 'utf8mb4',
                                  array  $opt = [PDO::ATTR_ERRMODE               => PDO::ERRMODE_EXCEPTION,
