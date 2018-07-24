@@ -6,6 +6,8 @@
  * Time: 2:32 PM
  */
 
+
+
 class DatabaseConfiguration
 {
     private $host;
@@ -79,6 +81,4 @@ class DatabaseConfiguration
     public function getOpt (): array {
         return $this->opt;
     }
-
-
 }
