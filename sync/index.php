@@ -15,7 +15,7 @@ require_once 'php/is_pwd_correct.php';
 if (!empty($_POST)) {
     $connected = false;
     //echo 'POST array: '."\n";
-    //print_r($_POST);
+    //print_r($_POST);$db
     //echo "\n";
 
     if (!(isset($_POST['id']) || isset($_POST['pwd']))) {

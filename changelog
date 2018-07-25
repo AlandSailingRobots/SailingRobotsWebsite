@@ -4,3 +4,9 @@ https://www.jetbrains.com/help/phpstorm/configuring-local-interpreter.html
 
 add php unit
 https://www.jetbrains.com/help/phpstorm/enabling-php-unit-support.html
+
+====================
+vendor dir is now in .gitignore
+
+run composer install from project root to install dependencies
+====================
