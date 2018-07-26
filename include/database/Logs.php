@@ -21,14 +21,12 @@ class Logs extends DatabaseRepository  {
             .' AND TABLE_SCHEMA="' . $this->dbName . '";';
 
         try {
-            header('Content-Type: application/json');
             $result =  $this->getTables($tableName, $selector, $statements);
             array_shift($result['INFORMATION_SCHEMA.TABLES']);
             return $result;
         } catch (Exception $e) {
             print $e->getMessage();
         }
-
     }
     /**
      * @param string $prefix
