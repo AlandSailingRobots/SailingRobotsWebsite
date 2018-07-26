@@ -2,26 +2,31 @@
 /**
  * Created by PhpStorm.
  * User: jan
- * Date: 7/24/18
- * Time: 4:05 PM
+ * Date: 7/26/18
+ * Time: 10:06 AM
  */
-include 'DatabaseHandlerInterface.php';
 
-class DatabaseHandler implements DatabaseHandlerInterface {
+include 'DatabaseRepositoryInterface.php';
+
+abstract class AbstractDatabaseRepository implements DatabaseRepositoryInterface {
     private $pdo = null;
     private $stmt = null;
+    protected $dbName = null;
 
     /**
-     * DatabaseHandler constructor.
+     * DatabaseRepository constructor.
      * @param DatabaseConnection $databaseConnection
      */
     public function __construct (DatabaseConnection $databaseConnection) {
-        $dsn = $databaseConnection->getDsn();
-        $usr = $databaseConnection->getUsername();
-        $pwd = $databaseConnection->getPassword();
-        $opt = $databaseConnection->getOptions();
         try {
+            $dsn = $databaseConnection->getDsn();
+            $usr = $databaseConnection->getUser();
+            $pwd = $databaseConnection->getPassword();
+            $opt = $databaseConnection->getOptions();
+
+            $this->dbName = $databaseConnection->getDbName();
             $this->pdo = new PDO($dsn, $usr, $pwd, $opt);
+
         } catch (PDOException $e) {
             print $e->getMessage();
         }
@@ -33,10 +38,10 @@ class DatabaseHandler implements DatabaseHandlerInterface {
      * @param $tableNames name of the table
      * @param string $selector columns or just "*" (default)
      * @param string $statements    for example "WHERE id=1 or LIMIT 1
-     * @return mixed
+     * @return array
      * @throws Exception
      */
-    function getTables($tableNames, $selector = "*", $statements = "")
+    final public function getTables($tableNames, $selector = "*", $statements = ""): array
     {
         $array = array();
 
@@ -78,7 +83,7 @@ class DatabaseHandler implements DatabaseHandlerInterface {
      * @return string   JSON
      * @throws Exception
      */
-    function getTablesAsJSON($tableNames, $selector = "*", $statements = "") {
+    final public function getTablesAsJSON($tableNames, $selector = "*", $statements = ""): string {
         return json_encode(self::getTables($tableNames, $selector, $statements));
     }
 }

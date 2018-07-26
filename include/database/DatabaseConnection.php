@@ -26,16 +26,19 @@ class DatabaseConnection
     public function getDsn (): string {
         return sprintf('mysql:host=%s;dbname=%s;charset=%s;port=%s',
             $this->databaseConfiguration->getHost(),
-            $this->databaseConfiguration->getDb(),
+            $this->databaseConfiguration->getDbName(),
             $this->databaseConfiguration->getCharset(),
             $this->databaseConfiguration->getPort()
             );
     }
 
+    public function getDbName (): string {
+        return $this->databaseConfiguration->getDbName();
+    }
     /**
      * @return string
      */
-    public function getUsername (): string {
+    public function getUser (): string {
         return $this->databaseConfiguration->getUsr();
     }
 

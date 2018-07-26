@@ -60,7 +60,7 @@ class DatabaseConfiguration
     /**
      * @return string
      */
-    public function getDb (): string {
+    public function getDbName (): string {
         return $this->db;
     }
 

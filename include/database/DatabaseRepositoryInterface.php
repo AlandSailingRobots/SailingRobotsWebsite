@@ -6,7 +6,7 @@
  * Time: 10:49 AM
  */
 
-interface DatabaseHandlerInterface
+interface DatabaseRepositoryInterface
 {
     /**
      * Gets a single table as an array with tablename as key to an array with first row as column names
@@ -17,7 +17,7 @@ interface DatabaseHandlerInterface
      * @return mixed
      * @throws Exception
      */
-    function getTables($tableNames, $selector = "*", $statements = "");
+    public function getTables($tableNames, $selector = "*", $statements = "");
 
     /**
      * Returns the contents of a table as JSON
@@ -27,5 +27,5 @@ interface DatabaseHandlerInterface
      * @return string   JSON
      * @throws Exception
      */
-    function getTablesAsJSON($tableNames, $selector = "*", $statements = "");
+    public function getTablesAsJSON($tableNames, $selector = "*", $statements = "");
 }
