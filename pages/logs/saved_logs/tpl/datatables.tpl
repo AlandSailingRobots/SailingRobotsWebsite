@@ -1,7 +1,7 @@
 <table id="example" class="display" width="100%" cellspacing="0">
     <thead>
     <tr id="dtHeaders">
-        <?php $dtHeaders ?>
+        <?php echo $dtHeaders ?>
     </tr>
     </thead>
 
