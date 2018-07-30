@@ -76,9 +76,10 @@ function insertTables($tables) {
     foreach ($tables as $tableName => $rows) {
         // PDO binding
         $sql = "INSERT INTO $tableName(".implode(',', $rows[0]).") VALUES(:".implode(',:', $rows[0]).")";
-        $query = $db->prepare($sql);
 
+        $query = $db->prepare($sql);
         foreach (array_splice($rows,1) as $row) {
+
             for ($i = 0; $i < count($rows[0]); $i++) {
                 if (!$query->bindValue($tables[$tableName][0][$i], $row[$i])) {
                     error_log("insertTables(): Unable to bind $tableName parameter $i\"$rows[0][$i]\"=\"$row[$i]\"".PHP_EOL);
@@ -98,6 +99,7 @@ function insertTables($tables) {
                 error_log("500: insertTables():".$e->getMessage()." on \"$sql\"".PHP_EOL);
                 die($e->getMessage());
             }
+            // $query->closeCursor()
         }
     }
     return $idmap;
