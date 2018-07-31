@@ -11,7 +11,6 @@ require_once(__ROOT__.'/globalsettings.php');
 require_once(__ROOT__.'/include/database/DatabaseConnectionFactory.php');
 require_once(__ROOT__.'/include/database/Logs.php');
 
-mb_internal_encoding("UTF-8");
 
 class dtConnection {
     private $sql_details, $table, $primaryKey, $columns;

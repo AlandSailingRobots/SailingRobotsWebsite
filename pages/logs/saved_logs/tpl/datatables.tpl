@@ -1,13 +1,4 @@
-<script type="text/javascript" language="javascript" class="init">
-    $.fn.dataTable.ext.legacy.ajax = true;
-    $(document).ready(function() {
-        $('#example').dataTable( {
-            "processing": true,
-            "serverSide": true,
-            "ajax": "./../../../include/database/datatables/dtConnection.php"
-        } );
-    } );
-</script>
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-9 col-md-10 main">

@@ -58,7 +58,16 @@
 
 <script; type="text/javascript"; src="js/autoRefresh.js"></script>
 <script src="./../../../assets/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
-
+<script type="text/javascript" language="javascript" class="init">
+    //$.fn.dataTable.ext.legacy.ajax = true;
+    $(document).ready(function() {
+        $('#example').dataTable( {
+            "processing": true,
+            "serverSide": true,
+            "ajax": "./../../../include/database/datatables/dtConnection.php"
+        } );
+    } );
+</script>
 
 
 <!-- TODO Check if it's used or not  -->

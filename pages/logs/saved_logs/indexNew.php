@@ -107,7 +107,6 @@ if (!isset($_GET['boat'])) {
 
     // GET TABLE COLUMNS
     $columnNamesAsJSON = $logs->getColumnNamesByTableNameAsJSON("dataLogs_gps");
-    echo $columnNamesAsJSON;
     $dtHeaders = buildHeaders($columnNamesAsJSON);
 
 //require_once(__ROOT__.'/include/database/datatables/dtConnection.php');
