@@ -3,24 +3,19 @@
  * Created by PhpStorm.
  * User: jan
  * Date: 7/26/18
- * Time: 1:03 PM
+ * Time: 12:59 PM
  */
+
+
+session_start();
 define('__ROOT__', dirname(dirname(dirname(dirname(__FILE__)))));
 require_once(__ROOT__.'/globalsettings.php');
+$relative_path = './../../../';
+
+
 require_once(__ROOT__.'/include/database/DatabaseConnectionFactory.php');
 require_once(__ROOT__.'/include/database/Logs.php');
 
-$patterns = array();
-array_push($patterns, '/dataLogs_/');
-array_push($patterns, '/_/');
-
-$replacements = array();
-array_push($replacements, '');
-array_push($replacements, ' ');
-
-$listOfAbbreviation = array(
-    "GPS" => "gps",
-);
 
 
 /**
@@ -37,7 +32,7 @@ function pregReplace(array $patterns, array $replacements, $subject, array $abbr
     } else {
         $displayName = ucwords($displayName);
     }
-        return $displayName;
+    return $displayName;
 }
 
 function buildList (string $jsonResponse, $boatName): string {
@@ -77,24 +72,59 @@ function buildHeaders (string $jsonResponse): string {
     reset($array);
     $firstKey = key($array);
     foreach ($array[$firstKey] as $tableName) {
-        //echo $tableName[0];
-        //echo print_r ($tableName);
-        $tblHeaders = $tblHeaders . "<th>" . $tableName[0] . "</th>";
+        $tblHeaders = $tblHeaders . "<th>" . $tableName . "</th>";
 
     }
     return $tblHeaders;
 }
 
+//  If we are connected
+if (isset($_SESSION['id']) and isset($_SESSION['username'])) {
+  // TODO
+    $connected = true;
+    $name = $_SESSION['username'];
+} else {
+    session_destroy();
+    $connected = false;
+    $_SESSION['username'] = 'Guest';
+    $name = 'Guest';
+}
 
-$databaseConnection = DatabaseConnectionFactory::getDatabaseConnection("ASPire");
-$logs = new Logs($databaseConnection);
-$prefix = 'dataLogs_';
-$jsonResponse = $logs->getTableNamesAsJSONByPrefix($prefix);
-//header('Content-Type: application/json');
 
-$dtList = buildList($jsonResponse, "aspire");
-//include 'tpl/datatables.tpl';
-include 'tpl/datatableList.tpl';
+if (!isset($_GET['boat'])) {
+    // We force aspire by default
+    $_GET['boat'] = "aspire";
+}
+
+    $databaseConnection = DatabaseConnectionFactory::getDatabaseConnection("ASPire");
+    $logs = new Logs($databaseConnection);
+
+    // GET TABLE NAMES
+    $prefix = 'dataLogs_';
+    $tableNamesAsJSON = $logs->getTableNamesAsJSONByPrefix($prefix);
+    //header('Content-Type: application/json');
+    $dtList = buildList($tableNamesAsJSON, "aspire");
+
+    // GET TABLE COLUMNS
+    $columnNamesAsJSON = $logs->getColumnNamesByTableNameAsJSON("dataLogs_gps");
+    echo $columnNamesAsJSON;
+    $dtHeaders = buildHeaders($columnNamesAsJSON);
+
+//require_once(__ROOT__.'/include/database/datatables/dtConnection.php');
+//$dtc = new dtConnection($databaseConnection);
+
+$table = 'dataLogs_gps';
+$primaryKey = 'id';
+
+$selector   = '*';
+$tableName  = 'dataLogs_gps';
+$statements = 'LIMIT 1';
+//$dtHeaders = $logs->getTables($tableName, $selector, $statements);
+
+//$dtc->setup($table, $primaryKey, $columns);
+
+
+include 'tpl/savedLogsBody.tpl';
 
 
 

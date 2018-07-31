@@ -32,9 +32,20 @@ class DatabaseConnection
             );
     }
 
+    /**
+     * @return string
+     */
+    public function getHostname () {
+        return $this->databaseConfiguration->getHost();
+    }
+
+    /**
+     * @return string
+     */
     public function getDbName (): string {
         return $this->databaseConfiguration->getDbName();
     }
+
     /**
      * @return string
      */

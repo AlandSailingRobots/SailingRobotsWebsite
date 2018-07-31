@@ -29,7 +29,7 @@ class DatabaseConfiguration
      * @param array $opt
      */
     public function __construct (string $host, int $port = 3306, string $db, string $usr, string $pwd,
-                                 string $charset = 'utf8mb4',
+                                 string $charset = 'utf8',
                                  array  $opt = [PDO::ATTR_ERRMODE               => PDO::ERRMODE_EXCEPTION,
                                                 PDO::ATTR_DEFAULT_FETCH_MODE    => PDO::FETCH_ASSOC,
                                                 PDO::ATTR_EMULATE_PREPARES      => false,]) {
