@@ -1,6 +1,11 @@
+<style>
+    li.dtList > a {
+        font-size: 8pt;
+    }
 
+</style>
 
-<div class="col-sm-3 col-md-2 sidebar">
+<div class="col-sm-1 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
         <?php echo $dtList ?>
     </ul>

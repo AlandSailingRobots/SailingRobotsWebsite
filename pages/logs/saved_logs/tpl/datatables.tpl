@@ -1,3 +1,8 @@
+<style>
+    #datatables {
+        font-size: 8pt;
+    }
+</style>
 
 <div class="container-fluid">
     <div class="row">
@@ -5,7 +10,7 @@
             <h1 class="sub-header jumbotron"><?php echo $page_title ;?></h1>
             <div id="dataTable"  class="table-responsive">
 
-                <table id="example" class="display" width="100%" cellspacing="0">
+                <table id="datatables" class="display" width="100%" cellspacing="0">
                     <thead>
                     <tr id="dtHeaders">
                         <?php echo $dtHeaders ?>

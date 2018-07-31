@@ -48,22 +48,24 @@
         // That way, main file is 'clean' ?>
 <?php  //include $relative_path . 'include/js_scripts.php'; ?>
 <!-- jQuery -->
-<script src=<?php echo $relative_path . "assets/vendors/jquery/dist/jquery.min.js"?>></script>
+<script src="./../../../assets/vendors/jquery/dist/jquery.min.js"></script>
 <!-- Bootstrap -->
 
-<script; src=;<?php echo; $relative_path .; "assets/vendors/bootstrap/dist/js/bootstrap.min.js"?;>></script>
+<script src="./../../../assets/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
 
 <!-- Custom Theme Scripts -->
-<script src=<?php echo $relative_path . "assets/js/custom.min.js"?>></script>
+<script src="./../../../assets/js/custom.min.js"></script>
 
-<script; type="text/javascript"; src="js/autoRefresh.js"></script>
+<script type="text/javascript" src="js/autoRefresh.js"></script>
 <script src="./../../../assets/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" language="javascript" class="init">
     //$.fn.dataTable.ext.legacy.ajax = true;
     $(document).ready(function() {
-        $('#example').dataTable( {
+        $('#datatables').dataTable( {
             "processing": true,
             "serverSide": true,
+            "order": [[0,'desc']],
+
             "ajax": "./../../../include/database/datatables/dtConnection.php"
         } );
     } );
