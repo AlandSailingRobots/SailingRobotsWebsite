@@ -138,6 +138,9 @@ function pushAllLogs($boat, $json) {
         die('Error: no recognizable data');
     }
 
+    // We will not report anything more so just let the sender off the hook
+    fastcgi_finish_request();
+
     // We will use the dataLogs_system table differently so remove it for now
     $dataLogs_system = array();
     if (array_key_exists('system', $data)) {
@@ -149,7 +152,6 @@ function pushAllLogs($boat, $json) {
     $tables = array();
     foreach ($data as $tablePartName => $rows) {
         $tableName = "dataLogs_$tablePartName";
-
 
         // The SQLite and MySQL dbs have different ID series
         $mysql_id = selectFromAsInt($db, "MAX(id)", $tableName);
@@ -164,9 +166,7 @@ function pushAllLogs($boat, $json) {
             }
             $tables[$tableName][] = $row;
         }
-
     }
-
     $idmap = insertTables($tables);
 
     // This value is not like the others. We actually just grab the mission id from the first log entry
