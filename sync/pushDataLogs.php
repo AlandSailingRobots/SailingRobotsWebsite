@@ -69,42 +69,6 @@ function selectFromAsInt($db, $selector, $from)
     }
 }*/
 
-function insertTables($tables) {
-    $db = $GLOBALS['db_connection'];
-    $idmap = array();
-
-    foreach ($tables as $tableName => $rows) {
-        // PDO binding
-        $sql = "INSERT INTO $tableName(".implode(',', $rows[0]).") VALUES(:".implode(',:', $rows[0]).")";
-
-        $query = $db->prepare($sql);
-        foreach (array_splice($rows,1) as $row) {
-
-            for ($i = 0; $i < count($rows[0]); $i++) {
-                if (!$query->bindValue($tables[$tableName][0][$i], $row[$i])) {
-                    error_log("insertTables(): Unable to bind $tableName parameter $i\"$rows[0][$i]\"=\"$row[$i]\"".PHP_EOL);
-                }
-            }
-
-            try {
-                if ($query->execute()) {
-                    $idmap[$tableName."_id"] = $row[array_search('id', $tables[$tableName][0])];
-                }
-            } catch (PDOException $e) {
-                header(
-                    $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
-                    true,
-                    500
-                );
-                error_log("500: insertTables():".$e->getMessage()." on \"$sql\"".PHP_EOL);
-                die($e->getMessage());
-            }
-            // $query->closeCursor()
-        }
-    }
-    return $idmap;
-}
-
 /**
  * Receives data from boat
  *

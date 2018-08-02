@@ -1,6 +1,25 @@
 <?php
 // ASPire
-// Decode the json array and send queries to the DB to update the configuration of the boat
+
+/**
+ * @param $data
+ * @return bool
+ */
+function pushConfigs($data) {
+    fastcgi_finish_request();
+    $tables = json_decode($data, true);
+    if (count($tables)) {
+        foreach ($tables as $table => $rows) {
+            $tables['config_'.$table] = $rows;
+            unset($tables[$table]);
+        }
+
+        updateTables($tables);
+        return true;
+    }
+}
+
+/*// Decode the json array and send queries to the DB to update the configuration of the boat
 function pushConfigs($data)
 {
     $db = $GLOBALS['db_connection'];
@@ -28,4 +47,4 @@ function pushConfigs($data)
         // $query->close()
     }
     return 1;
-}
+}*/
