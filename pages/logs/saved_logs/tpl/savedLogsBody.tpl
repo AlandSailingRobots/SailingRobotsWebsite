@@ -9,6 +9,7 @@
 
     <link href="main.css" rel="stylesheet">
     <link rel="stylesheet" href="css/autoRefresh.css">
+    <link href="css/dataTables.css" rel="stylesheet">
     <!-- <meta http-equiv="refresh" content="6" > <!-- SESSION COOKIE controls this with JavaScript-->
 </head>
 
@@ -66,7 +67,7 @@
             "serverSide": true,
             "order": [[0,'desc']],
 
-            "ajax": "./../../../include/database/datatables/dtConnection.php"
+            "ajax": "./../../../include/database/datatables/DataTablesRepository.php"
         } );
     } );
 </script>

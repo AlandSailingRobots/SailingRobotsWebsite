@@ -12,7 +12,7 @@ require_once(__ROOT__.'/include/database/DatabaseConnectionFactory.php');
 require_once(__ROOT__.'/include/database/Logs.php');
 
 
-class dtConnection {
+class DataTablesRepository {
     private $sql_details, $table, $primaryKey, $columns;
     private $joinQuery = NULL;
     private $extraWhere = '';
@@ -88,9 +88,9 @@ class dtConnection {
     }
 }
 
-$databaseConnection = DatabaseConnectionFactory::getDatabaseConnection("ASPire");
+$databaseConnection = DatabaseConnectionFactory::getDatabaseConnection("aspire");
 $logs = new Logs($databaseConnection);
-$dtc = new dtConnection($databaseConnection);
+$dtc = new DataTablesRepository($databaseConnection);
 
 $table = 'dataLogs_gps';
 $primaryKey = 'id';
@@ -98,7 +98,9 @@ $primaryKey = 'id';
 $selector   = '*';
 $tableName  = 'dataLogs_gps';
 $statements = 'LIMIT 1';
-$columns = $logs->getTables($tableName, $selector, $statements);
+//$columns = $logs->getTables($tableName, $selector, $statements);
+$columns = $logs->getColumnNamesByTableName($table);
+
 
 //header('Content-Type: application/json');
 $dtc->setup($table, $primaryKey, $columns);

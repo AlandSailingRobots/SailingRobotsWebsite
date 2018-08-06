@@ -71,7 +71,7 @@ function buildHeaders (string $jsonResponse): string {
     $array = json_decode($jsonResponse, true);
     reset($array);
     $firstKey = key($array);
-    foreach ($array[$firstKey] as $tableName) {
+    foreach ($array[$firstKey][0] as $tableName) {
         $tblHeaders = $tblHeaders . "<th>" . $tableName . "</th>";
 
     }
@@ -109,8 +109,8 @@ if (!isset($_GET['boat'])) {
     $columnNamesAsJSON = $logs->getColumnNamesByTableNameAsJSON("dataLogs_gps");
     $dtHeaders = buildHeaders($columnNamesAsJSON);
 
-//require_once(__ROOT__.'/include/database/datatables/dtConnection.php');
-//$dtc = new dtConnection($databaseConnection);
+//require_once(__ROOT__.'/include/database/datatables/DataTablesRepositorypository.php');
+//$dtc = new DataTablesRepository($databaseConnection);
 
 $table = 'dataLogs_gps';
 $primaryKey = 'id';

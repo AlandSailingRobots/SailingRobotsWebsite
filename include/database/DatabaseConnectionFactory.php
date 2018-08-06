@@ -30,7 +30,7 @@ class DatabaseConnectionFactory extends AbstractDatabaseConnectionFactory {
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES   => false,
         ];
-        
+
         $config = new DatabaseConfiguration($host, $port, $db, $usr, $pwd, $charset, $opt);
         $connection = new DatabaseConnection($config);
 

@@ -36,8 +36,11 @@ class Logs extends DatabaseRepository  {
     public function getTableNamesAsJSONByPrefix (string $prefix): string {
         return json_encode(self::getTableNames($prefix));
     }
-//select * from information_schema.columns where table_name = 'dataLogs_gps'
-//$req = $db->prepare("SELECT $selector FROM $tableName $statements");
+
+    /**
+     * @param string $table
+     * @return array
+     */
     public function getColumnNamesByTableName (string $table): array {
         $selector   = '*';
         $tableName  = 'INFORMATION_SCHEMA.COLUMNS';
@@ -49,20 +52,17 @@ class Logs extends DatabaseRepository  {
             $haystack = $result['INFORMATION_SCHEMA.COLUMNS'][0];
             $columnNameIndex  = array_search($needle, $haystack);
 
-            //
-            //$result = $result['INFORMATION_SCHEMA.COLUMNS'][$columnNameIndex];
-
             //we can now remove the first array and get the column names
-            $columnNames = array(
-                "$table" => array()
-            );
             array_shift($result['INFORMATION_SCHEMA.COLUMNS']);
+
+            $columnNames = array(
+                "$table" => array(
+                    array()
+                )
+            );
             foreach ($result['INFORMATION_SCHEMA.COLUMNS'] as $columnInfo) {
-                array_push($columnNames["$table"], $columnInfo[$columnNameIndex]);
+                array_push($columnNames["$table"][0], $columnInfo[$columnNameIndex]);
             }
-
-
-
             return $columnNames;
         } catch (Exception $e) {
             print $e->getMessage();
