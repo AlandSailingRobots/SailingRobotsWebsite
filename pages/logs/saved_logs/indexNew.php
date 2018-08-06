@@ -121,9 +121,11 @@ $statements = 'LIMIT 1';
 //$dtHeaders = $logs->getTables($tableName, $selector, $statements);
 
 //$dtc->setup($table, $primaryKey, $columns);
-
+require_once(__ROOT__.'/include/handlers/RequestHandler.php');
+RequestHandler::handle();
 
 include 'tpl/savedLogsBody.tpl';
+
 
 
 
