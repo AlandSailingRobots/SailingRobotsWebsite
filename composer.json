@@ -1,5 +1,6 @@
 {
     "require": {
+        "php": ">=7.1.0",
         "ext-json": "*",
         "ext-PDO": "*",
         "phpoffice/phpspreadsheet": "^1.2",

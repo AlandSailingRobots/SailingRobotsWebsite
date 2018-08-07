@@ -7,6 +7,14 @@
  */
 
 class GetController {
+    private $request
+    ;
     public function __construct ($request) {
+        $this->request = $request;
+    }
+
+    public function run () {
+        // TODO: Implement __toString() method.
+        echo "yodigity";
     }
 }

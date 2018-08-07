@@ -9,20 +9,27 @@ require_once (__ROOT__ . '/include/handlers/AbstractRequestHandler.php');
 
 class RequestHandler extends AbstractRequestHandler {
 
+    /**
+     * @return GetController|PostController
+     */
     public static function handle() {
         $method = $_SERVER['REQUEST_METHOD'];
-        $request = explode("/", substr(@$_SERVER['PATH_INFO'], 1));
-        print_r($request);
-        print_r($method);
+        //$request = explode("/", substr(@$_SERVER['PATH_INFO'], 1));
+        //print_r($request);
+        //print_r($method);
+        print_r($_GET);
+
         switch ($method) {
             case 'GET':
-                return new GetController($request);
+                require_once (__ROOT__ . '/include/controllers/request/GetController.php');
+                return new GetController($_GET);
             case 'POST':
-                return new PostController($request);
-            case 'PUT':
-                break;
+                require_once (__ROOT__ . '/include/controllers/request/PostController.php');
+                return new PostController($_POST);
+            //case 'PUT':
+              //  break;
             default:
-                break;
+                return null;
         }
     }
 }

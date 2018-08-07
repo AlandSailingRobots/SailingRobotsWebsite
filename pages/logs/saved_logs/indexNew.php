@@ -7,14 +7,15 @@
  */
 
 
-session_start();
-define('__ROOT__', dirname(dirname(dirname(dirname(__FILE__)))));
-require_once(__ROOT__.'/globalsettings.php');
+session_start ();
+define ('__ROOT__', dirname(dirname(dirname(dirname(__FILE__)))));
+require_once (__ROOT__.'/globalsettings.php');
 $relative_path = './../../../';
 
 
-require_once(__ROOT__.'/include/database/DatabaseConnectionFactory.php');
-require_once(__ROOT__.'/include/database/Logs.php');
+require_once (__ROOT__.'/include/database/DatabaseConnectionFactory.php');
+require_once (__ROOT__.'/include/database/Logs.php');
+require_once (__ROOT__.'/include/view/DataLogView.php');
 
 
 
@@ -103,11 +104,11 @@ if (!isset($_GET['boat'])) {
     $prefix = 'dataLogs_';
     $tableNamesAsJSON = $logs->getTableNamesAsJSONByPrefix($prefix);
     //header('Content-Type: application/json');
-    $dtList = buildList($tableNamesAsJSON, "aspire");
+    $dtList = DataLogView::buildList($tableNamesAsJSON, "aspire");
 
     // GET TABLE COLUMNS
     $columnNamesAsJSON = $logs->getColumnNamesByTableNameAsJSON("dataLogs_gps");
-    $dtHeaders = buildHeaders($columnNamesAsJSON);
+    $dtHeaders = DataLogView::buildHeaders($columnNamesAsJSON);
 
 //require_once(__ROOT__.'/include/database/datatables/DataTablesRepositorypository.php');
 //$dtc = new DataTablesRepository($databaseConnection);
@@ -122,7 +123,12 @@ $statements = 'LIMIT 1';
 
 //$dtc->setup($table, $primaryKey, $columns);
 require_once(__ROOT__.'/include/handlers/RequestHandler.php');
-RequestHandler::handle();
+$controller = RequestHandler::handle();
+$controller->run ();
+
+
+
+
 
 include 'tpl/savedLogsBody.tpl';
 
