@@ -19,7 +19,7 @@ class DatabaseConnectionFactory extends AbstractDatabaseConnectionFactory {
      * @param string $boatName
      * @return DatabaseConnection
      */
-    static function getDatabaseConnection (string $boatName): DatabaseConnection {
+    static function getDatabaseConnection (string $boatName = null): DatabaseConnection {
         $host     =  $GLOBALS['hostname'];
         $port     = "3306";
         $db       = self::getDb($boatName);

@@ -124,7 +124,7 @@ $statements = 'LIMIT 1';
 //$dtc->setup($table, $primaryKey, $columns);
 require_once(__ROOT__.'/include/handlers/RequestHandler.php');
 $controller = RequestHandler::handle();
-$controller->run ();
+$controller = $controller->retrieveController ();
 
 
 
