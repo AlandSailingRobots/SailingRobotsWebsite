@@ -34,12 +34,12 @@ class GetController {
 
         // logs/saved_logs/
         if ( in_array('logs', $route) AND in_array('saved_logs', $route) ) {
-            return new DataLogController ();
+            return new DataLogController ($this->request);
         }
 
         // logs/live
         if ( in_array('logs', $route) AND in_array('live', $route) ) {
-            return new LiveLogController ();
+            return new LiveLogController ($this->request);
         }
     }
 

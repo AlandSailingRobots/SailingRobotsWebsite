@@ -125,7 +125,7 @@ $statements = 'LIMIT 1';
 require_once(__ROOT__.'/include/handlers/RequestHandler.php');
 $controller = RequestHandler::handle();
 $controller = $controller->retrieveController ();
-
+$controller->run();
 
 
 
