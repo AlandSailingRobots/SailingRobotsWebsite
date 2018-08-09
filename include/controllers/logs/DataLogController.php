@@ -6,6 +6,7 @@
  * Time: 9:00 AM
  */
 require_once ('AbstractLogController.php');
+require_once (__ROOT__ . '/include/database/datatables/DataTablesRepository.php');
 
 class DataLogController extends AbstractLogController {
     private $request;
@@ -15,16 +16,27 @@ class DataLogController extends AbstractLogController {
     }
 
     public function run () : void {
-        echo '<pre>';
-        print_r( self::getRequest () );
-        echo '</pre>';
+        $this->getData();
     }
 
     public function getData() {
         $request = self::getRequest();
-
-        if ($request['boat'] == aspire) {
-            // TODO
+        $databaseConnection = DatabaseConnectionFactory::getDatabaseConnection($request['boat']);
+        $logs = new Logs($databaseConnection);
+        //print_r ($_GET);
+        if ($_GET['dt']) {
+            //echo 'dt';
+            $table = $request['data'];
+            $primaryKey = 'id';
+            $columns = $logs->getColumnNamesByTableName($table);
+            $dtc = new DataTablesRepository($databaseConnection);
+            $dtc->setup($table, $primaryKey, $columns);
+            $dtc->run();
+        } else {
+            echo '<pre>';
+            echo 'run () ';
+            print_r( self::getRequest () );
+            echo '</pre>';
         }
 
     }

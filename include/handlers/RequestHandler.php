@@ -17,7 +17,7 @@ class RequestHandler extends AbstractRequestHandler {
         //$request = explode("/", substr(@$_SERVER['PATH_INFO'], 1));
         //print_r($request);
         //print_r($method);
-        print_r($_GET);
+//        print_r($_GET);
 
         switch ($method) {
             case 'GET':

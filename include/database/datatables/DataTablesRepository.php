@@ -6,7 +6,7 @@
  * Time: 11:25 AM
  */
 
-define('__ROOT__', dirname(dirname(dirname(dirname(__FILE__)))));
+//define('__ROOT__', dirname(dirname(dirname(dirname(__FILE__)))));
 require_once(__ROOT__.'/globalsettings.php');
 require_once(__ROOT__.'/include/database/DatabaseConnectionFactory.php');
 require_once(__ROOT__.'/include/database/Logs.php');
@@ -44,12 +44,12 @@ class DataTablesRepository {
     public function run (): void {
         //require( 'ssp.class.php' );
 
-
+        /**
         $joinQuery = "FROM `user` AS `u` JOIN `user_details` AS `ud` ON (`ud`.`user_id` = `u`.`id`)";
         $extraWhere = "`u`.`salary` >= 90000";
         $groupBy = "`u`.`office`";
         $having = "`u`.`salary` >= 140000";
-
+        **/
         require('ssp.customized.class.php' );
 
         echo json_encode(
@@ -87,7 +87,7 @@ class DataTablesRepository {
         return $result;
     }
 }
-
+/**
 $databaseConnection = DatabaseConnectionFactory::getDatabaseConnection("aspire");
 $logs = new Logs($databaseConnection);
 $dtc = new DataTablesRepository($databaseConnection);
@@ -102,7 +102,7 @@ $statements = 'LIMIT 1';
 $columns = $logs->getColumnNamesByTableName($table);
 
 
-//header('Content-Type: application/json');
+header('Content-Type: application/json');
 $dtc->setup($table, $primaryKey, $columns);
 $dtc->run();
-
+**/

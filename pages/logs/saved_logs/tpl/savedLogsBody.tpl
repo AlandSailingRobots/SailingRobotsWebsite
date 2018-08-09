@@ -66,8 +66,16 @@
             "processing": true,
             "serverSide": true,
             "order": [[0,'desc']],
-
-            "ajax": "./../../../include/database/datatables/DataTablesRepository.php"
+            //"ajax": "./../../../include/database/datatables/DataTablesRepository.php"
+            "ajax": {
+                "url": "indexNew.php"
+                //?boat=aspire&data=dataLogs_compass&dt=1
+                "data": function ( d ) {
+                    d.boat = "aspire";
+                    d.data = "dataLogs_compass";
+                    d.dt = true;
+                }
+            }
         } );
     } );
 </script>

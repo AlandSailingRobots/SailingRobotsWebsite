@@ -25,12 +25,14 @@ class GetController {
     public function checkRoute () : LogControllerInterface {
         $route = explode("/", substr(@$_SERVER['PHP_SELF'], 1));
 
+        /**
         # @DEBUG
         //echo $_SERVER['PHP_SELF'];
         echo '<pre>';
         print_r($route);
         echo '</pre>';
         # @DEBUG
+        **/
 
         // logs/saved_logs/
         if ( in_array('logs', $route) AND in_array('saved_logs', $route) ) {

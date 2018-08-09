@@ -130,7 +130,7 @@ $controller->run();
 
 
 
-include 'tpl/savedLogsBody.tpl';
+//include 'tpl/savedLogsBody.tpl';
 
 
 
