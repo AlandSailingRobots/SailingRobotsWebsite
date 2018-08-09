@@ -24,7 +24,7 @@ class DataLogController extends AbstractLogController {
         $databaseConnection = DatabaseConnectionFactory::getDatabaseConnection($request['boat']);
         $logs = new Logs($databaseConnection);
         //print_r ($_GET);
-        if ($_GET['dt']) {
+        if (isset($request['dt'])) {
             //echo 'dt';
             $table = $request['data'];
             $primaryKey = 'id';

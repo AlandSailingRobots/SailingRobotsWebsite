@@ -129,8 +129,10 @@ $controller->run();
 
 
 
+if (!isset($_GET['dt'])) {
+    include 'tpl/savedLogsBody.tpl';
+}
 
-//include 'tpl/savedLogsBody.tpl';
 
 
 
