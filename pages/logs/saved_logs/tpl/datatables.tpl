@@ -1,6 +1,6 @@
 <style>
     #datatables {
-        font-size: 8pt;
+        font-size: 10pt;
     }
 </style>
 

@@ -62,22 +62,80 @@
 <script type="text/javascript" language="javascript" class="init">
     //$.fn.dataTable.ext.legacy.ajax = true;
     $(document).ready(function() {
-        $('#datatables').dataTable( {
-            "processing": true,
-            "serverSide": true,
-            "order": [[0,'desc']],
-            "ajax": {
-                "url": "indexNew.php",
-                "data": {
-                    "boat": "aspire",
-                    "data": "dataLogs_gps",
-                    "dt": true
+        var clicked = [];
+
+        var table = $('#example').DataTable();
+
+        if (clicked.data != null) {
+
+
+        var dataTable = $('#datatables').dataTable( {
+            processing: true,
+            serverSide: true,
+            order: [[0,'desc']],
+            ajax: {
+                url: "indexNew.php",
+
+                data: {
+                    boat: $(this).attr('boat'),
+                    //data: "dataLogs_gps",
+                    data: clicked.data,
+                    dt: true,
+                    success: function(data) {
+                        var successmessage = 'Data was succesfully captured';
+
+                        console.log(successmessage)
+                    }
                 }
             }
 
         } );
+        }
+
+
+
+        //document.getElementById("dataLogList").addEventListener("click", function(event){
+        $('.dtLstLnk').on('click', function (event) {
+            event.preventDefault();
+            var clicked = [];
+            clicked.id = $(this).attr('id');
+            clicked.boat = $(this).attr('boat');
+            clicked.data = $(this).attr('dataLog');
+            clicked.dt = $(this).attr('dt');
+            //alert(clicked.id);
+            //dataTable.fnClearTable();
+            console.log(clicked);
+            var dataTable = $('#datatables').dataTable( {
+                destroy: true,
+                processing: true,
+                serverSide: true,
+                order: [[0,'desc']],
+                ajax: {
+                    url: "indexNew.php",
+
+                    data: {
+                        boat: clicked.boat,
+                        //data: "dataLogs_gps",
+                        data: clicked.data,
+                        dt: true,
+                        success: function(data) {
+                            var successmessage = 'Data was succesfully captured';
+
+                            console.log(successmessage)
+                        }
+                    }
+                }
+
+            } );
+        });
+
+
     } );
-    
+
+
+    //linky: id="70" href="#" onclick="movieInfo(this.id)
+
+
 </script>
 
 

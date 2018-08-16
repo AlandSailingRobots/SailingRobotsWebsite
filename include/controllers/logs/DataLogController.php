@@ -24,8 +24,16 @@ class DataLogController extends AbstractLogController {
         $databaseConnection = DatabaseConnectionFactory::getDatabaseConnection($request['boat']);
         $logs = new Logs($databaseConnection);
         //print_r ($_GET);
-        if (isset($request['dt'])) {
+        //print_r($request['data']);
+        if ( isset($request['dt']) && isset($request['data']) ) {
+          /**
+            echo '<pre>';
+            echo 'run () ';
+            print_r( $_GET );
+            echo '</pre>';
+           * */
             //echo 'dt';
+
             $table = $request['data'];
             $primaryKey = 'id';
             $columns = $logs->getColumnNamesByTableName($table);
@@ -33,10 +41,12 @@ class DataLogController extends AbstractLogController {
             $dtc->setup($table, $primaryKey, $columns);
             $dtc->run();
         } else {
+            /**
             echo '<pre>';
             echo 'run () ';
             print_r( self::getRequest () );
             echo '</pre>';
+             **/
         }
 
     }

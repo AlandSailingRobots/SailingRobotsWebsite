@@ -60,7 +60,9 @@ function buildList (string $jsonResponse, $boatName): string {
         $displayName = $displayName . ' Data';
 
 
-        $tblList = $tblList . '<li class="dtList"><a href="index.php?boat='.$boatName.'&data='.$tableName[0].'">'. ucwords($displayName) . '</a></li>';
+        //$tblList = $tblList . '<li class="dtList"><a href="index.php?boat='.$boatName.'&data='.$tableName[0].'">'. ucwords($displayName) . '</a></li>';
+        $tblList = $tblList . '<li class="dtList"><a id="listItem" boat="' . $boatName .' " data="' . $tableName[0] . ' ">' . ucwords($displayName) . '</a></li>';
+        //data-dt-idx
 
     }
     return $tblList;
