@@ -1,15 +1,15 @@
 <?php
 
 function pushWaypoint($data) {
-    $result = $data;
-    $data = json_decode($data, true);
-    $size = count($data);
+    fastcgi_finish_request();
+    $result = json_decode($data, true);
+    if (count($result)) {
+        $db = $GLOBALS['db_connection'];
 
-    $db = $GLOBALS['db_connection'];
+        $req = $db->prepare("DELETE FROM currentMission");
+        $req->execute();    // Continue even if old data is there
 
-    $req = $db->prepare("DELETE FROM currentMission");
-    $req->execute();    // Continue even if old data is there
-
-    insertTables($data);
-    return true;
+        insertTables($result);
+        return true;
+    }
 }

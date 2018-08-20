@@ -11,13 +11,22 @@ function checkIfNewConfigs()
 
     $req = $db->prepare("SELECT configs_updated FROM config_httpsync");
     $exec = $req->execute();
+
     if (!$exec) {
         throw new Exception("Database Error {$req->error}");
     }
     $result = $req->fetchAll(PDO::FETCH_ASSOC);
     $req->closeCursor();
+
+    // FIX for DB column being VARCHAR when it should be INT or BOOL
+    foreach ($result[0] as $key => $value) {
+        if ($value == "") {
+            $result[0][$key] = "0";
+        }
+    }
     return json_encode($result[0]);
 }
+
 
 function setConfigsUpdated()
 {

@@ -19,6 +19,7 @@ var absolutePath;
 var data = null;
 var gpsData = null;
 var windSensorData;
+var windStateData;
 var courseData;
 var compassData;
 var currentSensorData;
@@ -236,6 +237,7 @@ function updateAllData(jsonArray) {
     gpsData = jsonArray[0].gpsData;
     courseData = jsonArray[0].courseData;
     windSensorData = jsonArray[0].windSensorData;
+    windStateData = jsonArray[0].windStateData;
     compassData = jsonArray[0].compassData;
     currentSensorData = jsonArray[0].currentSensorData;
     marineSensorData = jsonArray[0].marineSensorData;
@@ -256,7 +258,7 @@ function printLiveData(data, idKey, idValue) {
             } else {
                 dataValue += "<div class='liveData-inRange'>" + data[key] + "</div>";
             }
-    })
+    });
 
     document.getElementById(idKey).innerHTML = dataKey;
     document.getElementById(idValue).innerHTML = dataValue;
@@ -505,7 +507,8 @@ function getBoatHeading() {
 }
 
 function getWindHeading() {
-    return windSensorData.direction;
+    //return windSensorData.direction;
+    return windStateData.true_wind_direction;
 }
 
 function getSteerHeading(){
@@ -1064,7 +1067,7 @@ function switchModes(){
         courseToSteerMarker.icon.strokeColor = '#26A65B';
         lineToWaypoint.setOptions({
             strokeColor: '#D2527F',
-        })
+        });
         routePolyline.setOptions({
             strokeColor: '#FFA500',
         });
@@ -1110,7 +1113,7 @@ function CenterControl(controlDiv) {
         control.state = !control.state;
         //Change background colour depending on state
         if (control.state) {
-            controlUI.style.background = '#ffa'
+            controlUI.style.background = '#ffa';
             map.setCenter(boatPos);
         } else {
             controlUI.style.backgroundColor = '#fff'
@@ -1131,7 +1134,7 @@ google.maps.InfoWindow.prototype.isOpen = function(){
 };
 
 google.maps.Polygon.prototype.my_getBounds=function(){
-    var bounds = new google.maps.LatLngBounds()
-    this.getPath().forEach(function(element,index){bounds.extend(element)})
+    var bounds = new google.maps.LatLngBounds();
+    this.getPath().forEach(function(element,index){bounds.extend(element)});
     return bounds
-}
+};

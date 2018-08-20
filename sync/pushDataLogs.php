@@ -28,7 +28,7 @@ function selectFromAsInt($db, $selector, $from)
  *
  * @return void
  */
-function populateDatabase($db, $table_name, $entries)
+/*function populateDatabase($db, $table_name, $entries)
 {
     $param_stmt = "(";
     $param_to_fill = "(";
@@ -67,41 +67,7 @@ function populateDatabase($db, $table_name, $entries)
             die($e->getMessage());
         }
     }
-}
-
-function insertTables($tables) {
-    $db = $GLOBALS['db_connection'];
-    $idmap = array();
-
-    foreach ($tables as $tableName => $rows) {
-        // PDO binding
-        $sql = "INSERT INTO $tableName(".implode(',', $rows[0]).") VALUES(:".implode(',:', $rows[0]).")";
-        $query = $db->prepare($sql);
-
-        foreach (array_splice($rows,1) as $row) {
-            for ($i = 0; $i < count($rows[0]); $i++) {
-                if (!$query->bindValue($tables[$tableName][0][$i], $row[$i])) {
-                    error_log("insertTables(): Unable to bind $tableName parameter $i\"$rows[0][$i]\"=\"$row[$i]\"".PHP_EOL);
-                }
-            }
-
-            try {
-                if ($query->execute()) {
-                    $idmap[$tableName."_id"] = $row[array_search('id', $tables[$tableName][0])];
-                }
-            } catch (PDOException $e) {
-                header(
-                    $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
-                    true,
-                    500
-                );
-                error_log("500: insertTables():".$e->getMessage()." on \"$sql\"".PHP_EOL);
-                die($e->getMessage());
-            }
-        }
-    }
-    return $idmap;
-}
+}*/
 
 /**
  * Receives data from boat
@@ -136,18 +102,30 @@ function pushAllLogs($boat, $json) {
         die('Error: no recognizable data');
     }
 
+    // We will not report anything more so just let the sender off the hook
+    fastcgi_finish_request();
+
     // We will use the dataLogs_system table differently so remove it for now
     $dataLogs_system = array();
     if (array_key_exists('system', $data)) {
         $dataLogs_system = $data['system'];
         unset($data['system']);
+
+        // The SQLite and MySQL dbs have different ID series
+        $mysql_id = selectFromAsInt($db, "MAX(id)", 'dataLogs_system');
+        $idColumn = array_search("id", $dataLogs_system[0]);
+        $sqlite_id = $dataLogs_system[1][$idColumn];
+        $idOffset = $mysql_id - $sqlite_id + 1;
+
+        for ($i = 1; $i < count($dataLogs_system); $i++) {
+            $dataLogs_system[$i][$idColumn] = $dataLogs_system[$i][$idColumn] + $idOffset;
+        }
     }
 
     // Calculate row id offsets between SQLite DB on the boat and MySQL DB on the web server
     $tables = array();
     foreach ($data as $tablePartName => $rows) {
         $tableName = "dataLogs_$tablePartName";
-
 
         // The SQLite and MySQL dbs have different ID series
         $mysql_id = selectFromAsInt($db, "MAX(id)", $tableName);
@@ -157,34 +135,15 @@ function pushAllLogs($boat, $json) {
 
         $i = 0;
         foreach ($rows as $row) {
-            if ($i++ > 0) {
-                $row[$idColumn] += $idOffset;
+            if ($i > 0) {
+                $row[$idColumn] = $row[$idColumn] + $idOffset;
+                $systemColumn = array_search($tablePartName."_id", $dataLogs_system[0]);
+                $dataLogs_system[$i][$systemColumn] = $dataLogs_system[$i][$systemColumn] + $idOffset;
             }
             $tables[$tableName][] = $row;
+            $i++;
         }
-
     }
-
-    $idmap = insertTables($tables);
-
-    // This value is not like the others. We actually just grab the mission id from the first log entry
-    $idmap["current_mission_id"] = $dataLogs_system[1][array_search("current_mission_id", $dataLogs_system[0])];
-
-    // Prepare another table insert of the indices
-    $indexTables = array();
-    $indexTables['dataLogs_system'][0] = array_keys($idmap);
-    foreach ($indexTables['dataLogs_system'][0] as $key => $columnName) {
-        unset($indexTables['dataLogs_system'][0][$key]);
-        $columnName = str_replace("dataLogs_", "", $columnName);
-        $indexTables['dataLogs_system'][0][$key] = $columnName;
-    }
-
-    // Ensure the id numbers are in the same order as the keys above
-    $indexData = array();
-    foreach (array_keys($idmap) as $columnName) {
-        $indexData[] = $idmap[$columnName];
-    }
-    $indexTables['dataLogs_system'][] = $indexData;
-
-    insertTables($indexTables);
+    $tables['dataLogs_system'] = $dataLogs_system;
+    insertTables($tables);
 }

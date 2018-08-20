@@ -21,6 +21,12 @@ function checkIfNewWaypoints()
     $result = $req->fetchAll(PDO::FETCH_ASSOC);
     $req->closeCursor();
 
+    // FIX for DB column being VARCHAR when it should be INT or BOOL
+    foreach ($result[0] as $key => $value) {
+        if ($value == "") {
+            $result[0][$key] = "0";
+        }
+    }
     return json_encode($result[0]);
 }
 
