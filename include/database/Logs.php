@@ -44,7 +44,8 @@ class Logs extends DatabaseRepository  {
     public function getColumnNamesByTableName (string $table): array {
         $selector   = '*';
         $tableName  = 'INFORMATION_SCHEMA.COLUMNS';
-        $statements = "where table_name = '$table'";
+        $statements = "where table_name = '$table'"
+        .' AND TABLE_SCHEMA="' . $this->dbName . '";';
         try {
             $result =  $this->getTables($tableName, $selector, $statements);
 
@@ -61,7 +62,10 @@ class Logs extends DatabaseRepository  {
                 )
             );
             foreach ($result['INFORMATION_SCHEMA.COLUMNS'] as $columnInfo) {
-                array_push($columnNames["$table"][0], $columnInfo[$columnNameIndex]);
+                if ($columnInfo[$columnNameIndex] != "time_stamp") {
+                    array_push($columnNames["$table"][0], $columnInfo[$columnNameIndex]);
+                }
+
             }
             return $columnNames;
         } catch (Exception $e) {

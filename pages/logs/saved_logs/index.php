@@ -148,7 +148,7 @@ if ($_GET['boat'] == 'janet') {
   <!-- ##########################    JAVASCRIPT     ########################## -->
     <?php // Not very clean, but the default configs includes too many JS for a beginner
         // That way, main file is 'clean' ?>
-    <?php  //include $relative_path . 'include/js_scripts.php'; ?>
+    <?php  #include $relative_path . 'include/js_scripts.php'; ?>
   <!-- jQuery -->
     <script src=<?php echo $relative_path . "assets/vendors/jquery/dist/jquery.min.js"?>></script>
     <!-- Bootstrap -->

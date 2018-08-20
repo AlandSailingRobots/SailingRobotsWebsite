@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <?php // Head of the HTML document
-    include __ROOT__ . '/include/head.php';
+    include $relative_path . 'include/head.php';
     ?>
     <!-- Custom CSS for the page -->
     <!-- TODO Check if it's used or not -->
@@ -16,11 +16,11 @@
 <body class="nav-md">
 <div class="container body">
     <!-- sidebar -->
-    <?php include __ROOT__ . '/include/sidebar.php'; ?>
+    <?php include $relative_path . 'include/sidebar.php'; ?>
     <!-- /sidebar -->
 
     <!-- top navigation -->
-    <?php include __ROOT__ . '/include/top_navigation.php'; ?>
+    <?php include $relative_path . 'include/top_navigation.php'; ?>
     <!-- /top navigation -->
 
     <!-- data content -->
@@ -51,7 +51,7 @@
 <!-- jQuery -->
 <script src="./../../../assets/vendors/jquery/dist/jquery.min.js"></script>
 <!-- Bootstrap -->
-<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+
 <script src="./../../../assets/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
 
 <!-- Custom Theme Scripts -->
@@ -59,46 +59,19 @@
 
 <script type="text/javascript" src="js/autoRefresh.js"></script>
 <script src="./../../../assets/vendors/datatables.net/js/jquery.dataTables.min.js"></script>
-
 <script type="text/javascript" language="javascript" class="init">
     //$.fn.dataTable.ext.legacy.ajax = true;
     $(document).ready(function() {
         var clicked = [];
-        var request = [];
 
-        var url_string = window.location.href;
-        var url = new URL(url_string);
-        request.boat = url.searchParams.get("boat");
-        request.data = url.searchParams.get("data");
-        request.dt = true;
-        console.log(request);
+        var table = $('#example').DataTable();
 
-        var url = "indexNew.php";
-        var dataTable = $('#datatables').dataTable( {
-            //destroy: true,
-            processing: true,
-            serverSide: true,
-            //
-            order: [[0,'desc']],
-            ajax: {
-                url: url,
-                data: {
-                    boat: request.boat,
-                    //data: "dataLogs_gps",
-                    data: request.data,
-                    dt: request.dt,
-                    success: function(data) {
-                        var successmessage = 'Data was succesfully captured';
+        if (clicked.data != null) {
 
-                        console.log(successmessage)
-                    }
-                }
-            }
 
-        } );
 
-        // NOT USED - FOLLOWING TO TEST LOADING COLUMNS ON LINK CLICK
-        /**
+        }
+
         function generateHeaders(url, data) {
             $.getJSON(url, {dtHeaders: data},function(result){
                 console.log(result);
@@ -160,11 +133,12 @@
 
             } );
         });
-        **/
+
 
     } );
 
 
+    //linky: id="70" href="#" onclick="movieInfo(this.id)
 
 
 </script>

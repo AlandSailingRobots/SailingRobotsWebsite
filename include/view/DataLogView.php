@@ -31,10 +31,18 @@ class DataLogView {
             $displayName = self::prepareTableNames($patterns, $replacements, $tableName[0], $listOfAbbreviation);
             $displayName = $displayName . ' Data';
 
+            //index.php?boat=aspire&data=gps
+            $tblList = $tblList . '<li class="dtList "><a id="dataLogList" class="dtLstLnk" href="indexNew.php?boat=' . $boatName
+                .'&data=' . $tableName[0]
+                . '" dt="true">'
+                . ucwords($displayName) . '</a></li>';
+
+            /**
             $tblList = $tblList . '<li class="dtList "><a id="dataLogList" class="dtLstLnk" href="" boat="' . $boatName
                 .'" dataLog="' . $tableName[0]
                 . '" dt="true">'
                 . ucwords($displayName) . '</a></li>';
+             * */
             //$tblList = $tblList . '<li class="dtList"><a href="index.php?boat='.$boatName.'&data='.$tableName[0].'">'. ucwords($displayName) . '</a></li>';
 
         }

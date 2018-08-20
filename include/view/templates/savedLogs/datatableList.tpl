@@ -1,7 +1,7 @@
 <style>
     li.dtList > a {
         font-size: 10pt;
-        font-weight: normal;
+        font-style: normal;
     }
 
 </style>

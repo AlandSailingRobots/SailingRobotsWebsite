@@ -19,68 +19,6 @@ require_once (__ROOT__.'/include/view/DataLogView.php');
 
 
 
-/**
- * @param array $patterns
- * @param array $replacements
- * @param array $subject
- * @param array $abbreviations
- * @return null|string|string[]
- */
-function pregReplace(array $patterns, array $replacements, $subject, array $abbreviations) {
-    $displayName =  preg_replace($patterns, $replacements, $subject);
-    if (in_array($displayName, $abbreviations)) {
-        $displayName = strtoupper($displayName);
-    } else {
-        $displayName = ucwords($displayName);
-    }
-    return $displayName;
-}
-
-function buildList (string $jsonResponse, $boatName): string {
-    $tblList = "";
-    $array = json_decode($jsonResponse, true);
-    reset($array);
-    $firstKey = key($array);
-
-    $patterns = array();
-    array_push($patterns, '/dataLogs_/');
-    array_push($patterns, '/_/');
-
-    $replacements = array();
-    array_push($replacements, '');
-    array_push($replacements, ' ');
-
-    $listOfAbbreviation = array(
-        "GPS" => "gps",
-    );
-
-
-    foreach ($array[$firstKey] as $tableName) {
-        $displayName = pregReplace($patterns, $replacements, $tableName[0], $listOfAbbreviation);
-        $displayName = $displayName . ' Data';
-
-
-        //$tblList = $tblList . '<li class="dtList"><a href="index.php?boat='.$boatName.'&data='.$tableName[0].'">'. ucwords($displayName) . '</a></li>';
-        $tblList = $tblList . '<li class="dtList"><a id="listItem" boat="' . $boatName .' " data="' . $tableName[0] . ' ">' . ucwords($displayName) . '</a></li>';
-        //data-dt-idx
-
-    }
-    return $tblList;
-}
-
-
-function buildHeaders (string $jsonResponse): string {
-    $tblHeaders = "";
-    $array = json_decode($jsonResponse, true);
-    reset($array);
-    $firstKey = key($array);
-    foreach ($array[$firstKey][0] as $tableName) {
-        $tblHeaders = $tblHeaders . "<th>" . $tableName . "</th>";
-
-    }
-    return $tblHeaders;
-}
-
 //  If we are connected
 if (isset($_SESSION['id']) and isset($_SESSION['username'])) {
   // TODO
@@ -93,24 +31,24 @@ if (isset($_SESSION['id']) and isset($_SESSION['username'])) {
     $name = 'Guest';
 }
 
-
 if (!isset($_GET['boat'])) {
     // We force aspire by default
     $_GET['boat'] = "aspire";
 }
 
-    $databaseConnection = DatabaseConnectionFactory::getDatabaseConnection("ASPire");
-    $logs = new Logs($databaseConnection);
+
+
 
     // GET TABLE NAMES
-    $prefix = 'dataLogs_';
-    $tableNamesAsJSON = $logs->getTableNamesAsJSONByPrefix($prefix);
+
+    //$prefix = 'dataLogs_';
+    //$tableNamesAsJSON = $logs->getTableNamesAsJSONByPrefix($prefix);
     //header('Content-Type: application/json');
-    $dtList = DataLogView::buildList($tableNamesAsJSON, "aspire");
+    //$dtList = DataLogView::buildList($tableNamesAsJSON, "aspire");
 
     // GET TABLE COLUMNS
-    $columnNamesAsJSON = $logs->getColumnNamesByTableNameAsJSON("dataLogs_gps");
-    $dtHeaders = DataLogView::buildHeaders($columnNamesAsJSON);
+    //$columnNamesAsJSON = $logs->getColumnNamesByTableNameAsJSON("dataLogs_gps");
+    //$dtHeaders = DataLogView::buildHeaders($columnNamesAsJSON);
 
 //require_once(__ROOT__.'/include/database/datatables/DataTablesRepositorypository.php');
 //$dtc = new DataTablesRepository($databaseConnection);
@@ -124,16 +62,35 @@ $statements = 'LIMIT 1';
 //$dtHeaders = $logs->getTables($tableName, $selector, $statements);
 
 //$dtc->setup($table, $primaryKey, $columns);
-require_once(__ROOT__.'/include/handlers/RequestHandler.php');
-$controller = RequestHandler::handle();
-$controller = $controller->retrieveController ();
-$controller->run();
 
 
+if ($connected and $_SESSION['right'] == 'admin') {
+    // echo '<p> You are an ' . $_SESSION['right'] . '! ';
 
-if (!isset($_GET['dt'])) {
-    include 'tpl/savedLogsBody.tpl';
+    require_once(__ROOT__.'/include/handlers/RequestHandler.php');
+    $controller = RequestHandler::handle();
+    $controller = $controller->retrieveController ();
+    $controller->run();
+
+    if (!isset($_GET['dt']) && !isset($_GET['dtHeaders'])) {
+        $view = $controller->getView();
+        include 'tpl/savedLogsBody.tpl';
+    }
+
+
+} elseif ($connected) {
+    $message = '<p> You don\'t have the right to view this webdata </p>';
+    include 'tpl/default.tpl';
+    //echo '<p> You don\'t have the right to view this webdata </p>';
+} else {
+    $message = '<p> You must log-in to view this data. Click <strong><a href="'.$relative_path.'pages/users/login.php">here</a></strong> to log-in. </p>';
+    include 'tpl/default.tpl';
+    //echo '<p> You must log-in to view this data. Click <strong><a href="'.$relative_path.'pages/users/login.php">here</a></strong> to log-in. </p>';
 }
+
+
+
+
 
 
 
