@@ -19,7 +19,7 @@
 
                     <tfoot>
                     <tr id="dtHeaders">
-                        <?php #echo $view['dtHeaders'] ?>
+                        <?php echo $view['dtHeaders'] ?>
                     </tr>
                     </tfoot>
                 </table>

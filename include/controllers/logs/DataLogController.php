@@ -38,7 +38,7 @@ class DataLogController extends AbstractLogController {
 
         $request = self::getRequest();
 
-        $view['pageTitle'] = null;
+        $view['pageTitle'] = "Please choose which information you would like to visualize"; //DEFAULT
         $view['dtList'] = null;
         $view['dtHeaders'] = null;
 
