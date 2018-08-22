@@ -87,6 +87,12 @@ if (!empty($_POST)) {
                 include_once 'aspire/pushWaypoints.php';
                 include_once 'aspire/getWaypoints.php';
             } else {
+                # TODO MAKE THIS BETTER
+                # VELVET HOTIX
+                if (isset($_POST['id']) && strtolower($_POST['id']) == 'velvet') {
+                    $dbname = $GLOBALS['database_velvet'];
+                }
+                # TODO
                 // In an ideal situation this would always be the case but old ASPire binaries and Janet have
                 // their own code
                 include_once 'php/DB_functions.php';
