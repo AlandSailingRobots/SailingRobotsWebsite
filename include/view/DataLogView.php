@@ -32,7 +32,7 @@ class DataLogView {
             $displayName = $displayName . ' Data';
 
             //index.php?boat=aspire&data=gps
-            $tblList = $tblList . '<li class="dtList "><a id="dataLogList" class="dtLstLnk" href="indexNew.php?boat=' . $boatName
+            $tblList = $tblList . '<li class="dtList "><a id="dataLogList" class="dtLstLnk" href="index.php?boat=' . $boatName
                 .'&data=' . $tableName[0]
                 . '" dt="true">'
                 . ucwords($displayName) . '</a></li>';

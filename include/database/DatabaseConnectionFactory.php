@@ -49,6 +49,8 @@ class DatabaseConnectionFactory extends AbstractDatabaseConnectionFactory {
                 return $GLOBALS['database_ASPire'];
             case "janet":
                 return $GLOBALS['database_name_testdata'];
+            case "velvet":
+                return $GLOBALS['database_velvet'];
             default:
                 return $GLOBALS['database_ASPire'];
         }

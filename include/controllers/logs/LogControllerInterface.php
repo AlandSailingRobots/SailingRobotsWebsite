@@ -8,4 +8,9 @@
 
 interface LogControllerInterface {
     public function run () : void;
+
+    /**
+     * @return array|null
+     */
+    public function getView () : ?array;
 }

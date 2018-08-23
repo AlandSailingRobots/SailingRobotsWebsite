@@ -74,7 +74,7 @@
         console.log(request);
 
         if (request.data) {
-            var url = "indexNew.php";
+            var url = "index.php";
             var dataTable = $('#datatables').DataTable( {
                 destroy: true,
                 processing: true,

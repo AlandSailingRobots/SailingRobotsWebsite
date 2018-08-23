@@ -114,7 +114,7 @@ class DataLogController extends AbstractLogController {
     /**
     * @return mixed
     */
-    public function getView()
+    public function getView () : ?array
     {
         return $this->view;
     }

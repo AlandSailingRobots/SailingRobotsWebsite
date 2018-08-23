@@ -9,4 +9,5 @@ require_once ('LogControllerInterface.php');
 
 abstract class AbstractLogController implements LogControllerInterface {
     public function run () : void {}
+    public function getView () : ?array {}
 }
