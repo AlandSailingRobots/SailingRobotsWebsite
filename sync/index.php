@@ -9,6 +9,9 @@
  *
  * @see https://github.com/AlandSailingRobots/SailingRobotsWebsite
  */
+
+define('__ROOT__', dirname(dirname(__FILE__)));
+require_once('../include/database/DatabaseConnectionFactory.php');
 require_once '../globalsettings.php';
 require_once 'php/is_pwd_correct.php';
 
@@ -59,17 +62,19 @@ if (!empty($_POST)) {
             exit;
             // echo "ERROR: Wrong Password ! \n";
         } else {
-            $hostname  = $GLOBALS['hostname'];
-            $username  = $GLOBALS['username'];
-            $password  = $GLOBALS['password'];
-            $dbname    = $GLOBALS['database_ASPire'];
+
+            # TODO MAKE THIS BETTER
+
             try {
-                $db = new PDO(
-                    "mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
-                    $username,
-                    $password,
-                    array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)
-                );
+                $databaseConnection = DatabaseConnectionFactory::getDatabaseConnection($_POST['id']);
+
+                $dsn = $databaseConnection->getDsn();
+                $usr = $databaseConnection->getUser();
+                $pwd = $databaseConnection->getPassword();
+                $opt = $databaseConnection->getOptions();
+
+                $pdo = new PDO($dsn, $usr, $pwd, $opt);
+
             } catch (Exception $e) {
                 header(
                     $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
@@ -78,21 +83,19 @@ if (!empty($_POST)) {
                 );
                 die('Error : '.$e->getMessage());
             }
-            $GLOBALS['db_connection'] = $db;
+            $GLOBALS['db_connection'] = $pdo;
 
-            if (isset($_POST['gen']) && $_POST['gen'] == 'aspire') {
-                include_once 'aspire/pushDataLogs.php';
-                include_once 'aspire/getConfigs.php';
-                include_once 'aspire/pushConfigs.php';
-                include_once 'aspire/pushWaypoints.php';
-                include_once 'aspire/getWaypoints.php';
+            if (isset($_POST['gen']) && $_POST['gen'] == 'aspire'){
+
+
+                include_once 'pushDataLogs.php';
+                include_once 'pushConfigs.php';
+                include_once 'pushWaypoints.php';
+                include_once 'getConfigs.php';
+                include_once 'getWaypoints.php';
             } else {
                 # TODO MAKE THIS BETTER
-                # VELVET HOTIX
-                if (isset($_POST['id']) && strtolower($_POST['id']) == 'velvet') {
-                    $dbname = $GLOBALS['database_velvet'];
-                }
-                # TODO
+
                 // In an ideal situation this would always be the case but old ASPire binaries and Janet have
                 // their own code
                 include_once 'php/DB_functions.php';
