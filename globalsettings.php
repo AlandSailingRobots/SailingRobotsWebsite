@@ -34,6 +34,7 @@
     $GLOBALS['database_name_testdata']  = 'ithaax_testdata';
     $GLOBALS['database_name']           = 'ithaax_website_config';
     $GLOBALS['database_ASPire']         = 'ithaax_ASPire_config';
+    $GLOBALS['database_velvet']         = 'ithaax_velvet_config';
     $GLOBALS['database_mission']        = 'ithaax_mission';
     // $hostname = '127.0.0.1';
     // $db_user = 'root';

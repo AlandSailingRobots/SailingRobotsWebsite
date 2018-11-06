@@ -46,8 +46,9 @@ function runTimer (bool) {
 
 function startTimer () {
     let timer = setInterval(function () {
-        window.location.reload();
-    }, 6000);
+        //window.location.reload();
+        dataTable.ajax.reload( null, false ); // user paging is not reset on reload
+    }, 600);
 
     return timer;
 }

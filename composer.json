@@ -1,0 +1,12 @@
+{
+    "require": {
+        "php": ">=7.1.0",
+        "ext-json": "*",
+        "ext-PDO": "*",
+        "phpoffice/phpspreadsheet": "^1.2",
+        "phpunit/phpunit": "7.2.7",
+        "phpunit/dbunit": "4.0.0"
+    },
+    "name": "",
+    "description": ""
+}
