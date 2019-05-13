@@ -29,10 +29,11 @@ would have been made on previous missions.
 
 ## Database
 There are 4 DB used by the website
+
 | DB | Name | Purpose | 
-| -- | ---- | ------- |
-| Janet DB | ithaax_testdata | Janet DB, also used by the previous wesite |
-| ASPire DB | ithaax_aspire_config | ASPire DB |
+| --- | ---- | ------- |
+| Janet DB| ithaax_testdata | Janet DB, also used by the previous website |
+| ASPire DB| ithaax_aspire_config | ASPire DB |
 | Website | ithaax_website_config | handles the registered users |
 | Mission | ithaax_mission | handles the list of waypoints and checkpoints as well as the mission |
 
