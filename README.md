@@ -4,6 +4,10 @@ The website needs to be more user-friendly in order to be used by biologists.
 To do that, the new UI should offer a clear view of measurements/samplings that 
 would have been made on previous missions.
 
+## Installation:
+* [For Mac OS](INSTALL_MAC_OS.md)
+* [Arch Linux](https://github.com/AlandSailingRobots/SailingRobotsDocs/blob/master/Website%20on%20localhost%20guide.md) :exclamation: __most likely outdated__
+
 ## Current Features :
    -  Current Website : https://sailingrobots.ax/aspire/ 
    -  Previous website : http://sailingrobots.com/testdata/live/
