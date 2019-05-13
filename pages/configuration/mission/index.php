@@ -1,12 +1,12 @@
 <?php
 session_start();
 define('__ROOT__', dirname(dirname(dirname(dirname(__FILE__)))));
-require_once(__ROOT__.'/globalsettings.php');
+require_once(__ROOT__ . '/globalsettings.php');
 $relative_path = './../../../';
 
 //  If we are connected
 if (isset($_SESSION['id']) and isset($_SESSION['username'])) {
-  // TODO
+    // TODO
     $connected = true;
     $name = $_SESSION['username'];
 } else {
@@ -20,16 +20,16 @@ if (isset($_SESSION['id']) and isset($_SESSION['username'])) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<?php // Head of the HTML document
+    <?php // Head of the HTML document
     include $relative_path . 'include/head.php';
-?>
-    <link rel="stylesheet" href="<?php echo $relative_path . 'assets/vendors/leafletjs/leaflet.css' ;?>" />
-    <link rel="stylesheet" href="css/custom_style.css" />
+    ?>
+    <link rel="stylesheet" href="<?php echo $relative_path . 'assets/vendors/leafletjs/leaflet.css'; ?>"/>
+    <link rel="stylesheet" href="css/custom_style.css"/>
 
 </head>
 
 <body class="nav-md">
-  <div class="container body">
+<div class="container body">
     <!-- sidebar -->
     <?php include $relative_path . 'include/sidebar.php'; ?>
     <!-- /sidebar -->
@@ -57,34 +57,34 @@ if (isset($_SESSION['id']) and isset($_SESSION['username'])) {
     <!-- footer content -->
     <?php include $relative_path . 'include/footer.php'; ?>
     <!-- /footer content -->
-  </div>
+</div>
 
-  <!-- ##########################    JAVASCRIPT     ########################## -->
-    <?php // Not very clean, but the default configs includes too many JS for a beginner
-        // That way, main file is 'clean' ?>
-    <?php  //include $relative_path . 'include/js_scripts.php';
-    ?>
-    <!-- jQuery -->
-    <script src=<?php echo $relative_path . "assets/vendors/jquery/dist/jquery.min.js"?>></script>
-    <!-- Bootstrap -->
-    <script src=<?php echo $relative_path . "assets/vendors/bootstrap/dist/js/bootstrap.min.js"?>></script>
-    <!-- Custom Theme Scripts -->
-    <script src=<?php echo $relative_path . "assets/js/custom.min.js"?>></script>
-    <?php
-    if ($connected) {
-        echo '<script src="' . $relative_path . 'assets/vendors/leafletjs/leaflet.js"></script>';
-      // echo '<script src="' . $relative_path . 'assets/vendors/geomagnetism/index.js"></script>';
+<!-- ##########################    JAVASCRIPT     ########################## -->
+<?php // Not very clean, but the default configs includes too many JS for a beginner
+// That way, main file is 'clean' ?>
+<?php //include $relative_path . 'include/js_scripts.php';
+?>
+<!-- jQuery -->
+<script src=<?php echo $relative_path . "assets/vendors/jquery/dist/jquery.min.js" ?>></script>
+<!-- Bootstrap -->
+<script src=<?php echo $relative_path . "assets/vendors/bootstrap/dist/js/bootstrap.min.js" ?>></script>
+<!-- Custom Theme Scripts -->
+<script src=<?php echo $relative_path . "assets/js/custom.min.js" ?>></script>
+<?php
+if ($connected) {
+    echo '<script src="' . $relative_path . 'assets/vendors/leafletjs/leaflet.js"></script>';
+    // echo '<script src="' . $relative_path . 'assets/vendors/geomagnetism/index.js"></script>';
 
-        echo '<script src="./js/map_leaflet.js"></script>';
-        echo '<script src="./js/script.js"></script>';
+    echo '<script src="./js/map_leaflet.js"></script>';
+    echo '<script src="./js/script.js"></script>';
 
-        echo '<script src="./js/leaflet-color-markers.js"></script>';
-      // echo '<script src="' . $relative_path . 'assets/vendors/bootstrap-select-1.12.4/dist/js/bootstrap-select.min.js"</script>';
-    }
-    ?>
-    
+    echo '<script src="./js/leaflet-color-markers.js"></script>';
+    // echo '<script src="' . $relative_path . 'assets/vendors/bootstrap-select-1.12.4/dist/js/bootstrap-select.min.js"</script>';
+}
+?>
 
-  <!-- ##########################    JAVASCRIPT     ########################## -->
+
+<!-- ##########################    JAVASCRIPT     ########################## -->
 
 </body>
 </html>
