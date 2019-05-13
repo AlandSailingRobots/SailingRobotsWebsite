@@ -9,7 +9,7 @@ name of the column. That way, the button 'Save' only sends one form which is
 displayed in different tables.
 
 That has been done in order to avoid using AJAX queries on every table because, 
-I as a beginner developper in web development, I was not comfortable enough with
+I as a beginner developer in web development, I was not comfortable enough with
 Javascript at the moment I wrote this page.
 
 

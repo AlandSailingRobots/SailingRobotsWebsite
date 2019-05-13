@@ -22,4 +22,4 @@ because they were already used for the mission selector.
 
 # NB
 Use a JS minifier to reduce the size of the file on the server. Check the HTML 
-files everytime there is an update on the server.
+files every time there is an update on the server.

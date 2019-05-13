@@ -1,3 +1,3 @@
 # Purpose
 
-Resources used by the wesite, mainly pictures.
+Resources used by the website, mainly pictures.

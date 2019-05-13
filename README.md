@@ -28,7 +28,7 @@ would have been made on previous missions.
    -  Right Management system (see profile/README.md)
 
 ## Database
-There are 4 DB used by the website
+There are 4 databases used by the website
 
 | DB | Name | Purpose | 
 | --- | ---- | ------- |
@@ -38,6 +38,6 @@ There are 4 DB used by the website
 | Mission | ithaax_mission | handles the list of waypoints and checkpoints as well as the mission |
 
 ## Remarks
-   -  Check the different sub-folder READMEs to have a better overview of the work
+   -  Check the different sub-folder README's to have a better overview of the work
    
 
