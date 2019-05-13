@@ -6,10 +6,10 @@ function loadMissionToBoat($id_mission)
      * This function retrieves the selected mission from one DB and load it into the other
      */
 
-    $hostname   = $GLOBALS['hostname'];
-    $username   = $GLOBALS['username'];
-    $password   = $GLOBALS['password'];
-    $dbname     = $GLOBALS['database_mission'];
+    $hostname = $GLOBALS['hostname'];
+    $username = $GLOBALS['username'];
+    $password = $GLOBALS['password'];
+    $dbname = $GLOBALS['database_mission'];
     $dbname_ASP = $GLOBALS['database_ASPire'];
 
     try {
@@ -21,11 +21,11 @@ function loadMissionToBoat($id_mission)
         );
     } catch (Exception $e) {
         header(
-            $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+            $_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error',
             true,
             500
         );
-        die('Error : '.$e->getMessage());
+        die('Error : ' . $e->getMessage());
     }
     try {
         $db_boat = new PDO(
@@ -36,11 +36,11 @@ function loadMissionToBoat($id_mission)
         );
     } catch (Exception $e) {
         header(
-            $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+            $_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error',
             true,
             500
         );
-        die('Error : '.$e->getMessage());
+        die('Error : ' . $e->getMessage());
     }
 
     // Write in the DB the fact that we loaded a new mission
@@ -85,7 +85,7 @@ function loadMissionToBoat($id_mission)
                                                         radius, 
                                                         stay_time,
                                                         harvested
-                                                    ) VALUES '. $emptyArray .' ;');
+                                                    ) VALUES ' . $emptyArray . ' ;');
         // print_r($results);
         $exec4 = $query4->execute($arrayOfPoints);
         if ($exec4 === false) {
@@ -115,9 +115,9 @@ function loadMissionToBoat($id_mission)
 
 if (is_ajax()) {
     define('__ROOT__', dirname(dirname(dirname(dirname(dirname(__FILE__))))));
-    require_once(__ROOT__.'/globalsettings.php');
+    require_once(__ROOT__ . '/globalsettings.php');
     session_start();
-    
+
     // Get param & return JSON string
     if ($_SESSION['right'] == 'admin') {
         loadMissionToBoat($_POST['id_mission']);

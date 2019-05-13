@@ -7,7 +7,7 @@
  * @see https://github.com/AlandSailingRobots/SailingRobotsWebsite
  */
 define('__ROOT__', dirname(dirname(dirname(dirname(dirname(__FILE__))))));
-require_once __ROOT__.'/globalsettings.php';
+require_once __ROOT__ . '/globalsettings.php';
 require_once 'is_ajax.php';
 session_start();
 
@@ -26,10 +26,10 @@ function updateMissionInfo($id_mission, $name, $description = "")
      * This function update an entry of the DB.
      */
 
-    $hostname  = $GLOBALS['hostname'];
-    $username  = $GLOBALS['username'];
-    $password  = $GLOBALS['password'];
-    $dbname    = $GLOBALS['database_mission'];
+    $hostname = $GLOBALS['hostname'];
+    $username = $GLOBALS['username'];
+    $password = $GLOBALS['password'];
+    $dbname = $GLOBALS['database_mission'];
     try {
         $db = new PDO(
             "mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
@@ -39,18 +39,18 @@ function updateMissionInfo($id_mission, $name, $description = "")
         );
     } catch (Exception $e) {
         header(
-            $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+            $_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error',
             true,
             500
         );
-        die('Error : '.$e->getMessage());
+        die('Error : ' . $e->getMessage());
     }
 
     $query = $db->prepare('UPDATE mission SET name = :name, description = :description WHERE id = :id ;');
     $exec = $query->execute(array(
-                'name' => htmlspecialchars($name),
-                'description' => htmlspecialchars($description),
-                'id' => htmlspecialchars($id_mission)));
+        'name' => htmlspecialchars($name),
+        'description' => htmlspecialchars($description),
+        'id' => htmlspecialchars($id_mission)));
 
     if (false === $exec) {
         $msg = sprintf("Error while updating mission info into DB because execute() failed: %s\n<br />", htmlspecialchars($query->error));

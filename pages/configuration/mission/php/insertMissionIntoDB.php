@@ -1,6 +1,6 @@
 <?php
 define('__ROOT__', dirname(dirname(dirname(dirname(dirname(__FILE__))))));
-require_once(__ROOT__.'/globalsettings.php');
+require_once(__ROOT__ . '/globalsettings.php');
 require_once('is_ajax.php');
 
 function insertMissionIntoDB($name, $description = "")
@@ -10,10 +10,10 @@ function insertMissionIntoDB($name, $description = "")
      * After that, the mission will be selectable for its editing.
      */
 
-    $hostname  = $GLOBALS['hostname'];
-    $username  = $GLOBALS['username'];
-    $password  = $GLOBALS['password'];
-    $dbname    = $GLOBALS['database_mission'];
+    $hostname = $GLOBALS['hostname'];
+    $username = $GLOBALS['username'];
+    $password = $GLOBALS['password'];
+    $dbname = $GLOBALS['database_mission'];
     try {
         $db = new PDO(
             "mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
@@ -23,17 +23,17 @@ function insertMissionIntoDB($name, $description = "")
         );
     } catch (Exception $e) {
         header(
-            $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+            $_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error',
             true,
             500
         );
-        die('Error : '.$e->getMessage());
+        die('Error : ' . $e->getMessage());
     }
 
     $query = $db->prepare('INSERT INTO mission (name, description) VALUES (:name, :description);');
     $exec = $query->execute(array(
-            'name' => htmlspecialchars($name),
-            'description' => htmlspecialchars($description)));
+        'name' => htmlspecialchars($name),
+        'description' => htmlspecialchars($description)));
 
     if ($exec == false) {
         $msg = sprintf("Error while writing mission into DB (website) because execute() failed: %s\n<br />", htmlspecialchars($query->error));
@@ -41,7 +41,7 @@ function insertMissionIntoDB($name, $description = "")
         $msg = 'Success !';
     }
     echo $msg;
-    
+
     $query->closeCursor();
 }
 

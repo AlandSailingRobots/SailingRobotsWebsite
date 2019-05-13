@@ -8,7 +8,7 @@
  */
 define('__ROOT__', dirname(dirname(dirname(dirname(dirname(__FILE__))))));
 require_once './is_ajax.php';
-require_once __ROOT__.'/globalsettings.php';
+require_once __ROOT__ . '/globalsettings.php';
 session_start();
 
 /**
@@ -26,10 +26,10 @@ function insertPointIntoDB($params)
     /*
      */
 
-    $hostname  = $GLOBALS['hostname'];
-    $username  = $GLOBALS['username'];
-    $password  = $GLOBALS['password'];
-    $dbname    = $GLOBALS['database_mission'];
+    $hostname = $GLOBALS['hostname'];
+    $username = $GLOBALS['username'];
+    $password = $GLOBALS['password'];
+    $dbname = $GLOBALS['database_mission'];
     try {
         $db = new PDO(
             "mysql:host=$hostname;dbname=$dbname;charset=utf8;port=3306",
@@ -39,11 +39,11 @@ function insertPointIntoDB($params)
         );
     } catch (Exception $e) {
         header(
-            $_SERVER['SERVER_PROTOCOL'].' 500 Internal Server Error',
+            $_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error',
             true,
             500
         );
-        die('Error : '.$e->getMessage());
+        die('Error : ' . $e->getMessage());
     }
 
     // First we delete everything associated to the mission
@@ -68,19 +68,19 @@ function insertPointIntoDB($params)
     // Now we insert every waypoints / checkpoint into the DB
     $query = $db->prepare(
         'INSERT INTO pointList (id,'
-        .'id_mission,'
-        .'rankInMission,'
-        .'isCheckpoint,'
-        .'name,'
-        .'latitude,'
-        .'longitude,'
-        .'declination,'
-        .'radius,'
-        .'stay_time,'
-        .'harvested'
-        .') VALUES '.$emptyArray.' ;'
+        . 'id_mission,'
+        . 'rankInMission,'
+        . 'isCheckpoint,'
+        . 'name,'
+        . 'latitude,'
+        . 'longitude,'
+        . 'declination,'
+        . 'radius,'
+        . 'stay_time,'
+        . 'harvested'
+        . ') VALUES ' . $emptyArray . ' ;'
     );
-    
+
     // Failsafe on the size of the array
     if (count($arrayOfPoints) > 10) {
         $exec = $query->execute($arrayOfPoints);
