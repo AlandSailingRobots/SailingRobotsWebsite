@@ -7,7 +7,7 @@ _Tested using 10.14.4 with HomeBrew and PHP 3.7.5_
 * [Starting Services](INSTALL_MAC_OS.md#Starting-services)
 * [References](INSTALL_MAC_OS.md#References)
 
-##Clone repo
+## Clone repo
 Clone the repository in a directory of choice:
 ```bash
 #!/usr/bin/env bash
@@ -15,7 +15,7 @@ cd /Users/Dummy/SailingRobotsWebsite
 git clone https://github.com/AlandSailingRobots/SailingRobotsWebsite.git
 ```
 
-##Installation of services
+## Installation of services
 
 ### 1. Prerequisites
 There are multiple services needed.
@@ -94,7 +94,7 @@ Alias /phpmyadmin /usr/local/share/phpmyadmin
 </Directory>
 ```
 
-### Changes to `httpd.conf`
+### 6. Changes to `httpd.conf`
 edit the httpd.conf file with a link to the file made in step 5 and other necessary steps. The file can most likely be found at `/usr/local/etc/httpd/httpd.conf`
 
 ```
@@ -143,7 +143,7 @@ gzip localhost.sql.gz | mysql -v --user=root --password=your_password
 (if you downloaded as raw text without compression do `mysql -v --user=root --password=your_password  < localhost.sql` instead)   
 
 
-##Starting services
+## Starting services
 1. To start the services:
    ```bash
    #!/usr/bin/env bash
