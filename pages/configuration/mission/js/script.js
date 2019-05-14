@@ -285,7 +285,7 @@
         $.ajax({
             type: 'POST',
             url: 'php/insertMissionIntoDB.php',
-            data: {name: nameF, decription: descriptionF},
+            data: {name: nameF, description: descriptionF},
             timeout: 3000,
             success: function (data) {
                 alert(data);
