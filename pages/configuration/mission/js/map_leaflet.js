@@ -353,7 +353,9 @@ function displayPointFromDB(data) {
     numberOfPoints = listOfPoints.childElementCount;
 
     // Join the markers
-    mymap.removeLayer(polyline);
+    if (numberOfPoints > 0) {
+        mymap.removeLayer(polyline);
+    }
     // mymap.removeLayer(polylineSup);
     // mymap.removeLayer(polylineInf);
     drawLineBetweenMarkers();
