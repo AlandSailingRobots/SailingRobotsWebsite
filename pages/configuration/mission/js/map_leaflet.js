@@ -326,10 +326,9 @@ function displayPointFromDB(data) {
     arrayOfCircle = {};
 
     var len = data.length;
-
     // Initialization if there is not point in the mission
     // Centered on Mariehamn
-    if (len == 0) {
+    if (len === 0) {
         listOfPoints.parentNode.style.display = "none";
         initMap(60.1, 19.935, mymap);
     }
@@ -343,7 +342,7 @@ function displayPointFromDB(data) {
         lon = point.longitude;
 
         // Centering the map on the first point
-        if (i == 0) {
+        if (i === 0) {
             initMap(lat, lon, mymap);
         }
 
