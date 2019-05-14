@@ -14,7 +14,7 @@
 (function () {
     var missionName = "",   // Name of the mission
         missionDescription = "",   // Its description
-        missionLastUse = "",   // Last use of the mission (clicked on laod button)
+        missionLastUse = "",   // Last use of the mission (clicked on load button)
         id_mission = 0;    // It id
 
     //*****************************************************************************
@@ -24,16 +24,16 @@
     //*****************************************************************************
 
     // Hide the list if there is no point in the mission
-    if (listOfPoints.childElementCount == 0) {
+    if (listOfPoints.childElementCount === 0) {
         listOfPoints.parentNode.style.display = "none";
     }
 
     // Hide the map while no mission is selected
-    document.getElementById('myConfig').style.display = 'none';
+    document.getElementById("myConfig").style.display = "none";
 
     // Read the selected mission
-    $('#missionSelection').on('change', function () {
-        id_mission = $(this).children(':selected').attr('id');
+    $("#missionSelection").on("change", function () {
+        id_mission = $(this).children(":selected").attr("id");
         handleMissionSelection(id_mission);
     });
 
@@ -42,54 +42,57 @@
     function getMissionListFromDB(id) {
         // Get the mission list in a JSON object
         $.ajax({
-            type: 'POST',
-            url: 'php/getMissionList.php',
-            dataType: 'json', // What is expected
+            type: "POST",
+            url: "php/getMissionList.php",
+            dataType: "json", // What is expected
             async: true,
             timeout: 3000,
             success: function (data) {
                 displayMissionList(data, id);
             },
             error: function () {
-                alert('Fail to get mission list!');
+                alert("Fail to get mission list!");
             }
         });
     }
 
     function displayMissionList(data, id) {
-        var selectNode = document.getElementById('missionSelection');
-        var optionNode = document.createElement('option');
+        var selectNode = document.getElementById("missionSelection");
+        var optionNode = document.createElement("option");
 
         // Clean before writing again
         deleteAllChildren(selectNode);
 
         // First element - nothing is selected
-        optionNode.setAttribute('id', '0');
-        optionNode.appendChild(document.createTextNode('Choose a mission'));
+        optionNode.setAttribute("id", "0");
+        optionNode.appendChild(document.createTextNode("Choose a mission"));
         selectNode.appendChild(optionNode);
 
         // Force the focus on the 1st item
-        if (id == 0) {
+        if (id === 0) {
             handleMissionSelection(0);
             optionNode.selected = true;
         }
 
         // If there is any mission in the DB
-        if (len == 0) {
-            optionNode = document.createElement('option');
-            optionNode.setAttribute('id', '-1'); // TODO : adapt test for activation of button
-            optionNode.appendChild(document.createTextNode('You don\'t have any saved mision yet.'));
+        amount_of_missions = data.length;
+        if (amount_of_missions === 0) {
+            optionNode = document.createElement("option");
+            optionNode.setAttribute("id", "-1"); // TODO : adapt test for activation of button
+            optionNode.appendChild(document.createTextNode("You don't have any saved mission yet."));
             selectNode.appendChild(optionNode);
         } else {
             // Display the name of the mission
-            for (var i = 0, len = data.length; i < len; i++) {
-                optionNode = document.createElement('option');
-                optionNode.setAttribute("id", data[i]['id']);
-                optionNode.setAttribute("data_token", data[i]['id']);
-                optionNode.appendChild(document.createTextNode(data[i]['id'] + ' - ' + data[i]['name']));
+            for (var i = 0; i < amount_of_missions; i++) {
+                data_id = data[i]["id"];
+                data_name = data[i]["name"];
+                optionNode = document.createElement("option", data_id);
+                optionNode.setAttribute("id", data_id);
+                optionNode.setAttribute("data_token", data_id);
+                optionNode.appendChild(document.createTextNode(data_id + "- " + data_name));
 
                 // This is used when the list of mission is refreshed after the edition of the mission properties
-                if (id == data[i]['id']) {
+                if (id.toString() === data_id) {
                     optionNode.selected = true;
                 }
 
@@ -107,36 +110,36 @@
         } else {
             // Delete the previous name & description node when (if) the user goes
             // back to the first field in the selector.
-            deleteAllChildren(document.getElementById('missionPresentation'));
+            deleteAllChildren(document.getElementById("missionPresentation"));
         }
 
         // Update the delete button and the display of the map, as well as
         // the display of the button to save or discard change to the mission.
         if (id_mission > 0) {
             // Disable buttons
-            document.getElementById("deleteMissionButton").classList.remove('disabled');
-            document.getElementById("editMissionButton").classList.remove('disabled');
+            document.getElementById("deleteMissionButton").classList.remove("disabled");
+            document.getElementById("editMissionButton").classList.remove("disabled");
 
             // Confirmation Popup before deleting the selected mission
             // $("#deleteMissionButton").off('click', showDeleteConfirmationModal);
 
             // Hide buttons
-            document.getElementById("saveMissionButton").classList.remove('hidden');
-            document.getElementById("cancelMissionButton").classList.remove('hidden');
-            document.getElementById('myConfig').style.display = 'inline';
+            document.getElementById("saveMissionButton").classList.remove("hidden");
+            document.getElementById("cancelMissionButton").classList.remove("hidden");
+            document.getElementById("myConfig").style.display = "inline";
         }
         if (id_mission <= 0) {
             // Enable buttons
-            document.getElementById("deleteMissionButton").classList.add('disabled');
-            document.getElementById("editMissionButton").classList.add('disabled');
+            document.getElementById("deleteMissionButton").classList.add("disabled");
+            document.getElementById("editMissionButton").classList.add("disabled");
 
             // Confirmation Popup before deleting the selected mission
             // $("#deleteMissionButton").on('click', showDeleteConfirmationModal);
 
             // Display buttons
-            document.getElementById("saveMissionButton").classList.add('hidden');
-            document.getElementById("cancelMissionButton").classList.add('hidden');
-            document.getElementById('myConfig').style.display = 'none';
+            document.getElementById("saveMissionButton").classList.add("hidden");
+            document.getElementById("cancelMissionButton").classList.add("hidden");
+            document.getElementById("myConfig").style.display = "none";
         }
     }
 
