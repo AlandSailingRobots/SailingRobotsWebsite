@@ -1,7 +1,6 @@
 # Configuration of the robot
 
-This page is used to read the content of the different tables (the name is spe-
-cified by the webmaster).
+This page is used to read the content of the different tables (the name is specified by the webmaster).
 
 Every entries have an unique ID which is used to recover which field of the DB
 needs to be updated. To do that, the name of the table is concatenated to the

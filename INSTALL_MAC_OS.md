@@ -147,8 +147,14 @@ gzip localhost.sql.gz | mysql -v --user=root --password=your_password
 1. To start the services:
    ```bash
    #!/usr/bin/env bash
+   #For the MariaDB
    mysql.server start
-   apachectl -k start
+   
+   #For the Apache either:
+   # (1) Through Apache Direct
+   sudo apachectl -k start
+   # (2) Or through httpd
+   sudo httpd -k start
    ```
 ## References
 [Arch Linux guide](https://github.com/AlandSailingRobots/SailingRobotsDocs/blob/master/Website%20on%20localhost%20guide.md)
