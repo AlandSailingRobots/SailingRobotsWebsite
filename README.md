@@ -13,19 +13,19 @@ would have been made on previous missions.
    -  Previous website : http://sailingrobots.com/testdata/live/
    -  Live logs
    -  Low level configuration
-   -  Easy way to add waypoints (using LeafletJS and MapboxAPI)
+   -  Easy way to add waypoints (using [LeafletJS](http://leafletjs.com) and [MapboxAPI](https://docs.mapbox.com/api/))
    -  Logs monitoring
 
 ## What has been done so far :
-   -  New UI, using Gentelella Bootstrap Template (by Colorlib)
-   -  Log-in system, need to be 'admin' to configure ASPire
-   -  Synchronisation of the server DB with ASPire DB
-   -  More user-friendly interface for route planning
+   - [x] New UI, using [Gentelella Bootstrap Template](https://github.com/ColorlibHQ/gentelella) (by Colorlib)
+   - [x] Log-in system, need to be 'admin' to configure ASPire
+   - [x] Synchronisation of the server DB with ASPire DB
+   - [x] More user-friendly interface for route planning
 
 
 ## What needs to be done :
-   -  Graphs / tables with data
-   -  Right Management system (see profile/README.md)
+   - [ ] Graphs / tables with data
+   - [ ] [Right Management system](pages/profile/README.md#Objectives)
 
 ## Database
 There are 4 databases used by the website
