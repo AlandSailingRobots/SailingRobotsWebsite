@@ -1,6 +1,7 @@
 # JS Libraries
 
 The following libs are used for the project
+
 | Lib | Purpose |
 | --- | ------- |
 | bootstrap | for the responsive design of the website |
@@ -9,7 +10,7 @@ The following libs are used for the project
 | leafletJS | for the map display |
 
 ### Nota Bene :
-*geomagnetism (could be used to automatically retrieve the magnetic declination of a point when it is sabed into the DB but it requires NodeJS or a 'compatible interpreter')*
+*geomagnetism (could be used to automatically retrieve the magnetic declination of a point when it is saved into the DB but it requires NodeJS or a 'compatible interpreter')*
 
-**The other libraries are not used. As long as they are not loaded into a HTML document, they won't do anything.**
+:exclamation: **The other libraries are not used. As long as they are not loaded into a HTML document, they won't do anything.**
 
