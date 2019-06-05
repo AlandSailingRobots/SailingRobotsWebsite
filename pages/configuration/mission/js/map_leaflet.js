@@ -41,6 +41,11 @@ Point.prototype.print = function () {
 //                          Initialisation                                    *
 //                                                                            *
 //*****************************************************************************
+//Global Variables:
+const max_zoom = 18;
+const attribution_mapbox = "Map data &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"http://mapbox.com\">Mapbox</a>";
+const mapbox_url = "https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}@2x.png?access_token=";
+const accessToken = "pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw";
 
 
 // Initialisation of the map
@@ -69,17 +74,32 @@ var rankInMission;
 
 // Initialize the map which is centered on the given lat, lng
 function initMap(lat, lon, mymap) {
-    var accessToken = 'pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
 
+    var url_acces = mapbox_url + accessToken;
     mymap.setView([lat, lon], 13);
-    L.tileLayer(
-        'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=' + accessToken,
+    var osm = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
+    var mapbox_streets = L.tileLayer(
+        url_acces,
         {
-            maxZoom: 18,
-            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' + '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' + 'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-            id: 'mapbox.streets'
-        }
-    ).addTo(mymap);
+            maxZoom: max_zoom,
+            attribution: attribution_mapbox,
+            id: "mapbox.streets"
+        });
+    var mapbox_satellite = L.tileLayer(
+        mapbox_url + accessToken,
+        {
+            maxZoom: max_zoom,
+            attribution: attribution_mapbox,
+            id: "mapbox.satellite"
+        });
+    var base_maps = {
+        "Mapbox Streets (Default)": mapbox_streets,
+        "Open Street Maps": osm,
+        "Satellite": mapbox_satellite
+    };
+
+    mapbox_streets.addTo(mymap);
+    L.control.layers(base_maps).addTo(mymap);
 
     // Event click on map
     mymap.on('click', onMapClick);
