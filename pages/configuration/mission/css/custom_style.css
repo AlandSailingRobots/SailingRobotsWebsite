@@ -1,110 +1,99 @@
-.myrow
-{
+.myrow {
     font-size: 0;
 }
-.myrow > *
-{
+
+.myrow > * {
     float: none;
     display: inline-block;
     font-size: 14px; /* if using LESS it's quicker to just use @font-size-base */
 }
-.myrow > *:last-child
-{
+
+.myrow > *:last-child {
     vertical-align: bottom;
 }
-.myrow p:last-child
-{
+
+.myrow p:last-child {
     margin-bottom: 0; /* optional */
 }
 
-.myfooter
-{
+.myfooter {
     vertical-align: bottom;
     margin-bottom: 0;
 }
 
-textarea
-{
+textarea {
     resize: vertical;
 }
 
-.top15
-{
+.top15 {
     margin-top: 15px;
 }
 
-#map
-{
+#map {
     height: 600px;
     border: 1px solid #AAA;
 }
 
-#buttonContainerMap
-{
+#buttonContainerMap {
     position: relative;
     margin-top: 2px;
 }
-#newCheckpoint
-{
+
+#newCheckpoint {
     position: absolute;
     right: 1px;
 }
 
-#ul
-{
+#ul {
     padding-top: 10px;
 }
 
-@media (min-width: 991px)
-{
-    #editMissionButton
-    {
+@media (min-width: 991px) {
+    #editMissionButton {
         /* Fix a bad alignement on the first button on large screen */
         margin-left: 5px;
     }
 }
 
-#missionPresentation
-{
+#missionPresentation {
     text-align: center;
 }
 
-#descriptionNode
-{
+#descriptionNode {
     font-size: 1.5em;
 }
-.list-group-item
-{
+
+.list-group-item {
     position: relative;
 }
-.customDelete
-{
+
+.customEdit, .customDelete, .customCenter {
     background-color: rgba(30, 30, 30, 0.3);
     font-size: 0.8em;
     vertical-align: bottom;
     align-content: right;
     bottom: -8px;
+    margin-left: 3px;
 }
 
-.customDelete:hover
-{
+.customDelete:hover, .customCenter:hover .customEdit:hover {
     background-color: rgba(30, 30, 30, 0.8);
     cursor: pointer;
 
 }
-.customEdit
-{
-    background-color: rgba(30, 30, 200, 0.3);
-    font-size: 0.8em;
-    vertical-align: bottom;
-    align-content: right;
-    bottom: -8px;
-    margin-left:3px;
+
+.customDelete {
+    background-color: rgba(30, 30, 200, 0.3) !important;
 }
 
-.customEdit:hover
-{
-    background-color: rgba(30, 30, 200, 0.8);
-    cursor: pointer;
+.customDelete:hover {
+    background-color: rgba(30, 30, 200, 0.8) !important;
+}
 
+.customCenter {
+    background-color: rgba(21, 132, 30, 0.3);
+}
+
+.customCenter:hover {
+    background-color: rgba(21, 132, 30, 0.8);
 }

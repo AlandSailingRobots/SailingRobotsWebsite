@@ -272,6 +272,7 @@ function updateListItems(marker, editOrMove) {
 
     addEditSymbol(newPoint, index);
     addDeleteSymbol(newPoint);
+    addCenterSymbol(newPoint, index)
 
     // Which is inserted at the the right place
     var listItem = document.getElementById(id);
@@ -448,6 +449,7 @@ function createMarker(point, lat, lon) {
     newPoint.appendChild(document.createTextNode(point.print()));
     addEditSymbol(newPoint, point.rankInMission);
     addDeleteSymbol(newPoint);
+    addCenterSymbol(newPoint, point.rankInMission)
     listOfPoints.appendChild(newPoint);
 
     // Display the list (useful only once)
@@ -652,6 +654,16 @@ $('#map').on('click', '.editPointButton', function () {
     editMarker(id_marker);
 });
 
+$('#listOfPoints').on('click', '.customCenter', function () {
+    var id_marker = $(this).parent().attr('id');
+    editedMarkerIndex = $(this).attr('id').split(':')[1];
+    console.log(editedMarkerIndex);
+    var point = arrayOfPoints[editedMarkerIndex];
+    mymap.setView([parseFloat(point.latitude),parseFloat(point.longitude)],initialZoomLevel)
+
+});
+
+
 function editMarker(id_marker) {
     // Adapt the modal to the point properties we clicked on
     if ($('#' + id_marker).hasClass('Checkpoint') || $('#' + id_marker).hasClass('isCheckpoint')) { //TODO change Checkpoint to isCheckpoit in the code
@@ -740,6 +752,15 @@ function addEditSymbol(newNode, rankInMission) {
     newNode.appendChild(newEdit);
 }
 
+// Add a edit span to the given node.
+function addCenterSymbol(newNode, rankInMission) {
+    var newEdit = document.createElement('span');
+
+    newEdit.setAttribute("class", "label label-default pull-right customCenter");
+    newEdit.setAttribute("id", "rankInMission:" + rankInMission);
+    newEdit.appendChild(document.createTextNode('Center'));
+    newNode.appendChild(newEdit);
+}
 
 //*****************************************************************************
 //                                                                            *
