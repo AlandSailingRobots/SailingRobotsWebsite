@@ -42,7 +42,9 @@ Point.prototype.print = function () {
 //                                                                            *
 //*****************************************************************************
 //Global Variables:
-const max_zoom = 18;
+
+const maxZoomLevel = 18;
+const initialZoomLevel = 13;
 const attribution_mapbox = "Map data &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"http://mapbox.com\">Mapbox</a>";
 const mapbox_url = "https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}@2x.png?access_token=";
 const accessToken = "pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw";
@@ -71,24 +73,25 @@ var lat;
 var lon;
 var rankInMission;
 
+var depth_points = null;
 
 // Initialize the map which is centered on the given lat, lng
 function initMap(lat, lon, mymap) {
 
     var url_acces = mapbox_url + accessToken;
-    mymap.setView([lat, lon], 13);
+    mymap.setView([lat, lon], initialZoomLevel);
     var osm = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
     var mapbox_streets = L.tileLayer(
         url_acces,
         {
-            maxZoom: max_zoom,
+            maxZoom: maxZoomLevel,
             attribution: attribution_mapbox,
             id: "mapbox.streets"
         });
     var mapbox_satellite = L.tileLayer(
         mapbox_url + accessToken,
         {
-            maxZoom: max_zoom,
+            maxZoom: maxZoomLevel,
             attribution: attribution_mapbox,
             id: "mapbox.satellite"
         });
@@ -97,12 +100,18 @@ function initMap(lat, lon, mymap) {
         "Open Street Maps": osm,
         "Satellite": mapbox_satellite
     };
-
+    var golden = L.marker([60.1, 19.935]).bindPopup('This is the center point');
+    var other = L.marker([60.2, 19.937]).bindPopup('This is the double point');
+    depth_points = L.layerGroup([golden, other]);
+    overlays = {
+        "depth_overlay": depth_points
+    };
     mapbox_streets.addTo(mymap);
-    L.control.layers(base_maps).addTo(mymap);
+    L.control.layers(base_maps, overlays).addTo(mymap);
 
     // Event click on map
     mymap.on('click', onMapClick);
+    mymap.on('moveend', onMapMove);
 }
 
 //*****************************************************************************
@@ -110,6 +119,10 @@ function initMap(lat, lon, mymap) {
 //                      Functions Used By The Events                          *
 //                                                                            *
 //*****************************************************************************
+
+function onMapMove(e) {
+    getMapBoundingBoxAndSendToBeProcessed()
+}
 
 // This function handles the click on the map.
 // It will display a popup asking the user which point he would liek to add
@@ -269,6 +282,35 @@ function updateListItems(marker, editOrMove) {
     listOfPoints.removeChild(listItem);
 }
 
+function getMapBoundingBoxAndSendToBeProcessed() {
+    if (!mymap.hasLayer(depth_points)) {
+        return null
+    }
+    let currentZoomLevel = mymap.getZoom();
+    if (currentZoomLevel < initialZoomLevel || currentZoomLevel > maxZoomLevel) {
+        console.log("outside zoom", currentZoomLevel);
+        return null
+    }
+    console.log(currentZoomLevel, mymap.getBounds());
+    jsoned = {
+        "zoom": currentZoomLevel,
+        "box": mymap.getBounds()
+    }
+    $.ajax({
+        type: 'POST',
+        url: 'http://127.0.0.1:80/server',
+        contentType: 'application/json; charset=utf-8', // What is sent
+        data: JSON.stringify(jsoned),
+        async: false,
+        timeout: 3000,
+        success: function (data) {
+            console.log('received', data)
+        },
+        error: function () {
+            alert('Fail !');
+        }
+    });
+}
 
 //*****************************************************************************
 //                                                                            *
@@ -377,6 +419,8 @@ function displayPointFromDB(data) {
     }
     // mymap.removeLayer(polylineSup);
     // mymap.removeLayer(polylineInf);
+
+    getMapBoundingBoxAndSendToBeProcessed()
     drawLineBetweenMarkers();
 }
 
