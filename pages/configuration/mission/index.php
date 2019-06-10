@@ -23,7 +23,7 @@ if (isset($_SESSION['id']) and isset($_SESSION['username'])) {
     <?php // Head of the HTML document
     include $relative_path . 'include/head.php';
     ?>
-    <link rel="stylesheet" href="<?php echo $relative_path . 'assets/vendors/leafletjs/leaflet.css'; ?>"/>
+    <link rel="stylesheet" href="<?= $relative_path . 'assets/vendors/leafletjs/leaflet.css'; ?>"/>
     <link rel="stylesheet" href="css/custom_style.css"/>
 
 </head>
@@ -31,11 +31,11 @@ if (isset($_SESSION['id']) and isset($_SESSION['username'])) {
 <body class="nav-md">
 <div class="container body">
     <!-- sidebar -->
-    <?php include $relative_path . 'include/sidebar.php'; ?>
-    <!-- /sidebar -->
-
-    <!-- top navigation -->
-    <?php include $relative_path . 'include/top_navigation.php'; ?>
+    <?php
+    //    <!-- /sidebar -->
+    include $relative_path . 'include/sidebar.php';
+    //<!--     top navigation -->
+    include $relative_path . 'include/top_navigation.php'; ?>
     <!-- /top navigation -->
 
     <!-- page content -->
@@ -59,17 +59,18 @@ if (isset($_SESSION['id']) and isset($_SESSION['username'])) {
     <!-- /footer content -->
 </div>
 
-<!-- ##########################    JAVASCRIPT     ########################## -->
-<?php // Not very clean, but the default configs includes too many JS for a beginner
-// That way, main file is 'clean' ?>
+<!-- ##########################    JAVASCRIPT     ##########################
+Not very clean, but the default configs includes too many JS for a beginner
+That way, main file is 'clean'
+-->
 <?php //include $relative_path . 'include/js_scripts.php';
 ?>
 <!-- jQuery -->
-<script src=<?php echo $relative_path . "assets/vendors/jquery/dist/jquery.min.js" ?>></script>
+<script src=<?= $relative_path . "assets/vendors/jquery/dist/jquery.min.js" ?>></script>
 <!-- Bootstrap -->
-<script src=<?php echo $relative_path . "assets/vendors/bootstrap/dist/js/bootstrap.min.js" ?>></script>
+<script src=<?= $relative_path . "assets/vendors/bootstrap/dist/js/bootstrap.min.js" ?>></script>
 <!-- Custom Theme Scripts -->
-<script src=<?php echo $relative_path . "assets/js/custom.min.js" ?>></script>
+<script src=<?= $relative_path . "assets/js/custom.min.js" ?>></script>
 <?php
 if ($connected) {
     echo '<script src="' . $relative_path . 'assets/vendors/leafletjs/leaflet.js"></script>';
