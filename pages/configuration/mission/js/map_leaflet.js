@@ -271,7 +271,7 @@ function updateListItems(marker, editOrMove) {
     newPoint.appendChild(document.createTextNode(arrayOfPoints[index].print()));
 
     addEditSymbol(newPoint, index);
-    addDeleteSymbol(newPoint);
+    addDeleteSymbol(newPoint, index);
     addCenterSymbol(newPoint, index)
 
     // Which is inserted at the the right place
@@ -448,8 +448,8 @@ function createMarker(point, lat, lon) {
     // Add an item to the HTML list
     newPoint.appendChild(document.createTextNode(point.print()));
     addEditSymbol(newPoint, point.rankInMission);
-    addDeleteSymbol(newPoint);
-    addCenterSymbol(newPoint, point.rankInMission)
+    addDeleteSymbol(newPoint, point.rankInMission);
+    addCenterSymbol(newPoint, point.rankInMission);
     listOfPoints.appendChild(newPoint);
 
     // Display the list (useful only once)
@@ -646,7 +646,7 @@ $('#listOfPoints').on('click', '.customCenter', function () {
     editedMarkerIndex = $(this).attr('id').split(':')[1];
     console.log(editedMarkerIndex);
     var point = arrayOfPoints[editedMarkerIndex];
-    mymap.setView([parseFloat(point.latitude),parseFloat(point.longitude)],initialZoomLevel)
+    mymap.setView([parseFloat(point.latitude), parseFloat(point.longitude)])
 
 });
 
@@ -728,24 +728,23 @@ $('#confirmEditPointButton').on('click', function () {
     }).update();
 });
 
+function createSpan(rankInMission, css_name, text) {
+    var newEdit = document.createElement('span');
+    newEdit.setAttribute("class", `label label-default pull-right ${css_name}`);
+    newEdit.setAttribute("id", `rankInMission:${rankInMission}`);
+    newEdit.appendChild(document.createTextNode(text));
+    return newEdit
+}
 
 // Add a edit span to the given node.
 function addEditSymbol(newNode, rankInMission) {
-    var newEdit = document.createElement('span');
-
-    newEdit.setAttribute("class", "label label-default pull-right customEdit");
-    newEdit.setAttribute("id", "rankInMission:" + rankInMission);
-    newEdit.appendChild(document.createTextNode('Edit'));
+    var newEdit = createSpan(rankInMission, "customEdit", "Edit");
     newNode.appendChild(newEdit);
 }
 
 // Add a edit span to the given node.
 function addCenterSymbol(newNode, rankInMission) {
-    var newEdit = document.createElement('span');
-
-    newEdit.setAttribute("class", "label label-default pull-right customCenter");
-    newEdit.setAttribute("id", "rankInMission:" + rankInMission);
-    newEdit.appendChild(document.createTextNode('Center'));
+    var newEdit = createSpan(rankInMission, "customCenter", "Center");
     newNode.appendChild(newEdit);
 }
 
@@ -822,11 +821,8 @@ function deleteMarker(id_marker) {
 
 // Add a delete span to the given node.
 function addDeleteSymbol(newNode) {
-    var newDelete = document.createElement('span');
-
-    newDelete.setAttribute("class", "label label-default pull-right customDelete");
-    newDelete.appendChild(document.createTextNode('Delete'));
-    newNode.appendChild(newDelete);
+    var newEdit = createSpan(rankInMission, "customDelete", "Delete");
+    newNode.appendChild(newEdit);
 }
 
 //*****************************************************************************
