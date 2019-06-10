@@ -569,38 +569,24 @@ function computeCoordinatesOfLine(markerA, markerB) {
         radiusB = parseInt(arrayOfPoints[markerB.options.rankInMission].radius);
 
     // radius = Math.min(radiusA, radiusB);
-    radiusA = parseFloat((radiusA + radiusB) / 2);
-    radiusB = radiusA;
-
-    console.log('theta : ', theta * 180 / Math.PI, 'radiusA', radiusA, 'radiusB', radiusB);
+    var radius = parseFloat((radiusA + radiusB) / 2);
+    thetad_radius = radius * (1 + Math.abs(Math.sin(theta)));
+    // console.log('theta : ', theta * 180 / Math.PI, 'radiusA', radiusA, 'radiusB', radiusB);
 
     // For the upper line
-    result[0] = rotationVector(
-        theta + Math.PI / 2,
-        markerA.getLatLng()['lat'],
-        markerA.getLatLng()['lng'],
-        radiusA * (1 + Math.abs(Math.sin(theta)))
-    );
-    result[1] = rotationVector(
-        theta + Math.PI / 2,
-        markerB.getLatLng()['lat'],
-        markerB.getLatLng()['lng'],
-        radiusB * (1 + Math.abs(Math.sin(theta)))
-    );
-    // For the lower line
-    result[2] = rotationVector(
-        theta - Math.PI / 2,
-        markerA.getLatLng()['lat'],
-        markerA.getLatLng()['lng'],
-        radiusA * (1 + Math.abs(Math.sin(theta)))
-    );
-    result[3] = rotationVector(
-        theta - Math.PI / 2,
-        markerB.getLatLng()['lat'],
-        markerB.getLatLng()['lng'],
-        radiusB * (1 + Math.abs(Math.sin(theta)))
-    );
-
+    for (let i = 0; i < 4; i++) {
+        var result_theta = 0;
+        if (i < 2) {
+            result_theta = theta + Math.PI / 2
+        } else {
+            result_theta = theta - Math.PI / 2
+        }
+        if (i === 0 || i === 2) {
+            result[i] = rotationVector(result_theta, markerA, thetad_radius)
+        } else {
+            result[i] = rotationVector(result_theta, markerB, thetad_radius)
+        }
+    }
     return result;
 }
 
@@ -608,9 +594,10 @@ function computeTheta(vectorA, vectorB) {
     return Math.atan2(vectorB['lat'] - vectorA['lat'], vectorB['lng'] - vectorA['lng']);
 }
 
-function rotationVector(theta, vector_lat, vector_lng, radius) {
+function rotationVector(theta, marker_, radius) {
     var result = {};
-
+    vector_lat = marker_.getLatLng()['lat'];
+    vector_lng = marker_.getLatLng()['lng'];
     // According to this answer on Stack Overflow :
     // https://stackoverflow.com/questions/2187657/calculate-second-point-knowing-the-starting-point-and-distance
     result['lat'] = vector_lat + radius * Math.sin(theta) / (110540);
