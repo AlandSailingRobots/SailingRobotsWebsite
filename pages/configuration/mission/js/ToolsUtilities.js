@@ -15,7 +15,7 @@ function askNewPoint() {
         "<div id=\'buttonContainerMap\'>\n    " +
         "<button name=\'newWaypoint\' class=\'btn btn-info addPoint\' id=\'newWaypoint\'>Waypoint</button>\n    " +
         "<button name=\'newCheckpoint\' class=\'btn btn-success addPoint\' id=\'newCheckpoint\'>Checkpoint</button>\n" +
-        "</div>s";
+        "</div>";
 }
 
 function askEditPoint(point) {

@@ -54,7 +54,6 @@ const accessToken = "pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3
 var mymap = L.map('map');
 initMap(60.1, 19.935, mymap);
 var popup = L.popup();
-
 var listOfPoints = document.getElementById('listOfPoints'); // To manage the list of item
 var isOpen = false;                 // To handle the popup of creation of point
 var numberOfPoints = listOfPoints.childElementCount;
@@ -120,8 +119,8 @@ function initMap(lat, lon, mymap) {
 //                                                                            *
 //*****************************************************************************
 
-function onMapMove(e) {
-    getMapBoundingBoxAndSendToBeProcessed()
+function onMapMove() {
+    getMapBoundingBoxAndSendToBeProcessed();
 }
 
 // This function handles the click on the map.
@@ -144,16 +143,20 @@ function onMapClick(e) {
 // Event when click on a button of the popup
 $('#map').on('click', '.addPoint', function (e) {
     // Edit the modal form depending of which kind of point we want to create.
+    var defaultStay_time;
+    var defaultRadius;
+    var classText;
+    var text;
     if ($(this).attr('id') == 'newCheckpoint') {
-        var text = 'checkpoint';
-        var classText = 'isCheckpoint';
-        var defaultRadius = 15;
-        var defaultStay_time = 5;
+        text = 'checkpoint';
+        classText = 'isCheckpoint';
+        defaultRadius = 15;
+        defaultStay_time = 5;
     } else {
-        var text = 'waypoint';
-        var classText = 'isWaypoint';
-        var defaultRadius = 50;
-        var defaultStay_time = 1;
+        text = 'waypoint';
+        classText = 'isWaypoint';
+        defaultRadius = 50;
+        defaultStay_time = 1;
     }
     editModalToPoint(classText, text);
 
@@ -179,7 +182,7 @@ function editModalToPoint(classText, text) {
         // Deleting previous text
         waypointOrCheckpoint[i].removeChild(waypointOrCheckpoint[i].firstChild);
 
-        // Creating a child (easier to remove than just using TexteNode)
+        // Creating a child (easier to remove than just using TextNode)
         var txt_env = document.createElement('span');
         txt_env.classList.add(classText);
         txt_env.appendChild(document.createTextNode(text));
@@ -356,12 +359,8 @@ function getMissionPointFromDB(id_mission) {
     mymap = L.map('map');
 
     // Clean the list
-    while (listOfPoints.firstChild) {
-        listOfPoints.removeChild(listOfPoints.firstChild);
-    }
+    deleteAllChildren(listOfPoints);
 
-    // Clean the map
-    //initMap(60.1, 19.935, mymap);
 
     // Get the marker list in JSON object
     $.ajax({
@@ -761,14 +760,12 @@ function addCenterSymbol(newNode, rankInMission) {
 // a new object and change the 'rankInMission' of the points after the deleted one
 $('#listOfPoints').on('click', '.customDelete', function () {
     var id_marker = $(this).parent().attr('id');
-
     deleteMarker(id_marker);
 });
 
 $('#map').on('click', '.deletePoint', function () {
     var id_element = $(this).attr('id');
     var id_marker = id_element.split('|')[1].split(':')[1];
-
     deleteMarker(id_marker);
 
 });
