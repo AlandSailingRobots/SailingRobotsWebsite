@@ -295,11 +295,17 @@ function getMapBoundingBoxAndSendToBeProcessed() {
         console.log("outside zoom", currentZoomLevel);
         return null
     }
-    console.log(currentZoomLevel, mymap.getBounds());
+    bounds = mymap.getBounds()
     jsoned = {
         "zoom": currentZoomLevel,
-        "box": mymap.getBounds()
-    }
+        "box": {
+            'ne': bounds.getNorthEast(),
+            'sw': bounds.getSouthWest(),
+            'nw': bounds.getNorthWest(),
+            'se': bounds.getSouthEast()
+        },
+        "crs": 'epsg:4326'
+    };
     $.ajax({
         type: 'POST',
         url: 'http://127.0.0.1:80/server',
