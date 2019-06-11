@@ -6,35 +6,6 @@
 //                                                                            *
 //*****************************************************************************
 
-function Point(id, id_mission, isCheckpoint, rankInMission, name, lat, lon, decl, radius, stay_time, harvested) {
-    this.id = id; // Different to the primary key of the DB when it comes to add new points.
-    this.id_mission = id_mission;
-    this.rankInMission = rankInMission;
-    this.isCheckpoint = isCheckpoint;
-    this.name = name;
-    this.latitude = lat;
-    this.longitude = lon;
-    this.declination = decl;
-    this.radius = radius;
-    this.stay_time = stay_time;
-    // If no argument is provided, then this.harvested = false, otherwise, the provided argument
-    this.harvested = (harvested === undefined ? 0 : harvested);
-}
-
-Point.prototype.print = function () {
-    if (this.isCheckpoint == "1") {
-        var type = "checkpoint";
-    } else {
-        var type = "waypoint";
-    }
-
-    var result = "The " + type + " " + this.rankInMission + " - " + this.name + " is located at the coordinates ("
-        + this.latitude + ", " + this.longitude + ")\n" +
-        "Radius: " + this.radius + " (m) | Declination: " + this.declination +
-        " | Stay time: " + this.stay_time + " (sec)";
-    return result;
-};
-
 
 //*****************************************************************************
 //                                                                            *
@@ -57,9 +28,9 @@ var popup = L.popup();
 var listOfPoints = document.getElementById('listOfPoints'); // To manage the list of item
 var isOpen = false;                 // To handle the popup of creation of point
 var numberOfPoints = listOfPoints.childElementCount;
-var arrayOfPoints = {};             // To store the different waypoints & checkpoints
-var arrayOfMarker = {};             // To store the different marker of the map.
-var arrayOfCircle = {};
+var arrayOfPoints = [];             // To store the different waypoints & checkpoints
+var arrayOfMarker = [];             // To store the different marker of the map.
+var arrayOfCircle = [];
 var coordGPS;                       // Coord of where we clicked on the map
 var timeStamp = currentTimeStamp(); // We need an unique ID to link the html tag / the marker object / the point object
 var polyline;                       // Declaration of a global variable. LeafletJS object (polyline)
@@ -141,29 +112,22 @@ function onMapClick(e) {
 }
 
 // Event when click on a button of the popup
-$('#map').on('click', '.addPoint', function (e) {
+$('#map').on('click', '.addPoint', addPointModelExample);
+
+function addPointModelExample() {
     // Edit the modal form depending of which kind of point we want to create.
-    var defaultStay_time;
-    var defaultRadius;
-    var classText;
-    var text;
+    let examplePoint;
     if ($(this).attr('id') == 'newCheckpoint') {
-        text = 'checkpoint';
-        classText = 'isCheckpoint';
-        defaultRadius = 15;
-        defaultStay_time = 5;
+        examplePoint = new CheckPoint();
     } else {
-        text = 'waypoint';
-        classText = 'isWaypoint';
-        defaultRadius = 50;
-        defaultStay_time = 1;
+        examplePoint = new WayPoint();
     }
-    editModalToPoint(classText, text);
+    editModalToPoint(examplePoint);
 
     // Change the default values depending on which type of point we want to add
     // We loose the 'feature' of having the previous entered value.
-    $('#newPointRadius').val(defaultRadius);
-    $('#newPointStay_time').val(defaultStay_time);
+    $('#newPointRadius').val(examplePoint.defaultRadius);
+    $('#newPointStay_time').val(examplePoint.defaultStay_time);
 
     // Modify the value of the longitude and latitude form to allow
     // the user to correct the value manually if needed.
@@ -172,10 +136,10 @@ $('#map').on('click', '.addPoint', function (e) {
 
     // Display the modal form
     $('#createPointModal').modal('show');
-});
+}
 
 // Use the span tags inside the modal form to adapt the text for a waypoint or a checkpoint
-function editModalToPoint(classText, text) {
+function editModalToPoint(point) {
     var waypointOrCheckpoint = $('.waypointOrCheckpoint');
 
     for (var i = waypointOrCheckpoint.length - 1; i >= 0; i--) {
@@ -184,8 +148,8 @@ function editModalToPoint(classText, text) {
 
         // Creating a child (easier to remove than just using TextNode)
         var txt_env = document.createElement('span');
-        txt_env.classList.add(classText);
-        txt_env.appendChild(document.createTextNode(text));
+        txt_env.classList.add(point.classText);
+        txt_env.appendChild(document.createTextNode(point.text));
         waypointOrCheckpoint[i].appendChild(txt_env);
     }
 }
@@ -212,7 +176,7 @@ function createNewPoint() {
     var color; // Of Icon on the map
 
     // Var to create a new point object
-    var name = escapeHtml($('#newPointName').val()),
+    let name = escapeHtml($('#newPointName').val()),
         id_mission = $('#missionSelection').children(':selected').attr('id'),
         radius = escapeHtml($('#newPointRadius').val()),
         stay_time = parseInt($('#newPointStay_time').val()) * 60, // So we get seconds
@@ -220,24 +184,21 @@ function createNewPoint() {
         lon = escapeHtml($('#newPointLongitude').val()),
         declination = escapeHtml($('#newPointDeclination').val()),
         rankInMission = ++numberOfPoints,
-        isCheckpoint;
 
-    // console.log("GPS : ", coordGPS, " lat ", coordGPS.split(',')[0], " lon ", coordGPS.split(',')[1]);
-    // Update the timestamp for the new point
-    timeStamp = currentTimeStamp();
-
-    // Checkpoint or Waypoint
-    if ($('.waypointOrCheckpoint')[0].firstChild.classList.contains('isCheckpoint')) {
-        isCheckpoint = 1;
-    } else {
-        isCheckpoint = 0;
-    }
+        // console.log("GPS : ", coordGPS, " lat ", coordGPS.split(',')[0], " lon ", coordGPS.split(',')[1]);
+        // Update the timestamp for the new point
+        timeStamp = currentTimeStamp();
 
     // Last thing to compute
     // declination = computeDeclination(lat, lon);
 
     // We can now create an instance of the class Point
-    var newPoint_JS = new Point(timeStamp, id_mission, isCheckpoint, rankInMission, name, lat, lon, declination, radius, stay_time);
+    let newPoint_JS;
+    if ($('.waypointOrCheckpoint')[0].firstChild.classList.contains('isCheckpoint')) {
+        newPoint_JS = new CheckPoint(timeStamp, id_mission, rankInMission, name, lat, lon, declination, radius, stay_time);
+    } else {
+        newPoint_JS = new WayPoint(timeStamp, id_mission, rankInMission, name, lat, lon, declination, radius, stay_time);
+    }
 
     // Add a marker on the map
     createMarker(newPoint_JS, lat, lon);
@@ -273,9 +234,9 @@ function updateListItems(marker, editOrMove) {
     newPoint.setAttribute("class", "point list-group-item");
     newPoint.appendChild(document.createTextNode(arrayOfPoints[index].print()));
 
-    addEditSymbol(newPoint, index);
-    addDeleteSymbol(newPoint, index);
-    addCenterSymbol(newPoint, index)
+    addEditSymbol(newPoint, arrayOfPoints[index]);
+    addDeleteSymbol(newPoint, arrayOfPoints[index]);
+    addCenterSymbol(newPoint, arrayOfPoints[index]);
 
     // Which is inserted at the the right place
     var listItem = document.getElementById(id);
@@ -292,7 +253,6 @@ function getMapBoundingBoxAndSendToBeProcessed() {
     }
     let currentZoomLevel = mymap.getZoom();
     if (currentZoomLevel < initialZoomLevel || currentZoomLevel > maxZoomLevel) {
-        console.log("outside zoom", currentZoomLevel);
         return null
     }
     bounds = mymap.getBounds()
@@ -335,11 +295,15 @@ function getMapBoundingBoxAndSendToBeProcessed() {
 function saveMissionIntoDB() {
     // console.log('clicked !');
     // console.log(JSON.stringify(arrayOfPoints));
+    array_data = {};
+    for (let i = 1; i < arrayOfPoints.length; i++) {
+        array_data[i] = (arrayOfPoints[i].getDBFormat())
+    }
     $.ajax({
         type: 'POST',
         url: 'php/insertPointIntoDB.php',
         contentType: 'application/json; charset=utf-8', // What is sent
-        data: JSON.stringify(arrayOfPoints),
+        data: JSON.stringify(array_data),
         // dataType: 'json',
         async: false,
         timeout: 3000,
@@ -389,9 +353,9 @@ function getMissionPointFromDB(id_mission) {
 // fill the array, and display them
 function displayPointFromDB(data) {
     // We clean the variables
-    arrayOfPoints = {};
-    arrayOfMarker = {};
-    arrayOfCircle = {};
+    arrayOfPoints = [];
+    arrayOfMarker = [];
+    arrayOfCircle = [];
 
     var len = data.length;
     // Initialization if there is not point in the mission
@@ -403,7 +367,13 @@ function displayPointFromDB(data) {
 
     // Adding all points
     for (var i = 0; i < len; i++) {
-        var point = $.extend(new Point(), data[i]);
+        let point;
+
+        if (data[i].isCheckpoint == "1") {
+            point = $.extend(new CheckPoint(), data[i]);
+        } else {
+            point = $.extend(new WayPoint(), data[i]);
+        }
 
         // Fullfilling our variables
         lat = point.latitude;
@@ -426,35 +396,32 @@ function displayPointFromDB(data) {
     // mymap.removeLayer(polylineSup);
     // mymap.removeLayer(polylineInf);
 
-    getMapBoundingBoxAndSendToBeProcessed()
+    getMapBoundingBoxAndSendToBeProcessed();
     drawLineBetweenMarkers();
 }
 
+//*****************************************************************************
+//                                                                            *
+//                      Marker & Markers Functions                            *
+//                                                                            *
+//*****************************************************************************
+
 // Handle the creation of a marker
 function createMarker(point, lat, lon) {
-    var newPoint = document.createElement('li');
 
+    // We add it to the array
+    arrayOfPoints[point.rankInMission] = point;
+    var newPoint = document.createElement('li');
     // Add class attribute to the <li> element
     newPoint.setAttribute("class", "point");
     newPoint.classList.add('list-group-item');
     newPoint.setAttribute("id", point.id);
-
-    if (point.isCheckpoint == "1") { // TODO : parse to float / int / bool when mapping to JS object Point()
-        newPoint.classList.add('isCheckpoint');
-        color = greenIcon;
-    } else {
-        newPoint.classList.add('isWaypoint');
-        color = blueIcon;
-    }
-
-    // We add it to the array
-    arrayOfPoints[point.rankInMission] = point;
-
     // Add an item to the HTML list
+    newPoint.classList.add(point.classText);
     newPoint.appendChild(document.createTextNode(point.print()));
-    addEditSymbol(newPoint, point.rankInMission);
-    addDeleteSymbol(newPoint, point.rankInMission);
-    addCenterSymbol(newPoint, point.rankInMission);
+    addEditSymbol(newPoint, point);
+    addDeleteSymbol(newPoint, point);
+    addCenterSymbol(newPoint, point);
     listOfPoints.appendChild(newPoint);
 
     // Display the list (useful only once)
@@ -467,18 +434,19 @@ function createMarker(point, lat, lon) {
         [lat, lon],
         {
             draggable: 'true',
-            icon: color,
+            icon: point.icon_color,
             rankInMission: point.rankInMission,
             id: point.id
         }
     );
     marker.bindPopup(askEditPoint(point));
-
+    marker.on('dragend', markerDrag);
     // Add in marker array
     arrayOfMarker[point.rankInMission] = marker;
 
     // New 'following' circle
-    var circle = L.circle(
+    // Store the circle in an array. It works the same way as it does for the marker
+    arrayOfCircle[point.rankInMission] = L.circle(
         [lat, lon],
         parseFloat(point.radius),
         {
@@ -488,10 +456,7 @@ function createMarker(point, lat, lon) {
             rankInMission: point.rankInMission,
             id: point.id
         }
-    ).addTo(mymap)
-
-    // Store the circle in an array. It works the same way as it does for the marker
-    arrayOfCircle[point.rankInMission] = circle;
+    ).addTo(mymap);
 
     // Update the polyline
     if (polyline != undefined) {
@@ -503,29 +468,31 @@ function createMarker(point, lat, lon) {
     polyline = L.polyline(LatLngs, {color: 'red'}).addTo(mymap);
 
     // Handle the Drag & Drop
-    marker.on('dragend', function (event) {
-        var marker = event.target;
-        var position = marker.getLatLng();
-        // console.log(position);
-
-        // Update the position on the map
-        marker.setLatLng(position, {
-            draggable: 'true',
-            rankInMission: marker.options.rankInMission,
-            id: marker.options.id
-        }).update();
-
-        // Update the position in our lists.
-        updateListItems(marker, "move");
-
-        // Update the polyline
-        mymap.removeLayer(polyline);
-        removePolylineInfSup();
-        drawLineBetweenMarkers();
-    });
 
     // Finally we display the marker on the map
     mymap.addLayer(marker);
+}
+
+function markerDrag(event) {
+
+    var marker = event.target;
+    var position = marker.getLatLng();
+    // console.log(position);
+
+    // Update the position on the map
+    marker.setLatLng(position, {
+        draggable: 'true',
+        rankInMission: marker.options.rankInMission,
+        id: marker.options.id
+    }).update();
+
+    // Update the position in our lists.
+    updateListItems(marker, "move");
+
+    // Update the polyline
+    mymap.removeLayer(polyline);
+    removePolylineInfSup();
+    drawLineBetweenMarkers();
 }
 
 // This functions uses the coordinates of all markers to draw a line between them
@@ -634,7 +601,6 @@ var editedMarkerIndex; // To keep the index of the marker we clicked on
 $('#listOfPoints').on('click', '.customEdit', function () {
     var id_marker = $(this).parent().attr('id');
     editedMarkerIndex = $(this).attr('id').split(':')[1];
-
     editMarker(id_marker);
 });
 
@@ -642,34 +608,34 @@ $('#map').on('click', '.editPointButton', function () {
     var id_element = $(this).attr('id');
     var id_marker = id_element.split('|')[1].split(':')[1];
     editedMarkerIndex = id_element.split('|')[0].split(':')[1]; // It's ugly right ? :p
-
     editMarker(id_marker);
 });
 
 $('#listOfPoints').on('click', '.customCenter', function () {
-    var id_marker = $(this).parent().attr('id');
-    editedMarkerIndex = $(this).attr('id').split(':')[1];
-    console.log(editedMarkerIndex);
-    var point = arrayOfPoints[editedMarkerIndex];
+    var point = arrayOfPoints[$(this).attr('id').split(':')[1]];
     mymap.setView([parseFloat(point.latitude), parseFloat(point.longitude)])
 
 });
 
+function findIdMarker(item) {
+    if (item !== undefined) {
+        return parseInt(item.id) === parseInt(this.id_marker);
+    } else {
+        return false
+    }
+}
+
+function findIndexOfMarker(id_marker) {
+    return arrayOfPoints.findIndex(findIdMarker, {id_marker: id_marker})
+}
 
 function editMarker(id_marker) {
     // Adapt the modal to the point properties we clicked on
-    if ($('#' + id_marker).hasClass('Checkpoint') || $('#' + id_marker).hasClass('isCheckpoint')) { //TODO change Checkpoint to isCheckpoit in the code
-        var text = 'checkpoint';
-        var classText = 'isCheckpoint';
-    } else {
-        var text = 'waypoint';
-        var classText = 'isWaypoint';
-    }
-    editModalToPoint(classText, text);
+
+    var point = arrayOfPoints.find(findIdMarker, {id_marker: id_marker});
+    editModalToPoint(point);
 
     // Fill the form with the properties of the marker we selected
-    var point = arrayOfPoints[editedMarkerIndex];
-
     $('#editPointName').val(point.name);
     $('#editPointLatitude').val(point.latitude);
     $('#editPointLongitude').val(point.longitude);
@@ -686,40 +652,30 @@ $('#cancelEditPointButton').on('click', function () {
     $('#editPointModal').modal('hide');
 });
 
-$('#confirmEditPointButton').on('click', function () {
+$('#confirmEditPointButton').on('click', function (e) {
     // $('#isCheckpointButton').removeClass('active');
     // $('#isWaypointButton').removeClass('active');
 
     $('#editPointModal').modal('hide');
-
     // Get the entered value, update the object in the array and the list
     var point = arrayOfPoints[editedMarkerIndex];
-
+    var changed_point;
+    if (point.isCheckpoint === "1") {
+        changed_point = new CheckPoint()
+    } else {
+        changed_point = new WayPoint()
+    }
     // Name
-    if (point.name != escapeHtml($('#editPointName').val())) {
-        point.name = escapeHtml($('#editPointName').val());
+    changed_point = Object.assign(changed_point, point);
+    changed_point.name = escapeHtml($('#editPointName').val());
+    changed_point.latitude = (escapeHtml($('#editPointLatitude').val()));
+    changed_point.longitude = (escapeHtml($('#editPointLongitude').val()));
+    changed_point.radius = (escapeHtml($('#editPointRadius').val()));
+    changed_point.stay_time = "" + parseInt(escapeHtml($('#editPointStay_time').val())) * 60;
+    changed_point.declination = (escapeHtml($('#editPointDeclination').val()));
+    if (!point.equals(changed_point)) {
+        point = changed_point
     }
-    // Latitude
-    if (point.latitude != escapeHtml($('#editPointLatitude').val())) {
-        point.latitude = parseFloat(escapeHtml($('#editPointLatitude').val()));
-    }
-    // Longitude
-    if (point.longitude != escapeHtml($('#editPointLongitude').val())) {
-        point.longitude = parseFloat(escapeHtml($('#editPointLongitude').val()));
-    }
-    // Radius
-    if (point.radius != escapeHtml($('#editPointRadius').val())) {
-        point.radius = parseInt(escapeHtml($('#editPointRadius').val()));
-    }
-    // Stay time
-    if (point.stay_time != parseInt(escapeHtml($('#editPointStay_time').val())) * 60) {
-        point.stay_time = parseInt(escapeHtml($('#editPointStay_time').val()));
-    }
-    // Declination
-    if (point.declination != escapeHtml($('#editPointDeclination').val())) {
-        point.declination = parseFloat(escapeHtml($('#editPointDeclination').val()));
-    }
-
     // Update the list item
     updateListItems(arrayOfMarker[editedMarkerIndex], "drag");
 
@@ -733,23 +689,25 @@ $('#confirmEditPointButton').on('click', function () {
     }).update();
 });
 
-function createSpan(rankInMission, css_name, text) {
+function createSpan(point, css_name, text) {
     var newEdit = document.createElement('span');
     newEdit.setAttribute("class", `label label-default pull-right ${css_name}`);
-    newEdit.setAttribute("id", `rankInMission:${rankInMission}`);
+    newEdit.setAttribute("id", `rankInMission:${point.rankInMission}`);
+    newEdit.setAttribute("point-id", `${point.id}`);
+
     newEdit.appendChild(document.createTextNode(text));
     return newEdit
 }
 
 // Add a edit span to the given node.
-function addEditSymbol(newNode, rankInMission) {
-    var newEdit = createSpan(rankInMission, "customEdit", "Edit");
+function addEditSymbol(newNode, point) {
+    var newEdit = createSpan(point, "customEdit", "Edit");
     newNode.appendChild(newEdit);
 }
 
 // Add a edit span to the given node.
-function addCenterSymbol(newNode, rankInMission) {
-    var newEdit = createSpan(rankInMission, "customCenter", "Center");
+function addCenterSymbol(newNode, point) {
+    var newEdit = createSpan(point, "customCenter", "Center");
     newNode.appendChild(newEdit);
 }
 
@@ -778,14 +736,11 @@ $('#map').on('click', '.deletePoint', function () {
 
 function deleteMarker(id_marker) {
     var parentNodeList = document.getElementById('listOfPoints').children;
-    var newArrayOfPoints = {},
-        newArrayOfMarker = {},
-        newArrayOfCircle = {};
-    // var rank = 1 + Array.from(parentNodeList).indexOf(document.getElementById(id_marker));
-
+    var newArrayOfPoints = [],
+        newArrayOfMarker = [],
+        newArrayOfCircle = [];
     var changeRank = 0;
     var j;
-
     // Update this different array without the deleted point
     for (var i = 1, len = parentNodeList.length; i <= len; i++) {
         j = i;
@@ -823,8 +778,8 @@ function deleteMarker(id_marker) {
 };
 
 // Add a delete span to the given node.
-function addDeleteSymbol(newNode) {
-    var newEdit = createSpan(rankInMission, "customDelete", "Delete");
+function addDeleteSymbol(newNode, point) {
+    var newEdit = createSpan(point, "customDelete", "Delete");
     newNode.appendChild(newEdit);
 }
 
