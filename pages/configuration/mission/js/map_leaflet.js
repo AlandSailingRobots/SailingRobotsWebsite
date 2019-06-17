@@ -23,6 +23,7 @@ const accessToken = "pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3
 
 // Initialisation of the map
 var mymap = L.map('map');
+var geoJsonWaterLayer;
 initMap(60.1, 19.935, mymap);
 var popup = L.popup();
 var listOfPoints = document.getElementById('listOfPoints'); // To manage the list of item
@@ -73,8 +74,10 @@ function initMap(lat, lon, mymap) {
     var golden = L.marker([60.1, 19.935]).bindPopup('This is the center point');
     var other = L.marker([60.2, 19.937]).bindPopup('This is the double point');
     depth_points = L.layerGroup([golden, other]);
+    geoJsonWaterLayer = L.geoJSON(undefined);
     overlays = {
-        "depth_overlay": depth_points
+        "depth_overlay": depth_points,
+        "water_overlay": geoJsonWaterLayer
     };
     mapbox_streets.addTo(mymap);
     L.control.layers(base_maps, overlays).addTo(mymap);
@@ -247,6 +250,75 @@ function updateListItems(marker, editOrMove) {
     listOfPoints.removeChild(listItem);
 }
 
+function checkPoint(point) {
+    let contained = false;
+    geoJsonWaterLayer.eachLayer(function (layer) {
+        if (layer.contains(point)) {
+            contained = true;
+        }
+    });
+    return contained;
+}
+
+function boundAroundPoint(sizeInMeters, overall_boundary) {
+    var listOfPoints = []
+    new_bound = overall_boundary.getNorthWest().toBounds(sizeInMeters);
+    let count = 0;
+    let max = 1000;
+    while (overall_boundary.contains(new_bound.getSouthEast())) {
+        let ne_begin = new_bound;
+        while (overall_boundary.contains(new_bound.getSouthEast())) {
+            let new_latlng = new_bound.getSouthEast();
+            if (checkPoint(new_latlng) && listOfPoints.includes(new_latlng) === false) {
+                listOfPoints.push(new_latlng);
+                count += 1;
+            }
+            new_bound = new_latlng.toBounds(sizeInMeters);
+            new_bound = L.latLng(new_bound.getNorth(), new_bound.getEast()).toBounds(sizeInMeters);
+            if (count === max) {
+                break;
+            }
+        }
+        if (count === max) {
+            break;
+        }
+        new_bound = L.latLng(ne_begin.getSouth(), overall_boundary.getWest()).toBounds(sizeInMeters);
+    }
+    console.log('end', listOfPoints.length);
+    // for (let i = 0; i < listOfPoints.length; i++) {
+    //     L.marker(listOfPoints[i]).addTo(mymap);
+    // }
+
+}
+
+function GetGeoJsonForCurrentBoundingBox() {
+    let bounds = mymap.getBounds();
+    let jsoned = {
+        "zoom": mymap.getZoom(),
+        "box": {
+            'ne': bounds.getNorthEast(),
+            'sw': bounds.getSouthWest(),
+            'nw': bounds.getNorthWest(),
+            'se': bounds.getSouthEast()
+        },
+        "crs": 'epsg:4326'
+    }
+    $.ajax({
+        type: 'POST',
+        url: 'http://127.0.0.1:80/getGeoJson',
+        async: false,
+        timeout: 3000,
+        contentType: 'application/json; charset=utf-8',
+        data: JSON.stringify(jsoned),
+        success: function (data) {
+            geoJsonWaterLayer.addData(data);
+        },
+        error: function () {
+            alert('Fail !');
+        }
+    })
+}
+
 function getMapBoundingBoxAndSendToBeProcessed() {
     if (!mymap.hasLayer(depth_points)) {
         return null
@@ -255,31 +327,8 @@ function getMapBoundingBoxAndSendToBeProcessed() {
     if (currentZoomLevel < initialZoomLevel || currentZoomLevel > maxZoomLevel) {
         return null
     }
-    bounds = mymap.getBounds()
-    jsoned = {
-        "zoom": currentZoomLevel,
-        "box": {
-            'ne': bounds.getNorthEast(),
-            'sw': bounds.getSouthWest(),
-            'nw': bounds.getNorthWest(),
-            'se': bounds.getSouthEast()
-        },
-        "crs": 'epsg:4326'
-    };
-    $.ajax({
-        type: 'POST',
-        url: 'http://127.0.0.1:80/server',
-        contentType: 'application/json; charset=utf-8', // What is sent
-        data: JSON.stringify(jsoned),
-        async: false,
-        timeout: 3000,
-        success: function (data) {
-            console.log('received', data)
-        },
-        error: function () {
-            alert('Fail !');
-        }
-    });
+    GetGeoJsonForCurrentBoundingBox();
+    boundAroundPoint(4, mymap.getBounds())
 }
 
 //*****************************************************************************

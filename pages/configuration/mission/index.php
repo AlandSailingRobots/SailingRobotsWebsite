@@ -76,7 +76,9 @@ if ($connected) {
     echo '<script src="' . $relative_path . 'assets/vendors/leafletjs/leaflet.js"></script>';
     // echo '<script src="' . $relative_path . 'assets/vendors/geomagnetism/index.js"></script>';
 
-    echo '<script src="./js/ToolsUtilities.js"></script>
+    echo '
+    <script src="https://cdn.rawgit.com/hayeswise/Leaflet.PointInPolygon/v1.0.0/wise-leaflet-pip.js"></script>
+    <script src="./js/ToolsUtilities.js"></script>
     <script src="./js/leaflet-color-markers.js"></script>\
     <script src="./js/point.js"></script>
     <script src="./js/map_leaflet.js"></script>
