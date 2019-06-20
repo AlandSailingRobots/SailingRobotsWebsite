@@ -554,7 +554,6 @@ function drawLineBetweenMarkers() {
     var LatLngsInf = Array();
     // mymap.removeLayer(polylineSup);
     // mymap.removeLayer(polylineInf);
-
     if (size > 1) {
         // Because we start at i = 2 in the loop
         LatLngs.push(arrayOfMarker[1].getLatLng());
@@ -802,8 +801,7 @@ function setdecl(v) {
 
 function lookupMag(lat, lon) {
     var url =
-        "http://www.ngdc.noaa.gov/geomag-web/calculators/calculateIgrfgrid?lat1=" + lat + "&lat2=" + lat + "&lon1=" + lon + "&lon2=" + lon +
-        "&latStepSize=0.1&lonStepSize=0.1&magneticComponent=d&resultFormat=xml";
+        `http://www.ngdc.noaa.gov/geomag-web/calculators/calculateIgrfgrid?lat1=${lat}&lat2=${lat}&lon1=${lon}&lon2=${lon}&latStepSize=0.1&lonStepSize=0.1&magneticComponent=d&resultFormat=xml`;
     // $.get(url, function(xml, status){
     //      setdecl( $(xml).find('declination').text());
     // });
@@ -828,6 +826,3 @@ function lookupMag(lat, lon) {
 // var info = model.point([44.53461, -109.05572]);
 // console.log('declination:', info.decl);
 // lookupMag(55.58552,12.1313);
-
-
-
