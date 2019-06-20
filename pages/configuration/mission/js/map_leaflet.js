@@ -23,7 +23,6 @@ const accessToken = "pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3
 
 // Initialisation of the map
 var mymap = L.map('map');
-var geoJsonWaterLayer;
 initMap(60.1, 19.935, mymap);
 var popup = L.popup();
 var listOfPoints = document.getElementById('listOfPoints'); // To manage the list of item
@@ -45,6 +44,10 @@ var lon;
 var rankInMission;
 
 var depth_points = null;
+var geoJsonWaterLayer;
+var localGeoJsonWaterLayer;
+var geoJsonWaterDepth;
+var calculateWaterDepth;
 
 // Initialize the map which is centered on the given lat, lng
 function initMap(lat, lon, mymap) {
@@ -75,9 +78,15 @@ function initMap(lat, lon, mymap) {
     var other = L.marker([60.2, 19.937]).bindPopup('This is the double point');
     depth_points = L.layerGroup([golden, other]);
     geoJsonWaterLayer = L.geoJSON(undefined);
+    localGeoJsonWaterLayer = L.geoJSON(undefined);
+    geoJsonWaterDepth = L.geoJSON(undefined);
+    calculateWaterDepth = L.marker([60.2, 19.937]);
     overlays = {
         "depth_overlay": depth_points,
-        "water_overlay": geoJsonWaterLayer
+        "water_overlay": geoJsonWaterLayer,
+        "local_overlay": localGeoJsonWaterLayer,
+        "water_depth": geoJsonWaterDepth,
+        "calculate_water_depth": calculateWaterDepth
     };
     mapbox_streets.addTo(mymap);
     L.control.layers(base_maps, overlays).addTo(mymap);
@@ -250,9 +259,21 @@ function updateListItems(marker, editOrMove) {
     listOfPoints.removeChild(listItem);
 }
 
+function overlapsArea() {
+    let overlaps = false;
+    let bounds = mymap.getBounds();
+    geoJsonWaterLayer.eachLayer(function (layer) {
+        if (bounds.overlaps(layer.getBounds())) {
+            overlaps = true;
+            console.log(geoJsonWaterLayer.getLayerId(layer));
+        }
+    });
+    return overlaps;
+}
+
 function checkPoint(point) {
     let contained = false;
-    geoJsonWaterLayer.eachLayer(function (layer) {
+    geoJsonWaterDepth.eachLayer(function (layer) {
         if (layer.contains(point)) {
             contained = true;
         }
@@ -260,38 +281,48 @@ function checkPoint(point) {
     return contained;
 }
 
-function boundAroundPoint(sizeInMeters, overall_boundary) {
+async function boundAroundPoint(sizeInMeters, overall_boundary) {
     var listOfPoints = []
-    new_bound = overall_boundary.getNorthWest().toBounds(sizeInMeters);
+    currentBound = overall_boundary.getNorthWest().toBounds(sizeInMeters);
     let count = 0;
     let max = 1000;
-    while (overall_boundary.contains(new_bound.getSouthEast())) {
-        let ne_begin = new_bound;
-        while (overall_boundary.contains(new_bound.getSouthEast())) {
-            let new_latlng = new_bound.getSouthEast();
+    let new_latlng = currentBound.getSouthEast();
+    let previousBound = currentBound;
+    while (overall_boundary.contains(new_latlng)) {
+        while (overall_boundary.contains(new_latlng)) {
             if (checkPoint(new_latlng) && listOfPoints.includes(new_latlng) === false) {
                 listOfPoints.push(new_latlng);
                 count += 1;
             }
-            new_bound = new_latlng.toBounds(sizeInMeters);
-            new_bound = L.latLng(new_bound.getNorth(), new_bound.getEast()).toBounds(sizeInMeters);
+            currentBound = new_latlng.toBounds(sizeInMeters);
+            currentBound = L.latLng(currentBound.getNorth(), currentBound.getEast()).toBounds(sizeInMeters);
+            if (count % max === 0) {
+                console.log(count);
+            }
             if (count === max) {
                 break;
             }
+            new_latlng = currentBound.getSouthEast();
         }
-        if (count === max) {
+        // console.log("break")
+        if (count % max === 0) {
+            console.log(count);
+        }
+        if(count===max){
             break;
         }
-        new_bound = L.latLng(ne_begin.getSouth(), overall_boundary.getWest()).toBounds(sizeInMeters);
+        currentBound = L.latLng(previousBound.getSouth(), overall_boundary.getWest()).toBounds(sizeInMeters);
+        new_latlng = currentBound.getSouthEast();
+        previousBound = currentBound;
     }
     console.log('end', listOfPoints.length);
     // for (let i = 0; i < listOfPoints.length; i++) {
     //     L.marker(listOfPoints[i]).addTo(mymap);
     // }
-
+    return listOfPoints;
 }
 
-function GetGeoJsonForCurrentBoundingBox() {
+function getDataForGeoJson(extra) {
     let bounds = mymap.getBounds();
     let jsoned = {
         "zoom": mymap.getZoom(),
@@ -301,24 +332,52 @@ function GetGeoJsonForCurrentBoundingBox() {
             'nw': bounds.getNorthWest(),
             'se': bounds.getSouthEast()
         },
-        "crs": 'epsg:4326'
-    }
+        "crs": 'epsg:4326',
+        "extra": extra
+    };
+
+    return JSON.stringify(jsoned)
+}
+
+function GetGeoJsonForCurrentBoundingBox() {
+    geoJsonWaterLayer.addData(requestGeoJson("getGeoJson"))
+}
+
+function getLocalGeoJson() {
+    localGeoJsonWaterLayer.clearLayers();
+    localGeoJsonWaterLayer.addData(requestGeoJson('getLocalGeoJson'))
+
+}
+
+function getWaterDepth() {
+    console.log('get water depth')
+    geoJsonWaterDepth.addData(requestGeoJson('getWaterDepthAreas', {'limitDepth': 10}))
+}
+
+
+let geoCallSucces = false;
+
+function requestGeoJson(jsonUrl, extra) {
+    var returnData;
     $.ajax({
         type: 'POST',
-        url: 'http://127.0.0.1:80/getGeoJson',
+        url: `http://127.0.0.1:80/${jsonUrl}`,
         async: false,
         timeout: 3000,
         contentType: 'application/json; charset=utf-8',
-        data: JSON.stringify(jsoned),
+        data: getDataForGeoJson(extra),
         success: function (data) {
-            geoJsonWaterLayer.addData(data);
+            returnData = data;
+            geoCallSucces = true
         },
         error: function () {
+            geoCallSucces = false;
             alert('Fail !');
         }
-    })
+    });
+    return returnData
 }
-
+let previous_bounds;
 function getMapBoundingBoxAndSendToBeProcessed() {
     if (!mymap.hasLayer(depth_points)) {
         return null
@@ -327,8 +386,22 @@ function getMapBoundingBoxAndSendToBeProcessed() {
     if (currentZoomLevel < initialZoomLevel || currentZoomLevel > maxZoomLevel) {
         return null
     }
-    GetGeoJsonForCurrentBoundingBox();
-    boundAroundPoint(4, mymap.getBounds())
+    // GetGeoJsonForCurrentBoundingBox();
+    // overlapsArea()
+    if(previous_bounds === undefined || !previous_bounds.contains(mymap.getBounds())) {
+        console.log('getting data');
+        getLocalGeoJson();
+        if (mymap.hasLayer(geoJsonWaterDepth)) {
+            console.log('get water depth');
+            getWaterDepth()
+        }
+        previous_bounds = mymap.getBounds()
+    }
+
+
+    if (mymap.hasLayer(calculateWaterDepth)) {
+        boundAroundPoint(4, mymap.getBounds()).then(result => console.log(result))
+    }
 }
 
 //*****************************************************************************
