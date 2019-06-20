@@ -563,7 +563,7 @@ function drawLineBetweenMarkers() {
             LatLngs.push(arrayOfMarker[i].getLatLng());
 
             // Compute points for upper and lower lines for the path
-            coordSupInf = computeCoordinatesOfLine(arrayOfMarker[i - 1], arrayOfMarker[i]);
+            coordSupInf = computeCoordinatesOfLine(arrayOfPoints, arrayOfMarker[i - 1], arrayOfMarker[i]);
 
             // Upper line
             LatLngsSup[0] = coordSupInf[0];
@@ -582,50 +582,6 @@ function drawLineBetweenMarkers() {
     polyline = L.polyline(LatLngs, {color: 'red'}).addTo(mymap);
 }
 
-function computeCoordinatesOfLine(markerA, markerB) {
-    // Origin of theta is the North
-    var theta = computeTheta(markerA.getLatLng(), markerB.getLatLng());
-    var result = {};
-    var radiusA = parseInt(arrayOfPoints[markerA.options.rankInMission].radius),
-        radiusB = parseInt(arrayOfPoints[markerB.options.rankInMission].radius);
-
-    // radius = Math.min(radiusA, radiusB);
-    var radius = parseFloat((radiusA + radiusB) / 2);
-    thetad_radius = radius * (1 + Math.abs(Math.sin(theta)));
-    // console.log('theta : ', theta * 180 / Math.PI, 'radiusA', radiusA, 'radiusB', radiusB);
-
-    // For the upper line
-    for (let i = 0; i < 4; i++) {
-        var result_theta = 0;
-        if (i < 2) {
-            result_theta = theta + Math.PI / 2
-        } else {
-            result_theta = theta - Math.PI / 2
-        }
-        if (i === 0 || i === 2) {
-            result[i] = rotationVector(result_theta, markerA, thetad_radius)
-        } else {
-            result[i] = rotationVector(result_theta, markerB, thetad_radius)
-        }
-    }
-    return result;
-}
-
-function computeTheta(vectorA, vectorB) {
-    return Math.atan2(vectorB['lat'] - vectorA['lat'], vectorB['lng'] - vectorA['lng']);
-}
-
-function rotationVector(theta, marker_, radius) {
-    var result = {};
-    vector_lat = marker_.getLatLng()['lat'];
-    vector_lng = marker_.getLatLng()['lng'];
-    // According to this answer on Stack Overflow :
-    // https://stackoverflow.com/questions/2187657/calculate-second-point-knowing-the-starting-point-and-distance
-    result['lat'] = vector_lat + radius * Math.sin(theta) / (110540);
-    result['lng'] = vector_lng + radius * Math.cos(theta) / (111320 * Math.cos(vector_lng * Math.PI / 180));
-
-    return result;
-}
 
 function removePolylineInfSup() {
     for (var i = arrayOfPolylineSup.length - 1; i >= 0; i--) {
