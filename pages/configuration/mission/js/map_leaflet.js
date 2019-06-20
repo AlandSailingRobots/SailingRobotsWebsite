@@ -488,7 +488,7 @@ function createMarker(point, lat, lon) {
             id: point.id
         }
     );
-    marker.bindPopup(askEditPoint(point));
+    marker.bindPopup(point.click());
     marker.on('dragend', markerDrag);
     // Add in marker array
     arrayOfMarker[point.rankInMission] = marker;

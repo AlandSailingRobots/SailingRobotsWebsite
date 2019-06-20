@@ -18,26 +18,6 @@ function askNewPoint() {
         "</div>";
 }
 
-function askEditPoint(point) {
-    var type = "";
-    if (point.isCheckpoint == "1") {
-        type = "Checkpoint";
-    } else {
-        type = "Waypoint";
-    }
-
-    // Popup when click on a marker
-    // I know I do something ugly with the id, but I din't find any better solution to get the marker on which the user clicks
-    return type + ": " + point.rankInMission + " - " + point.name + "<br /> \n" +
-        "Position: " + point.latitude + ", " + point.longitude + "<br /> \n" +
-        "Radius: " + point.radius + " (m) | Stay_time: " + point.stay_time + " (sec) <br /> \n" +
-        "<br /> \n" +
-        "<div> \n" +
-        "<button name='deletePointButton' class='btn btn-danger deletePoint'  id='rankInMission:" + point.rankInMission + "|id:" + point.id + "' >Delete Point</button> \n" +
-        "<button name='editPointButton'   class='btn btn-info   editPointButton " + type + "' id='rankInMission:" + point.rankInMission + "|id:" + point.id + "' >Edit Point</button> \n" +
-        "</div>";
-}
-
 function splitGPS(string) {
     // This function cleans the result send by leaflet when the user clicks on the map.
     // TODO : check if marker.getLatLng().lat; & marker.getLatLng().lon; do the same

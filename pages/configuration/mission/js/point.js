@@ -34,6 +34,17 @@ class Point {
         };
     }
 
+    click(type) {
+        return type + ": " + this.rankInMission + " - " + this.name + "<br /> \n" +
+            "Position: " + this.latitude + ", " + this.longitude + "<br /> \n" +
+            "Radius: " + this.radius + " (m) | Stay_time: " + this.stay_time + " (sec) <br /> \n" +
+            "<br /> \n" +
+            "<div> \n" +
+            "<button name='deletePointButton' class='btn btn-danger deletePoint'  id='rankInMission:" + this.rankInMission + "|id:" + this.id + "' >Delete Point</button> \n" +
+            "<button name='editPointButton'   class='btn btn-info   editPointButton " + type + "' id='rankInMission:" + this.rankInMission + "|id:" + this.id + "' >Edit Point</button> \n" +
+            "</div>";
+    }
+
     equals(other) {
         return (
             this.name === other.name &&
@@ -60,6 +71,9 @@ class WayPoint extends Point {
         return super.print(this.text);
     }
 
+    click() {
+        return super.click('Waypoint');
+    }
 
     getDBFormat() {
         return super.getDBFormat(0);
@@ -79,6 +93,10 @@ class CheckPoint extends Point {
 
     print() {
         return super.print(this.text);
+    }
+
+    click() {
+        return super.click('Checkpoint');
     }
 
     getDBFormat() {
