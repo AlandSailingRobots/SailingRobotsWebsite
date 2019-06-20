@@ -308,7 +308,7 @@ async function boundAroundPoint(sizeInMeters, overall_boundary) {
         if (count % max === 0) {
             console.log(count);
         }
-        if(count===max){
+        if (count === max) {
             break;
         }
         currentBound = L.latLng(previousBound.getSouth(), overall_boundary.getWest()).toBounds(sizeInMeters);
@@ -391,7 +391,7 @@ function getMapBoundingBoxAndSendToBeProcessed() {
     }
     // GetGeoJsonForCurrentBoundingBox();
     // overlapsArea()
-    if(previous_bounds === undefined || !previous_bounds.contains(mymap.getBounds())) {
+    if (previous_bounds === undefined || !previous_bounds.contains(mymap.getBounds())) {
         console.log('getting data');
         getLocalGeoJson();
         if (mymap.hasLayer(geoJsonWaterDepth)) {
