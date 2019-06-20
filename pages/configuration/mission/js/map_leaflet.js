@@ -370,14 +370,17 @@ function requestGeoJson(jsonUrl, extra) {
             returnData = data;
             geoCallSucces = true
         },
-        error: function () {
+        error: function (errorMessage) {
             geoCallSucces = false;
             alert('Fail !');
+            console.log(errorMessage)
         }
     });
     return returnData
 }
+
 let previous_bounds;
+
 function getMapBoundingBoxAndSendToBeProcessed() {
     if (!mymap.hasLayer(depth_points)) {
         return null
