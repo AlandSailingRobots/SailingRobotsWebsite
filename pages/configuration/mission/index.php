@@ -33,9 +33,9 @@ if (isset($_SESSION['id']) and isset($_SESSION['username'])) {
     <!-- sidebar -->
     <?php
     //    <!-- /sidebar -->
-    include $relative_path . 'include/sidebar.php';
+    include "{$relative_path}include/sidebar.php";
     //<!--     top navigation -->
-    include $relative_path . 'include/top_navigation.php'; ?>
+    include "{$relative_path}include/top_navigation.php"; ?>
     <!-- /top navigation -->
 
     <!-- page content -->
@@ -47,15 +47,14 @@ if (isset($_SESSION['id']) and isset($_SESSION['username'])) {
         } elseif ($connected) {
             echo '<p> You don\'t have the right to view this webpage </p>';
         } else {
-            echo '<p> Vous must log-in to view this page. Click <strong><a href=' .
-                $relative_path . 'pages/users/login.php>here</a></strong> to log-in. </p>';
+            echo "<p> You must log-in to view this page. Click <strong><a href={$relative_path}pages/users/login.php>here</a></strong> to log-in. </p>";
         }
         ?>
     </div>
     <!-- /page content -->
 
     <!-- footer content -->
-    <?php include $relative_path . 'include/footer.php'; ?>
+    <?php include "{$relative_path}include/footer.php"; ?>
     <!-- /footer content -->
 </div>
 
