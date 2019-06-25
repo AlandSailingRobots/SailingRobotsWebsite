@@ -23,7 +23,7 @@ if (isset($_SESSION['id']) and isset($_SESSION['username'])) {
     <?php // Head of the HTML document
     include $relative_path . 'include/head.php';
     ?>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"/>
+    <link rel="stylesheet" href="<?= $relative_path . 'assets/vendors/leafletjs/leaflet.css'; ?>"/>
     <link rel="stylesheet" href="css/custom_style.css"/>
 
 </head>
@@ -65,24 +65,24 @@ That way, main file is 'clean'
 <?php //include $relative_path . 'include/js_scripts.php';
 ?>
 <!-- jQuery -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src=<?= $relative_path . "assets/vendors/jquery/dist/jquery.min.js" ?>></script>
 <!-- Bootstrap -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<script src=<?= $relative_path . "assets/vendors/bootstrap/dist/js/bootstrap.min.js" ?>></script>
 <!-- Custom Theme Scripts -->
 <script src=<?= $relative_path . "assets/js/custom.min.js" ?>></script>
 <?php
 if ($connected) {
+    echo '<script src="' . $relative_path . 'assets/vendors/leafletjs/leaflet.js"></script>';
     // echo '<script src="' . $relative_path . 'assets/vendors/geomagnetism/index.js"></script>';
 
     echo '
-    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
     <script src="https://cdn.rawgit.com/hayeswise/Leaflet.PointInPolygon/v1.0.0/wise-leaflet-pip.js"></script>
     <script src="./js/ToolsUtilities.js"></script>
     <script src="./js/leaflet-color-markers.js"></script>\
     <script src="./js/point.js"></script>
     <script src="./js/map_leaflet.js"></script>
     <script src="./js/script.js"></script>';
+    // echo '<script src="' . $relative_path . 'assets/vendors/bootstrap-select-1.12.4/dist/js/bootstrap-select.min.js"</script>';
 }
 ?>
 <!-- ##########################    JAVASCRIPT     ########################## -->
