@@ -60,8 +60,8 @@ class Point {
 class WayPoint extends Point {
     constructor(id, id_mission, rankInMission, name, lat, lon, decl, radius, stay_time, harvested) {
         super(id, id_mission, rankInMission, name, lat, lon, decl, radius, stay_time, harvested);
-        this.text = 'waypoint';
-        this.classText = 'isWaypoint';
+        this.text = "waypoint";
+        this.classText = "isWaypoint";
         this.defaultRadius = 50;
         this.defaultStay_time = 1;
         this.icon_color = blueIcon;
@@ -72,7 +72,7 @@ class WayPoint extends Point {
     }
 
     click() {
-        return super.click('Waypoint');
+        return super.click("Waypoint");
     }
 
     getDBFormat() {
@@ -84,8 +84,8 @@ class CheckPoint extends Point {
     constructor(id, id_mission, rankInMission, name, lat, lon, decl, radius, stay_time, harvested) {
         super(id, id_mission, rankInMission, name, lat, lon, decl, radius, stay_time, harvested);
 
-        this.text = 'checkpoint';
-        this.classText = 'isCheckpoint';
+        this.text = "checkpoint";
+        this.classText = "isCheckpoint";
         this.defaultRadius = 15;
         this.defaultStay_time = 5;
         this.icon_color = greenIcon;
@@ -96,7 +96,7 @@ class CheckPoint extends Point {
     }
 
     click() {
-        return super.click('Checkpoint');
+        return super.click("Checkpoint");
     }
 
     getDBFormat() {

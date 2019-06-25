@@ -19,9 +19,10 @@ if (isset($_SESSION['id']) and isset($_SESSION['username'])) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <?php // Head of the HTML document
-    include $relative_path . 'include/head.php';
+    include "{$relative_path}include/head.php";
     ?>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
           integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
@@ -64,14 +65,12 @@ if (isset($_SESSION['id']) and isset($_SESSION['username'])) {
 Not very clean, but the default configs includes too many JS for a beginner
 That way, main file is 'clean'
 -->
-<?php //include $relative_path . 'include/js_scripts.php';
-?>
 <!-- jQuery -->
-<script src=<?= $relative_path . "assets/vendors/jquery/dist/jquery.min.js" ?>></script>
+<script src=<?= "{$relative_path}assets/vendors/jquery/dist/jquery.min.js" ?>></script>
 <!-- Bootstrap -->
-<script src=<?= $relative_path . "assets/vendors/bootstrap/dist/js/bootstrap.min.js" ?>></script>
+<script src=<?= "{$relative_path}assets/vendors/bootstrap/dist/js/bootstrap.min.js" ?>></script>
 <!-- Custom Theme Scripts -->
-<script src=<?= $relative_path . "assets/js/custom.min.js" ?>></script>
+<script src=<?= "{$relative_path}assets/js/custom.min.js" ?>></script>
 <?php
 if ($connected) {
     // echo '<script src="' . $relative_path . 'assets/vendors/geomagnetism/index.js"></script>';
