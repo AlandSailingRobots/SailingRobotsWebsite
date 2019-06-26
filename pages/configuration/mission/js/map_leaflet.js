@@ -13,17 +13,12 @@
 //                                                                            *
 //*****************************************************************************
 //Global Variables:
-
-const maxZoomLevel = 18;
-const initialZoomLevel = 13;
-const attribution_mapbox = "Map data &copy; <a href=\"http://openstreetmap.org\">OpenStreetMap</a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"http://mapbox.com\">Mapbox</a>";
-const mapbox_url = "https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}@2x.png?access_token=";
-const accessToken = "pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw";
+mapSettings = getMapSettings();
 
 
 // Initialisation of the map
 var mymap = L.map('map');
-initMap(60.1, 19.935, mymap);
+initMap(mapSettings.startPoint.lat, mapSettings.startPoint.long, mymap);
 var popup = L.popup();
 var listOfPoints = document.getElementById('listOfPoints'); // To manage the list of item
 var isOpen = false;                 // To handle the popup of creation of point
@@ -50,30 +45,12 @@ var geoJsonWaterDepth;
 var calculateWaterDepth;
 
 // Initialize the map which is centered on the given lat, lng
+function createMap(url, data) {
+    return L.tileLayer(url, data);
+}
+
 function initMap(lat, lon, mymap) {
 
-    var url_acces = mapbox_url + accessToken;
-    mymap.setView([lat, lon], initialZoomLevel);
-    var osm = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
-    var mapbox_streets = L.tileLayer(
-        url_acces,
-        {
-            maxZoom: maxZoomLevel,
-            attribution: attribution_mapbox,
-            id: "mapbox.streets"
-        });
-    var mapbox_satellite = L.tileLayer(
-        mapbox_url + accessToken,
-        {
-            maxZoom: maxZoomLevel,
-            attribution: attribution_mapbox,
-            id: "mapbox.satellite"
-        });
-    var base_maps = {
-        "Mapbox Streets (Default)": mapbox_streets,
-        "Open Street Maps": osm,
-        "Satellite": mapbox_satellite
-    };
     var golden = L.marker([60.1, 19.935]).bindPopup('This is the center point');
     var other = L.marker([60.2, 19.937]).bindPopup('This is the double point');
     depth_points = L.layerGroup([golden, other]);
@@ -81,6 +58,23 @@ function initMap(lat, lon, mymap) {
     localGeoJsonWaterLayer = L.geoJSON(undefined);
     geoJsonWaterDepth = L.geoJSON(undefined);
     calculateWaterDepth = L.marker([60.2, 19.937]);
+    base_maps = {};
+    for (let i = 0; i < mapSettings.maps.length; i++) {
+        let map = mapSettings.maps[i];
+        if (map.ids) {
+            for (let j = 0; j < map.ids.length; j++) {
+                console.log(map.ids[j]);
+                base_maps[map.ids[j]] = createMap(map.url, {
+                        maxZoom: mapSettings.maxZoomLevel,
+                        attribution: map.attribution_mapbox,
+                        id: map.ids[j]
+                    }
+                );
+            }
+        } else {
+            base_maps[map.display] = createMap(map.url);
+        }
+    }
     overlays = {
         "depth_overlay": depth_points,
         "water_overlay": geoJsonWaterLayer,
@@ -88,9 +82,10 @@ function initMap(lat, lon, mymap) {
         "water_depth": geoJsonWaterDepth,
         "calculate_water_depth": calculateWaterDepth
     };
-    mapbox_streets.addTo(mymap);
+    base_maps[mapSettings.defaultMap].addTo(mymap);
     L.control.layers(base_maps, overlays).addTo(mymap);
 
+    mymap.setView([lat, lon], mapSettings.initialZoomLevel);
     // Event click on map
     mymap.on('click', onMapClick);
     mymap.on('moveend', onMapMove);
@@ -487,7 +482,7 @@ function displayPointFromDB(data) {
     // Centered on Mariehamn
     if (len === 0) {
         listOfPoints.parentNode.style.display = "none";
-        initMap(60.1, 19.935, mymap);
+        initMap(mapSettings.startPoint.lat, mapSettings.startPoint.long, mymap);
     }
 
     // Adding all points
@@ -902,3 +897,27 @@ function lookupMag(lat, lon) {
 // var info = model.point([44.53461, -109.05572]);
 // console.log('declination:', info.decl);
 // lookupMag(55.58552,12.1313);
+
+
+function getMapSettings() {
+    let mapSettings;
+
+    function setMapSettings(data) {
+        mapSettings = data
+    }
+
+    var settings = {
+        "crossDomain": true,
+        "async": false,
+        "url": "http://127.0.0.1/MapSettings",
+        "method": "GET",
+        success: setMapSettings,
+        error: function () {
+            console.log('getting Json');
+            $.ajax({'url': 'DefaultMapSettings.json', 'async': false}).done(setMapSettings);
+        }
+    };
+
+    $.ajax(settings);
+    return mapSettings
+}
