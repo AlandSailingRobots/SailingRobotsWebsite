@@ -83,6 +83,7 @@ if ($connected) {
     <script src="./js/ToolsUtilities.js"></script>
     <script src="./js/leaflet-color-markers.js"></script>\
     <script src="./js/point.js"></script>
+    <script src="./js/water_depth.js"></script>
     <script src="./js/map_leaflet.js"></script>
     <script src="./js/script.js"></script>';
     // echo '<script src="' . $relative_path . 'assets/vendors/bootstrap-select-1.12.4/dist/js/bootstrap-select.min.js"</script>';
