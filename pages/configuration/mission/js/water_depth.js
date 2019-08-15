@@ -100,6 +100,9 @@ class WaterDepthHandler {
         this.geoJsonWaterLayer.addData(this.requestGeoJson("getGeoJson"));
     }
 
+    GetWaterDepthPointsFromServer() {
+        this.requestGeoJson("getWaterDepthPoints");
+    }
 
     getLocalGeoJson() {
         this.localGeoJsonWaterLayer.clearLayers();
@@ -151,11 +154,8 @@ class WaterDepthHandler {
             this.previous_bounds = mymap.getBounds();
         }
 
-
         if (mymap.hasLayer(this.calculateWaterDepth)) {
-            this.boundAroundPoint(4, mymap.getBounds()).then(result =>
-                result
-            );
+            this.GetWaterDepthPointsFromServer();
         }
     }
 }
