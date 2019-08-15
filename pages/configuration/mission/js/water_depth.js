@@ -25,59 +25,6 @@ class WaterDepthHandler {
         };
     }
 
-    overlapsArea(geoJsonWaterLayer, bounds) {
-        let overlaps = false;
-        geoJsonWaterLayer.eachLayer(function (layer) {
-            if (bounds.overlaps(layer.getBounds())) {
-                overlaps = true;
-            }
-        });
-        return overlaps;
-    }
-
-    checkPoint(point) {
-        let contained = false;
-        this.geoJsonWaterDepth.eachLayer(function (layer) {
-            if (layer.contains(point)) {
-                contained = true;
-            }
-        });
-        return contained;
-    }
-
-    boundAroundPoint(sizeInMeters, overall_boundary) {
-        let listOfPoints = [];
-        let currentBound = overall_boundary.getNorthWest().toBounds(sizeInMeters);
-        let count = 0;
-        let max = 1000;
-        let new_latlng = currentBound.getSouthEast();
-        let previousBound = currentBound;
-        while (overall_boundary.contains(new_latlng)) {
-            while (overall_boundary.contains(new_latlng)) {
-                if (this.checkPoint(new_latlng) && listOfPoints.includes(new_latlng) === false) {
-                    listOfPoints.push(new_latlng);
-                    count += 1;
-                }
-                currentBound = new_latlng.toBounds(sizeInMeters);
-                currentBound = this.L.latLng(currentBound.getNorth(), currentBound.getEast()).toBounds(sizeInMeters);
-                if (count === max) {
-                    break;
-                }
-                new_latlng = currentBound.getSouthEast();
-            }
-            if (count === max) {
-                break;
-            }
-            currentBound = this.L.latLng(previousBound.getSouth(), overall_boundary.getWest()).toBounds(sizeInMeters);
-            new_latlng = currentBound.getSouthEast();
-            previousBound = currentBound;
-        }
-        // for (let i = 0; i < listOfPoints.length; i++) {
-        //     L.marker(listOfPoints[i]).addTo(mymap);
-        // }
-        return listOfPoints;
-    }
-
     getDataForGeoJson(extra) {
         let bounds = this.mymap.getBounds();
         let jsoned = {
