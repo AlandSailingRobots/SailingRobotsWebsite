@@ -156,6 +156,8 @@ gzip localhost.sql.gz | mysql -v --user=root --password=your_password
    # (2) Or through httpd
    sudo httpd -k start
    ```
+   
+   if ```mysql.server start``` gives as an error: `Can't read dir of '/usr/local/etc/my.cnf.d'` then `mkdir /usr/local/etc/my.cnf.d`
 ## References
 [Arch Linux guide](https://github.com/AlandSailingRobots/SailingRobotsDocs/blob/master/Website%20on%20localhost%20guide.md)
 
