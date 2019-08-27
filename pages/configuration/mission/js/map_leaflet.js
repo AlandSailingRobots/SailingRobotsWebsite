@@ -52,7 +52,6 @@ function initMap(lat, lon, mymap) {
         let map = mapSettings.maps[i];
         if (map.ids) {
             for (let j = 0; j < map.ids.length; j++) {
-                console.log(map.ids[j]);
                 base_maps[map.ids[j]] = createMap(map.url, {
                         maxZoom: mapSettings.maxZoomLevel,
                         attribution: map.attribution_mapbox,
@@ -79,7 +78,8 @@ function initMap(lat, lon, mymap) {
 //*****************************************************************************
 
 function onMapMove() {
-    waterDepth.getMapBoundingBoxAndSendToBeProcessed(mymap);
+    var list = waterDepth.getMapBoundingBoxAndSendToBeProcessed(mymap);
+    console.log(list)
 }
 
 // This function handles the click on the map.
@@ -682,7 +682,7 @@ function deleteMarker(id_marker) {
     mymap.removeLayer(polyline);    // Delete the central polyline
     removePolylineInfSup();         // Delete the upper and the lower polylines
     drawLineBetweenMarkers();       // Draw them again
-};
+}
 
 // Add a delete span to the given node.
 function addDeleteSymbol(newNode, point) {
@@ -713,7 +713,7 @@ function lookupMag(lat, lon) {
         if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
             setdecl($(xml).find('declination').text());
         }
-    }
+    };
     xmlHTTP.open("GET", url, true);
     xmlHTTP.send(null);
 }

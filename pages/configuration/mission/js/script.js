@@ -400,9 +400,9 @@
 
         // Insertion of the converted values at the right place
         if ($(this).hasClass('gpsNewPoint')) {
-            $('#gpsConverterModal').modal('hide');
             $('#newPointLatitude').val(latitude);
             $('#newPointLongitude').val(longitude);
+            $('#gpsConverterModal').modal('hide');
             $('#createPointModal').modal('show');
         }
         if ($(this).hasClass('gpsEditPoint')) {

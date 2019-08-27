@@ -2,7 +2,7 @@ class WaterDepthHandler {
     constructor(L, mymap, initialZoomLevel, maxZoomLevel) {
         this.L = L;
         this.mymap = mymap;
-        this.geoJsonWaterDepth = L.geoJSON(undefined);
+
         this.previous_bounds = undefined;
         this.initialZoomLevel = initialZoomLevel;
         this.maxZoomLevel = maxZoomLevel;
@@ -11,6 +11,7 @@ class WaterDepthHandler {
         var other = L.marker([60.2, 19.937]).bindPopup("This is the double point");
         this.depth_points = L.layerGroup([golden, other]);
         this.geoJsonWaterLayer = L.geoJSON(undefined);
+        this.geoJsonWaterDepth = L.geoJSON(undefined);
         this.localGeoJsonWaterLayer = L.geoJSON(undefined);
         this.calculateWaterDepth = L.marker([60.2, 19.937]);
     }
@@ -48,7 +49,9 @@ class WaterDepthHandler {
     }
 
     GetWaterDepthPointsFromServer() {
-        this.requestGeoJson("getWaterDepthPoints");
+        var depth = this.requestGeoJson("getWaterDepthPoints",{"limitDepth": 10});
+        console.log(depth);
+        this.geoJsonWaterDepth.addData(depth);
     }
 
     getLocalGeoJson() {
