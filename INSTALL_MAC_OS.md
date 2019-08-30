@@ -9,7 +9,7 @@ _Tested using 10.14.4 with HomeBrew and PHP 3.7.5_
 
 ## Clone repo
 Clone the repository in a directory of choice:
-```bash
+```shell script
 #!/usr/bin/env bash
 cd /Users/Dummy/SailingRobotsWebsite
 git clone https://github.com/AlandSailingRobots/SailingRobotsWebsite.git
@@ -22,7 +22,7 @@ There are multiple services needed.
 so check if http, php, phpMyAdmin and mariaDB are installed
 or install them via a terminal:
 
-```bash
+```shell script
 #!/usr/bin/env bash
 #Optional install of HomeBrew
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
@@ -133,7 +133,7 @@ Include /usr/local/etc/httpd/extra/php-phpmyadmin.conf
 ### Import downloaded database to local server:
 
 Import the database using mysql as database user root on the commandline. You need to be in the same directory or give the full path the SQL-file you downloaded in the previous step.
-```bash
+```shell script
 #!/usr/bin/env bash
 gzip localhost.sql.gz | mysql -v --user=root --password=your_password 
 ```
@@ -145,7 +145,7 @@ gzip localhost.sql.gz | mysql -v --user=root --password=your_password
 
 ## Starting services
 1. To start the services:
-   ```bash
+   ```shell script
    #!/usr/bin/env bash
    #For the MariaDB
    mysql.server start
