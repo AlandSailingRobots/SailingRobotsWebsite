@@ -145,22 +145,20 @@ gzip localhost.sql.gz | mysql -v --user=root --password=your_password
 
 ## Starting services
 To start the services:
-   ```shell script
-   #!/usr/bin/env bash
-   #For the MariaDB
-   mysql.server start
-   
-   #For the Apache either:
-   # (1) Through Apache Direct
-   sudo apachectl -k start
-   # (2) Or through httpd
-   sudo httpd -k start
-   ```
-   
-   if ```mysql.server start``` gives as an error: `Can't read dir of '/usr/local/etc/my.cnf.d'` then `mkdir /usr/local/etc/my.cnf.d`
+```shell script
+#!/usr/bin/env bash
+#For the MariaDB
+mysql.server start
+
+#For the Apache either:
+# (1) Through Apache Direct
+sudo apachectl -k start
+# (2) Or through httpd
+sudo httpd -k start
+```
+if ```mysql.server start``` gives as an error: `Can't read dir of '/usr/local/etc/my.cnf.d'` then `mkdir /usr/local/etc/my.cnf.d`
 
 Or run the corresponding [script](run_httpd_mysql.sh) with `sh run_httpd_mysql.sh`
 ## References
 [Arch Linux guide](https://github.com/AlandSailingRobots/SailingRobotsDocs/blob/master/Website%20on%20localhost%20guide.md)
-
 [MariaDB](https://mariadb.com/kb/en/library/installing-mariadb-on-macos-using-homebrew/)
