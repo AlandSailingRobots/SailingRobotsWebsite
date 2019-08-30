@@ -144,7 +144,7 @@ gzip localhost.sql.gz | mysql -v --user=root --password=your_password
 
 
 ## Starting services
-1. To start the services:
+To start the services:
    ```shell script
    #!/usr/bin/env bash
    #For the MariaDB
@@ -158,6 +158,8 @@ gzip localhost.sql.gz | mysql -v --user=root --password=your_password
    ```
    
    if ```mysql.server start``` gives as an error: `Can't read dir of '/usr/local/etc/my.cnf.d'` then `mkdir /usr/local/etc/my.cnf.d`
+
+Or run the corresponding [script](run_httpd_mysql.sh) with `sh run_httpd_mysql.sh`
 ## References
 [Arch Linux guide](https://github.com/AlandSailingRobots/SailingRobotsDocs/blob/master/Website%20on%20localhost%20guide.md)
 
