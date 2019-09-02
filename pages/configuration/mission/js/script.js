@@ -12,10 +12,12 @@
 //**************************************************************************************/
 
 (function () {
-    var missionName = "",   // Name of the mission
-        missionDescription = "",   // Its description
-        missionLastUse = "",   // Last use of the mission (clicked on load button)
-        id_mission = 0;    // It id
+    let missionName = ""; // Name of the mission
+    let missionDescription = ""; // Its description
+    let missionLastUse = ""; // Last use of the mission (clicked on load button)
+    let id_mission = 0; // It's id
+    let missionUseBoatDepth = false; // If boat depth should be used.
+    let missionBoatDepth = 0;    // The boat depth
 
     //*****************************************************************************
     //                                                                            *
@@ -162,12 +164,14 @@
                 // I use the 'global' var within the IEFE
                 missionName = data[0]["name"];
                 missionDescription = data[0]["description"];
-                missionLastUse = data[0]['last_use'];
+                missionLastUse = data[0]["last_use"];
+                missionUseBoatDepth = data[0]["use_calculated_depth"];
+                missionBoatDepth = data[0]["boat_depth"];
                 cleanMissionInfo();
                 displayMissionInfo();
             },
             error: function () {
-                alert('Fail to get mission info!');
+                alert("Fail to get mission info!");
             }
         });
     }
@@ -311,6 +315,8 @@
         // Load values
         $('#editMissionName').val(missionName);
         $('#editMissionDescription').val(missionDescription);
+        $('#editMissionButton').val(missionUseBoatDepth);
+        $('#editMissionBoatDepth').val(missionBoatDepth)
     });
 
     // Cancel
@@ -327,7 +333,9 @@
             data: {
                 name: $('#editMissionName').val(),
                 description: $('#editMissionDescription').val(),
-                id_mission: id_mission
+                id_mission: id_mission,
+                use_boat_depth: $('#editMissionUseDepth').val(),
+                boat_depth: $('#editMissionBoatDepth').val()
             },
             timeout: 3000,
             success: function (data) {

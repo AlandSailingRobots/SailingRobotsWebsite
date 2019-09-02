@@ -1,0 +1,6 @@
+alter table ithaax_mission.mission
+    add boat_depth DOUBLE default 2.00 null comment 'The depth of the boat to be used for limiting of the areas where the boat can sail';
+
+alter table ithaax_mission.mission
+    add use_calculated_depth boolean default FALSE null comment 'If the calculated depth should be used in this mission or not';
+
