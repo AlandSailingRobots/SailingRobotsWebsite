@@ -51,20 +51,20 @@ function updateMissionInfo($id_mission,
         );
         die('Error : ' . $e->getMessage());
     }
-
-    $query = $db->prepare(
-        'UPDATE mission
-SET name                = :name,
-    description         = :description,
-    use_calculated_depth= :use_calculated_depth,
-    boat_depth          =: boat_depth
-WHERE id = :id;');
-    $exec = $query->execute(array(
+    $variables = array(
         'name' => htmlspecialchars($name),
         'description' => htmlspecialchars($description),
         'id' => htmlspecialchars($id_mission),
         'use_calculated_depth' => $use_calculated_depth,
-        'boat_depth' => $boat_depth));
+        'boat_depth' => $boat_depth);
+    $query = $db->prepare(
+        'UPDATE mission
+SET name                 = :name,
+    description          = :description,
+    use_calculated_depth = :use_calculated_depth,
+    boat_depth           = :boat_depth
+WHERE id = :id;');
+    $exec = $query->execute($variables);
 
 
     if (false === $exec) {
@@ -81,7 +81,7 @@ if (is_ajax() && isset($_POST['id_mission'])
     && isset($_POST['name'])
     && $_SESSION['right'] == 'admin') {
     $description = isset($POST['description']) ? $_POST['description'] : "";
-    $use_boat_depth = isset($_POST['use_boat_depth']) ? $_POST['use_boat_depth'] : false;
+    $use_boat_depth = isset($_POST['use_boat_depth']) ? $_POST['use_boat_depth'] : 0;
     $boat_depth = isset($_POST['boat_depth']) ? $_POST['boat_depth'] : 2.0;
     updateMissionInfo($_POST['id_mission'], $_POST['name'], $description, $use_boat_depth, $boat_depth);
 }

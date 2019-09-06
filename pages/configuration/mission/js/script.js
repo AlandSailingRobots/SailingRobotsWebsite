@@ -165,7 +165,7 @@
                 missionName = data[0]["name"];
                 missionDescription = data[0]["description"];
                 missionLastUse = data[0]["last_use"];
-                missionUseBoatDepth = data[0]["use_calculated_depth"];
+                missionUseBoatDepth = data[0]["use_calculated_depth"] === "1";
                 missionBoatDepth = data[0]["boat_depth"];
                 cleanMissionInfo();
                 displayMissionInfo();
@@ -315,7 +315,8 @@
         // Load values
         $('#editMissionName').val(missionName);
         $('#editMissionDescription').val(missionDescription);
-        $('#editMissionButton').val(missionUseBoatDepth);
+        console.log(missionUseBoatDepth);
+        $('#editMissionUseDepth').prop('checked',missionUseBoatDepth);
         $('#editMissionBoatDepth').val(missionBoatDepth)
     });
 
@@ -334,7 +335,7 @@
                 name: $('#editMissionName').val(),
                 description: $('#editMissionDescription').val(),
                 id_mission: id_mission,
-                use_boat_depth: $('#editMissionUseDepth').val(),
+                use_boat_depth: $('#editMissionUseDepth').prop('checked') ? 1 : 0,
                 boat_depth: $('#editMissionBoatDepth').val()
             },
             timeout: 3000,
