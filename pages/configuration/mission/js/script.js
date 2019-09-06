@@ -197,6 +197,8 @@
             ));
             parentNode.appendChild(lastUseNode);
         }
+        $('#editMissionUseDepth').prop('checked', missionUseBoatDepth);
+        $('#editMissionBoatDepth').val(missionBoatDepth)
 
     }
 
@@ -315,8 +317,7 @@
         // Load values
         $('#editMissionName').val(missionName);
         $('#editMissionDescription').val(missionDescription);
-        console.log(missionUseBoatDepth);
-        $('#editMissionUseDepth').prop('checked',missionUseBoatDepth);
+        $('#editMissionUseDepth').prop('checked', missionUseBoatDepth);
         $('#editMissionBoatDepth').val(missionBoatDepth)
     });
 

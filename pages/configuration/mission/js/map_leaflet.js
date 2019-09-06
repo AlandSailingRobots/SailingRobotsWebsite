@@ -40,6 +40,11 @@ var lat;
 var lon;
 var rankInMission;
 
+
+// var missionUseBoatDepth = false;
+// var missionBoatDepth = 100;
+
+
 // Initialize the map which is centered on the given lat, lng
 function createMap(url, data) {
     return L.tileLayer(url, data);
@@ -68,7 +73,7 @@ function initMap(lat, lon, mymap) {
     mymap.setView([lat, lon], mapSettings.initialZoomLevel);
     // Event click on map
     mymap.on('click', onMapClick);
-    mymap.on('moveend', onMapMove);
+    mymap.on('dragend', onMapMove);
 }
 
 //*****************************************************************************
@@ -78,8 +83,10 @@ function initMap(lat, lon, mymap) {
 //*****************************************************************************
 
 function onMapMove() {
-    var list = waterDepth.getMapBoundingBoxAndSendToBeProcessed(mymap);
-    console.log(list)
+    console.log(mymap.getBounds());
+    var list = waterDepth.getMapBoundingBoxAndSendToBeProcessed(mymap, missionUseBoatDepth, missionBoatDepth);
+    console.log(list);
+    console.log(mymap.getBounds());
 }
 
 // This function handles the click on the map.
@@ -347,8 +354,8 @@ function displayPointFromDB(data) {
     }
     // mymap.removeLayer(polylineSup);
     // mymap.removeLayer(polylineInf);
-
-    waterDepth.getMapBoundingBoxAndSendToBeProcessed(mymap);
+    missionUseBoatDepth = $('#editMissionUseDepth').prop('checked');
+    missionBoatDepth = $('#editMissionBoatDepth').val();
     drawLineBetweenMarkers();
 }
 

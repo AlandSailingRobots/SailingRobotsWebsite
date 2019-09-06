@@ -49,7 +49,19 @@ class WaterDepthHandler {
     }
 
     GetWaterDepthPointsFromServer() {
-        var depth = this.requestGeoJson("getWaterDepthPoints",{"limitDepth": 10});
+        var depth = this.requestGeoJson("getWaterDepthPoints", {"limitDepth": 10});
+        console.log(depth);
+        this.geoJsonWaterDepth.addData(depth);
+    }
+
+    CalculateWaterDepthPointsFromServer() {
+        var depth = this.requestGeoJson("calculateWaterDepthPoints", {"limitDepth": 10});
+        console.log(depth);
+        this.geoJsonWaterDepth.addData(depth);
+    }
+
+    GetWaterDepthAreaFromServer(boat_depth) {
+        var depth = this.requestGeoJson("getWaterDepthArea", {"limitDepth": 10, "boatDepth": parseFloat(boat_depth)});
         console.log(depth);
         this.geoJsonWaterDepth.addData(depth);
     }
@@ -85,7 +97,7 @@ class WaterDepthHandler {
         return returnData;
     }
 
-    getMapBoundingBoxAndSendToBeProcessed(mymap) {
+    getMapBoundingBoxAndSendToBeProcessed(mymap, missionUseBoatDepth, missonBoatDepth) {
         this.mymap = mymap;
         if (!mymap.hasLayer(this.depth_points)) {
             return null;
@@ -94,6 +106,10 @@ class WaterDepthHandler {
         if (currentZoomLevel < this.initialZoomLevel || currentZoomLevel > this.maxZoomLevel) {
             return null;
         }
+        if (!missionUseBoatDepth) {
+            return null;
+        }
+
         // GetGeoJsonForCurrentBoundingBox();
         // overlapsArea()
         if (this.previous_bounds === undefined || !this.previous_bounds.contains(mymap.getBounds())) {
@@ -105,7 +121,12 @@ class WaterDepthHandler {
         }
 
         if (mymap.hasLayer(this.calculateWaterDepth)) {
-            this.GetWaterDepthPointsFromServer();
+            this.CalculateWaterDepthPointsFromServer();
+        }
+        // this.GetWaterDepthAreaFromServer(missonBoatDepth);
+        if (mymap.hasLayer(this.geoJsonWaterDepth)) {
+            this.GetWaterDepthAreaFromServer(missonBoatDepth);
         }
     }
+
 }
