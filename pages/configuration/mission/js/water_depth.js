@@ -55,12 +55,11 @@ class WaterDepthHandler {
     }
 
     CalculateWaterDepthPointsFromServer() {
-        var depth = this.requestGeoJson("calculateWaterDepthPoints", {"limitDepth": 10});
-        console.log(depth);
-        this.geoJsonWaterDepth.addData(depth);
+        var depth = this.requestGeoJson("calculateProcess", {"limitDepth": 10});
     }
 
     GetWaterDepthAreaFromServer(boat_depth) {
+        console.log(boat_depth)
         var depth = this.requestGeoJson("getWaterDepthArea", {"limitDepth": 10, "boatDepth": parseFloat(boat_depth)});
         console.log(depth);
         this.geoJsonWaterDepth.addData(depth);

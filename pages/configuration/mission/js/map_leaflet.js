@@ -84,7 +84,9 @@ function initMap(lat, lon, mymap) {
 
 function onMapMove() {
     console.log(mymap.getBounds());
-    var list = waterDepth.getMapBoundingBoxAndSendToBeProcessed(mymap, missionUseBoatDepth, missionBoatDepth);
+    boat_depth = $('#editMissionBoatDepth').val();
+    console.log(boat_depth);
+    var list = waterDepth.getMapBoundingBoxAndSendToBeProcessed(mymap, missionUseBoatDepth, boat_depth);
     console.log(list);
     console.log(mymap.getBounds());
 }
