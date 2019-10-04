@@ -70,6 +70,7 @@ function initMap(lat, lon, mymap) {
     }
     base_maps[mapSettings.defaultMap].addTo(mymap);
     L.control.layers(base_maps, waterDepth.getOverlays()).addTo(mymap);
+    L.control.scale().addTo(mymap);
     mymap.setView([lat, lon], mapSettings.initialZoomLevel);
     // Event click on map
     mymap.on('click', onMapClick);
