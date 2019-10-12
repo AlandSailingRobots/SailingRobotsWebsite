@@ -18,10 +18,10 @@ mapSettings = getMapSettings();
 
 // Initialisation of the map
 var mymap = L.map('map');
-
-var waterDepth = new WaterDepthHandler(L, mymap, mapSettings.initialZoomLevel, mapSettings.maxZoomLevel);
+var info = L.control();
+var waterDepth = new WaterDepthHandler(L, mymap, mapSettings.initialZoomLevel, mapSettings.maxZoomLevel,info);
 initMap(mapSettings.startPoint.lat, mapSettings.startPoint.long, mymap);
-var popup = L.popup();
+var popup = L.popup();;
 var listOfPoints = document.getElementById('listOfPoints'); // To manage the list of item
 var isOpen = false;                 // To handle the popup of creation of point
 var numberOfPoints = listOfPoints.childElementCount;
@@ -763,3 +763,6 @@ function getMapSettings() {
     $.ajax(settings);
     return mapSettings
 }
+
+
+
