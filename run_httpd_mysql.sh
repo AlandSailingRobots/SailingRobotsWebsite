@@ -9,7 +9,7 @@ function stop_everything() {
 }
 pause() {
   sleep 1
-  read -n 1 -p "Press any key to continue..."
+  read -n 1 -p "Press any key to stop..."
 }
 
 start_everything
