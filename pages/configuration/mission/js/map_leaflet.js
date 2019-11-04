@@ -84,12 +84,10 @@ function initMap(lat, lon, mymap) {
 //*****************************************************************************
 
 function onMapMove() {
-    console.log(mymap.getBounds());
     boat_depth = $('#editMissionBoatDepth').val();
-    console.log(boat_depth);
-    var list = waterDepth.getMapBoundingBoxAndSendToBeProcessed(mymap, missionUseBoatDepth, boat_depth);
-    console.log(list);
-    console.log(mymap.getBounds());
+    missionUseBoatDepth = $('#editMissionUseDepth').prop('checked');
+    console.log(boat_depth, missionUseBoatDepth);
+    waterDepth.getMapBoundingBoxAndSendToBeProcessed(mymap, missionUseBoatDepth, boat_depth);
 }
 
 // This function handles the click on the map.
