@@ -15,6 +15,7 @@ would have been made on previous missions.
    -  Low level configuration
    -  Easy way to add waypoints (using [LeafletJS](http://leafletjs.com) and [MapboxAPI](https://docs.mapbox.com/api/))
    -  Logs monitoring
+   -  Depth recognition from Aerial images from finland (using an [new system](https://github.com/AlandSailingRobots/AerialImagesToWaterDepth))
 
 ## What has been done so far :
    - [x] New UI, using [Gentelella Bootstrap Template](https://github.com/ColorlibHQ/gentelella) (by Colorlib)
